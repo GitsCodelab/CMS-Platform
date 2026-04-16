@@ -58,6 +58,54 @@ SimpleAuthManager is configured with credentials stored in:
 - **File:** `airflow/simple_auth_manager_passwords.json`
 - **Default User:** airflow / airflow
 
+## Database Connections
+
+### Oracle Connection (`oracle_main`)
+
+Airflow connects to Oracle XE database:
+```
+Type:         Oracle
+Host:         cms-oracle-xe
+Port:         1521
+Login:        system
+Password:     oracle
+Service Name: xepdb1
+```
+
+**Connection URI:** `oracle://system:oracle@cms-oracle-xe:1521/?service_name=xepdb1`
+
+### PostgreSQL Connection (`postgres_main`)
+
+Airflow connects to PostgreSQL:
+```
+Type:     PostgreSQL
+Host:     cms-postgresql
+Port:     5432
+Username: postgres
+Password: postgres
+Database: cms
+```
+
+**Connection URI:** `postgresql://postgres:postgres@cms-postgresql:5432/cms`
+
+### Setup Connections
+
+Use the automated setup script to create or recreate connections:
+
+```bash
+# Create connections (if they don't exist)
+bash airflow/scripts/create_connections.sh
+
+# Force recreate connections
+bash airflow/scripts/create_connections.sh --force
+```
+
+The script will:
+- ✓ Create `oracle_main` connection
+- ✓ Create `postgres_main` connection
+- ✓ Verify both connections are accessible
+- ✓ Test connectivity to both databases
+
 ## Important Fixes Applied
 
 ### 1. Database Connection Issue
@@ -168,6 +216,24 @@ docker exec cms-airflow airflow connections add \
   --conn-host localhost \
   --conn-port 5432
 ```
+
+### Testing Database Connections
+
+A test DAG is included to verify both Oracle and PostgreSQL connections:
+
+```bash
+# Test connections via DAG
+docker compose exec cms-airflow airflow dags test test_connections
+
+# Or from the Airflow UI: http://localhost:8080
+# Navigate to DAGs → test_connections → Trigger DAG
+```
+
+The test DAG will run two tasks:
+- `test_oracle` - Queries Oracle database (`SELECT name FROM v$database`)
+- `test_postgres` - Queries PostgreSQL database (`SELECT NOW()`)
+
+Both tasks must complete successfully for connections to be working correctly.
 
 ## Maintenance
 

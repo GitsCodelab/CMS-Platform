@@ -5,10 +5,10 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.providers.oracle.hooks.oracle import OracleHook
 
 def test_oracle_conn():
-    hook = OracleHook(oracle_conn_id='bot_oracle')
+    hook = OracleHook(oracle_conn_id='oracle_main')
     conn = hook.get_conn()
     cur = conn.cursor()
-    cur.execute('select sysdate from dual')
+    cur.execute('select name from v$database')
     result = cur.fetchone()
     print('oracle test result:', result)
     cur.close()
@@ -18,7 +18,7 @@ def test_oracle_conn():
         pass
 
 def test_postgres_conn():
-    hook = PostgresHook(postgres_conn_id='bot_postgres')
+    hook = PostgresHook(postgres_conn_id='postgres_main')
     with hook.get_conn() as conn:
         cur = conn.cursor()
         cur.execute('SELECT NOW()')
