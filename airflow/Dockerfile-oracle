@@ -1,0 +1,10 @@
+FROM apache/airflow:latest
+
+# Install Oracle DB driver and provider package as the non-root `airflow` user
+USER root
+RUN apt-get update && apt-get install -y libaio1 --no-install-recommends \
+	&& rm -rf /var/lib/apt/lists/*
+
+USER airflow
+RUN pip install --no-cache-dir --user oracledb apache-airflow-providers-oracle
+ENV PATH="/home/airflow/.local/bin:${PATH}"
