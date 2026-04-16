@@ -1,9 +1,7 @@
-version: '3.9'
-
 services:
-  oracle-xe:
+  cms-oracle-xe:
     image: gvenzl/oracle-xe:21.3.0
-    container_name: oracle-xe
+    container_name: cms-oracle-xe
     ports:
       - "1521:1521" # Oracle default port
       - "5500:5500" # Oracle EM Express port
@@ -14,9 +12,9 @@ services:
     networks:
       - cms-platform-net
 
-  postgresql:
+  cms-postgresql:
     image: postgres:15.3
-    container_name: postgres
+    container_name: cms-postgresql
     ports:
       - "5432:5432" # PostgreSQL default port
     environment:
@@ -28,10 +26,42 @@ services:
     networks:
       - cms-platform-net
 
+  cms-airflow:
+    image: apache/airflow:3.0.0
+    container_name: cms-airflow
+    command: ["standalone"]
+    depends_on:
+      cms-postgresql:
+        condition: service_started
+      cms-oracle-xe:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/ui/"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    env_file:
+      - ./airflow/.env
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@cms-postgresql:5432/cms
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/simple_auth_manager_passwords.json:/opt/airflow/simple_auth_manager_passwords.json
+      - ./airflow/scripts:/opt/airflow/scripts
+    ports:
+      - "8080:8080"
+    networks:
+      - cms-platform-net
+
 volumes:
   oracle-data:
     driver: local
   postgres-data:
+    driver: local
+  airflow-data:
     driver: local
 
 networks:
