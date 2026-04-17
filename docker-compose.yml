@@ -75,6 +75,25 @@ services:
     networks:
       - cms-platform-net
 
+  cms-frontend:
+    image: node:18-alpine
+    container_name: cms-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      cms-backend:
+        condition: service_started
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://cms-backend:8000
+    networks:
+      - cms-platform-net
+
 volumes:
   oracle-data:
     driver: local

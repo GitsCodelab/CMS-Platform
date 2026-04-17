@@ -1,5 +1,6 @@
 """FastAPI application initialization"""
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.routers import oracle, postgres
 
@@ -12,6 +13,15 @@ def create_app() -> FastAPI:
         version=settings.API_VERSION,
         description="Dual-database CRUD API for Oracle XE and PostgreSQL",
         debug=settings.DEBUG
+    )
+
+    # Add CORS middleware
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # Allow all origins for development
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     # Health check endpoint
