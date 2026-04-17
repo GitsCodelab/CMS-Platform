@@ -1,0 +1,348 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "CMS Platform APIs",
+    "description": "API definitions for CMS Platform (Oracle and PostgreSQL)",
+    "version": "1.0.0",
+    "contact": {
+      "name": "CMS Platform Team",
+      "url": "https://github.com/GitsCodelab/CMS-Platform"
+    }
+  },
+  "host": "cms-apim:8280",
+  "basePath": "/cms/v1",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/oracle/test": {
+      "get": {
+        "summary": "Get all test records from Oracle",
+        "description": "Retrieve all test records from Oracle XE database",
+        "operationId": "getOracleTestRecords",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of test records",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestRecord"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new test record in Oracle",
+        "operationId": "createOracleTestRecord",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestRecordInput"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Record created successfully",
+            "schema": {
+              "$ref": "#/definitions/TestRecord"
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/oracle/test/{id}": {
+      "get": {
+        "summary": "Get a specific test record from Oracle",
+        "operationId": "getOracleTestRecordById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test record details",
+            "schema": {
+              "$ref": "#/definitions/TestRecord"
+            }
+          },
+          "404": {
+            "description": "Record not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a test record in Oracle",
+        "operationId": "updateOracleTestRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestRecordInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Record updated successfully",
+            "schema": {
+              "$ref": "#/definitions/TestRecord"
+            }
+          },
+          "404": {
+            "description": "Record not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a test record from Oracle",
+        "operationId": "deleteOracleTestRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Record deleted successfully"
+          },
+          "404": {
+            "description": "Record not found"
+          }
+        }
+      }
+    },
+    "/postgres/test": {
+      "get": {
+        "summary": "Get all test records from PostgreSQL",
+        "description": "Retrieve all test records from PostgreSQL database",
+        "operationId": "getPostgresTestRecords",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of test records",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestRecord"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new test record in PostgreSQL",
+        "operationId": "createPostgresTestRecord",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestRecordInput"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Record created successfully",
+            "schema": {
+              "$ref": "#/definitions/TestRecord"
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/postgres/test/{id}": {
+      "get": {
+        "summary": "Get a specific test record from PostgreSQL",
+        "operationId": "getPostgresTestRecordById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test record details",
+            "schema": {
+              "$ref": "#/definitions/TestRecord"
+            }
+          },
+          "404": {
+            "description": "Record not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a test record in PostgreSQL",
+        "operationId": "updatePostgresTestRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestRecordInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Record updated successfully",
+            "schema": {
+              "$ref": "#/definitions/TestRecord"
+            }
+          },
+          "404": {
+            "description": "Record not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a test record from PostgreSQL",
+        "operationId": "deletePostgresTestRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Record deleted successfully"
+          },
+          "404": {
+            "description": "Record not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TestRecord": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Record identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Record name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Record description"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive",
+            "archived"
+          ],
+          "description": "Record status"
+        }
+      }
+    },
+    "TestRecordInput": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Record identifier (auto-generated if not provided)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Record name",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "description": {
+          "type": "string",
+          "description": "Record description",
+          "maxLength": 1000
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive",
+            "archived"
+          ],
+          "default": "active",
+          "description": "Record status"
+        }
+      }
+    }
+  },
+  "x-wso2-basePath": "/cms/v1",
+  "x-wso2-production-endpoints": {
+    "url": "http://cms-backend:8000"
+  },
+  "x-wso2-sandbox-endpoints": {
+    "url": "http://cms-backend:8000"
+  }
+}
