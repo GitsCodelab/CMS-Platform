@@ -1,6 +1,10 @@
+"""Application configuration"""
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
+    """Application settings"""
+    
     # Oracle Configuration
     ORACLE_HOST: str = "cms-oracle-xe"
     ORACLE_PORT: int = 1521
@@ -18,9 +22,11 @@ class Settings(BaseSettings):
     # API Configuration
     API_TITLE: str = "CMS Platform API"
     API_VERSION: str = "1.0.0"
+    DEBUG: bool = False
     
     class Config:
         env_file = ".env"
         case_sensitive = True
+
 
 settings = Settings()

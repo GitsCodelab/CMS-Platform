@@ -31,13 +31,152 @@ http://localhost:8080
 
 | Service | Port | Description |
 |---------|------|-------------|
+| **FastAPI Backend** | 8000 | REST API for dual-database CRUD operations |
 | **Airflow (Standalone)** | 8080 | Data orchestration & scheduling |
 | **Oracle Database** | 1521 | Primary data source |
 | **PostgreSQL DWH** | 5432 | Data warehouse |
 | **Superset** | 8088 | Analytics & visualization |
 | **WSO2 APIM** | 9443 | API management |
 
-## Airflow Configuration
+## FastAPI Backend
+
+### Overview
+
+The backend provides a RESTful API for CRUD operations on both Oracle and PostgreSQL databases using FastAPI with a professional modular architecture.
+
+### Architecture
+
+The backend is organized using separation of concerns:
+
+```
+backend/
+├── app/
+│   ├── __init__.py           # FastAPI application factory
+│   ├── config.py             # Configuration management
+│   ├── schemas/              # Pydantic request/response models
+│   │   └── __init__.py
+│   ├── database/             # Database connectors
+│   │   ├── __init__.py
+│   │   ├── oracle.py         # Oracle database operations
+│   │   └── postgres.py       # PostgreSQL database operations
+│   └── routers/              # API endpoints
+│       ├── __init__.py
+│       ├── oracle.py         # Oracle endpoints
+│       └── postgres.py       # PostgreSQL endpoints
+├── run.py                    # Application entry point
+├── requirements.txt          # Dependencies
+└── .env                      # Configuration variables
+```
+
+### Setup
+
+```bash
+# Backend starts automatically with Docker Compose
+docker compose up -d
+
+# Or manually start just the backend
+docker compose up -d cms-backend
+
+# Check health
+curl http://localhost:8000/health
+```
+
+### API Endpoints
+
+#### Health Check
+```bash
+GET /health
+```
+
+Response:
+```json
+{
+  "status": "healthy",
+  "api": "CMS Platform API",
+  "version": "1.0.0"
+}
+```
+
+#### Oracle Test Table
+
+```bash
+# Get all records
+GET /oracle/test
+
+# Get record by ID
+GET /oracle/test/{id}
+
+# Create record
+POST /oracle/test
+Body: {"id": 10, "name": "Test", "description": "Desc", "status": "pending"}
+
+# Update record
+PUT /oracle/test/{id}
+Body: {"name": "Updated", "status": "active"}
+
+# Delete record
+DELETE /oracle/test/{id}
+```
+
+#### PostgreSQL Test Table
+
+```bash
+# Get all records
+GET /postgres/test
+
+# Get record by ID
+GET /postgres/test/{id}
+
+# Create record
+POST /postgres/test
+Body: {"name": "Test", "description": "Desc", "status": "pending"}
+
+# Update record
+PUT /postgres/test/{id}
+Body: {"name": "Updated", "status": "active"}
+
+# Delete record
+DELETE /postgres/test/{id}
+```
+
+### Configuration
+
+Environment variables in `backend/.env`:
+
+```
+ORACLE_HOST=cms-oracle-xe
+ORACLE_PORT=1521
+ORACLE_USER=system
+ORACLE_PASSWORD=oracle
+ORACLE_SERVICE=xepdb1
+
+POSTGRES_HOST=cms-postgresql
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=cms
+
+API_TITLE=CMS Platform API
+API_VERSION=1.0.0
+```
+
+### Interactive API Documentation
+
+FastAPI provides auto-generated documentation:
+- **Swagger UI:** http://localhost:8000/docs
+- **ReDoc:** http://localhost:8000/redoc
+
+### Initialization
+
+To populate test data:
+
+```bash
+python backend/setup_test_tables.py
+```
+
+This creates test tables with sample data in both databases.
+
+
 
 ### Database Connection
 
@@ -177,6 +316,17 @@ sudo chmod -R u+rwx airflow/
 
 ```
 .
+├── backend/                  # FastAPI backend application
+│   ├── app/
+│   │   ├── __init__.py      # FastAPI factory
+│   │   ├── config.py        # Settings management
+│   │   ├── schemas/         # Pydantic models
+│   │   ├── database/        # DB connectors
+│   │   └── routers/         # API endpoints
+│   ├── run.py               # Entry point
+│   ├── requirements.txt     # Dependencies
+│   ├── .env                 # Configuration
+│   └── setup_test_tables.py # Test data initialization
 ├── airflow/
 │   ├── dags/              # DAG definitions
 │   ├── logs/              # DAG execution logs
