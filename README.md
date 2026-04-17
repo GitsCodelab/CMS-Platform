@@ -33,6 +33,11 @@ docker compose down
 | **Frontend (React)** | http://localhost:3000 | - |
 | **Backend API** | http://localhost:8000 | - |
 | **Airflow UI** | http://localhost:8080 | airflow / airflow |
+| **WSO2 APIM Admin** | https://localhost:9443/admin | admin / admin |
+| **WSO2 APIM Publisher** | https://localhost:9443/publisher | admin / admin |
+| **WSO2 APIM Developer** | https://localhost:9443/devportal | - |
+| **APIM Gateway (HTTP)** | http://localhost:8280 | - |
+| **APIM Gateway (HTTPS)** | https://localhost:8243 | - |
 | **Oracle Database** | localhost:1521/xepdb1 | sys / oracle |
 | **PostgreSQL** | localhost:5432/cms | postgres / postgres |
 
@@ -496,12 +501,174 @@ SimpleAuthManager is configured with:
 | cms-oracle-xe | gvenzl/oracle-xe:21.3.0 | 1521 | Oracle database |
 | cms-postgresql | postgres:15.3 | 5432 | PostgreSQL database |
 | cms-airflow | apache/airflow:3.0.0 | 8080 | Airflow orchestration |
+| cms-apim | wso2/wso2am:4.0.0 | 8280, 8243, 9443, 9611 | WSO2 API Manager gateway |
+
+---
+
+## 🌐 WSO2 API Manager (APIM)
+
+### Overview
+
+WSO2 API Manager is an enterprise-grade API management platform that provides centralized API governance, security, and monetization.
+
+### Quick Start
+
+**Access WSO2 APIM:**
+```
+Admin Console:      https://localhost:9443/admin
+Publisher Portal:   https://localhost:9443/publisher
+Developer Portal:   https://localhost:9443/devportal
+API Gateway (HTTP):  http://localhost:8280
+API Gateway (HTTPS): https://localhost:8243
+```
+
+**Default Credentials:**
+- Username: `admin`
+- Password: `admin`
+
+**Note:** Accept the self-signed SSL certificate on first access.
+
+### Features
+
+✅ **API Gateway**
+- Request/response mediation and transformation
+- Policy enforcement (throttling, authentication, CORS)
+- Traffic shaping and rate limiting
+- Request/response logging and analytics
+
+✅ **Publisher Portal**
+- Create and publish APIs
+- Manage API versions and endpoints
+- Apply policies and security measures
+- Monitor API usage and performance
+- Configure OAuth2 scopes
+
+✅ **Developer Portal**
+- Browse and discover published APIs
+- Subscribe to APIs and manage subscriptions
+- Generate and manage API keys
+- View API documentation and samples
+- Monitor own API usage
+
+✅ **Security**
+- OAuth2 authentication and authorization
+- API key management
+- Rate limiting and throttling
+- Request validation
+- Data transformation and masking
+
+### Architecture
+
+```
+wso2-stack/apim/
+├── README.md                    # Quick start guide
+├── API_REGISTRATION.md          # Step-by-step API registration
+├── POLICIES.md                  # Policy configuration guide
+├── PRODUCTION.md                # Production deployment guide
+├── POLICIES.md                  # API security policies
+├── Dockerfile                   # APIM container image
+├── docker-compose.yml           # APIM Docker service definition
+├── .env                         # Environment configuration
+├── start.sh                     # Quick start script
+└── cms-api-definition.json      # OpenAPI/Swagger definition for CMS APIs
+```
+
+### Configuration
+
+**Environment Variables:**
+```env
+DB_TYPE=postgresql                  # Database type
+DB_HOSTNAME=cms-postgresql          # PostgreSQL host
+DB_PORT=5432                        # PostgreSQL port
+DB_NAME=wso2am                      # Database name
+DB_USERNAME=postgres                # DB username
+DB_PASSWORD=postgres                # DB password
+ADMIN_USERNAME=admin                # APIM admin user
+ADMIN_PASSWORD=admin                # APIM admin password
+API_GATEWAY_HOST=cms-apim           # Gateway hostname
+API_GATEWAY_HTTP_PORT=8280          # Gateway HTTP port
+API_GATEWAY_HTTPS_PORT=8243         # Gateway HTTPS port
+```
+
+### Registering CMS APIs
+
+**Step 1: Access Publisher Portal**
+1. Open https://localhost:9443/publisher
+2. Login with admin credentials
+3. Accept SSL certificate
+
+**Step 2: Create API**
+1. Click **Create** → **Create New API**
+2. Select **REST API**
+3. Enter API details:
+   - Name: `CMS Test API`
+   - Context: `/cms/test`
+   - Version: `1.0.0`
+   - Backend URL: `http://cms-backend:8000/test`
+
+**Step 3: Publish API**
+1. Configure endpoints
+2. Apply policies (OAuth2, throttling, CORS)
+3. Click **Publish**
+4. API available at: `https://localhost:8243/cms/test/1.0.0`
+
+**Step 4: Test API**
+```bash
+# Generate OAuth2 token
+TOKEN=$(curl -X POST "https://localhost:9443/oauth2/token" \
+  -H "Authorization: Basic YWRtaW46YWRtaW4=" \
+  -d "grant_type=client_credentials" -k -s | jq -r '.access_token')
+
+# Call API
+curl -X GET "https://localhost:8243/cms/test/1.0.0/oracle" \
+  -H "Authorization: Bearer $TOKEN" -k
+```
+
+### Integration with Frontend
+
+Update frontend API client to route through APIM gateway:
+
+```javascript
+// frontend/src/api/client.js
+import axios from 'axios';
+
+const apiClient = axios.create({
+  baseURL: 'https://localhost:8243/cms/v1',
+  httpsAgent: {
+    rejectUnauthorized: false  // For development only
+  }
+});
+
+// Add token injection
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default apiClient;
+```
+
+### Documentation
+
+For detailed information, see:
+- **[wso2-stack/apim/README.md](wso2-stack/apim/README.md)** - APIM overview and quick start
+- **[wso2-stack/apim/API_REGISTRATION.md](wso2-stack/apim/API_REGISTRATION.md)** - API registration guide
+- **[wso2-stack/apim/POLICIES.md](wso2-stack/apim/POLICIES.md)** - Policy configuration
+- **[wso2-stack/apim/PRODUCTION.md](wso2-stack/apim/PRODUCTION.md)** - Production deployment
 
 ### Docker Commands
 
 ```bash
 # Start all services
 docker compose up -d
+
+# Start specific service
+docker compose up -d cms-apim
+docker compose up -d cms-backend
+docker compose up -d cms-frontend
 
 # View logs
 docker compose logs -f [service-name]
@@ -511,6 +678,7 @@ docker compose down
 
 # Restart specific service
 docker compose restart cms-frontend
+docker compose restart cms-apim
 
 # View running containers
 docker compose ps
@@ -544,13 +712,22 @@ docker compose ps
    - Add API logging and monitoring
    - Set secure CORS policies
 
-3. **Databases:**
+3. **WSO2 API Manager:**
+   - Replace self-signed SSL certificates with CA-signed certificates
+   - Change default admin credentials
+   - Enable OAuth2 for API security
+   - Configure API throttling policies
+   - Set up analytics and monitoring
+   - Enable backup and disaster recovery
+   - See [wso2-stack/apim/PRODUCTION.md](wso2-stack/apim/PRODUCTION.md) for detailed guidance
+
+4. **Databases:**
    - Enable backup and recovery
    - Set up replication
    - Configure proper user permissions
    - Monitor disk space and performance
 
-4. **Monitoring:**
+5. **Monitoring:**
    - Set up container health checks
    - Add centralized logging
    - Monitor API response times
