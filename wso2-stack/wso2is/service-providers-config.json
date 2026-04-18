@@ -1,0 +1,142 @@
+{
+  "serviceProviders": [
+    {
+      "name": "CMS-Platform",
+      "description": "Content Management System Platform Application",
+      "type": "web",
+      "inboundAuthenticationProtocol": "oauth2",
+      "callbackURLs": [
+        "http://localhost:3000/callback",
+        "https://localhost:3000/callback"
+      ],
+      "clientId": "cms-platform-client",
+      "oauth2Configuration": {
+        "grantTypes": [
+          "authorization_code",
+          "client_credentials",
+          "refresh_token",
+          "urn:ietf:params:oauth:grant-type:jwt-bearer"
+        ],
+        "scopes": [
+          "openid",
+          "profile",
+          "email",
+          "phone",
+          "api",
+          "api:read",
+          "api:write",
+          "offline_access"
+        ],
+        "publicClient": false,
+        "pkceEnabled": true,
+        "pkceRequired": false,
+        "tokenEndpointAuthMethod": "client_secret_basic",
+        "accessTokenExpiry": 3600,
+        "refreshTokenExpiry": 86400,
+        "idTokenExpiry": 3600
+      },
+      "samlConfiguration": {
+        "enabled": false
+      },
+      "attributes": {
+        "oidc_id_token_alg": "SHA256withRSA",
+        "oidc_id_token_encrypted_alg": "RSA-OAEP",
+        "oidc_id_token_encrypted_enc": "A128CBC+HS256",
+        "oidc_userinfo_signed_response_alg": "SHA256withRSA",
+        "oidc_userinfo_encrypted_alg": "RSA-OAEP",
+        "oidc_userinfo_encrypted_enc": "A128CBC+HS256",
+        "oidc_logout_url": "http://localhost:3000/logout",
+        "oidc_claims": [
+          "http://wso2.org/claims/emailaddress",
+          "http://wso2.org/claims/givenname",
+          "http://wso2.org/claims/lastname",
+          "http://wso2.org/claims/mobile"
+        ]
+      },
+      "claimsMapping": {
+        "http://wso2.org/claims/emailaddress": "email",
+        "http://wso2.org/claims/givenname": "given_name",
+        "http://wso2.org/claims/lastname": "family_name",
+        "http://wso2.org/claims/mobile": "phone_number",
+        "http://wso2.org/claims/userid": "sub"
+      },
+      "roleMapping": {
+        "admin": "admin-role",
+        "developer": "developer-role",
+        "viewer": "viewer-role"
+      },
+      "permissions": [
+        "list-records",
+        "create-record",
+        "update-record",
+        "delete-record",
+        "manage-users",
+        "view-reports"
+      ]
+    }
+  ],
+  "apiResources": [
+    {
+      "name": "cms-api",
+      "description": "CMS Platform REST API",
+      "baseUrl": "http://localhost:8000",
+      "scopes": [
+        {
+          "name": "api:read",
+          "description": "Read access to CMS APIs"
+        },
+        {
+          "name": "api:write",
+          "description": "Write access to CMS APIs"
+        },
+        {
+          "name": "api:admin",
+          "description": "Administrative access to CMS APIs"
+        }
+      ]
+    }
+  ],
+  "userRoles": [
+    {
+      "name": "admin-role",
+      "description": "Administrator role with full access",
+      "permissions": [
+        "manage-users",
+        "manage-roles",
+        "manage-apis",
+        "view-audit-logs",
+        "system-configuration"
+      ]
+    },
+    {
+      "name": "developer-role",
+      "description": "Developer role for API access",
+      "permissions": [
+        "list-records",
+        "create-record",
+        "update-record",
+        "delete-record",
+        "generate-api-keys"
+      ]
+    },
+    {
+      "name": "viewer-role",
+      "description": "Read-only viewer role",
+      "permissions": [
+        "list-records",
+        "view-reports"
+      ]
+    }
+  ],
+  "userStores": [
+    {
+      "name": "PRIMARY",
+      "type": "JDBC",
+      "description": "Primary user store",
+      "properties": {
+        "dataSource": "WSO2CarbonDB",
+        "hashAlgorithm": "SHA-256"
+      }
+    }
+  ]
+}
