@@ -1,0 +1,102 @@
+[server]
+hostname = "apim.local"
+node_ip = "0.0.0.0"
+base_path = "https://apim.local:9443"
+server_name = "WSO2 API Manager"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[user_store]
+type = "database_unique_id"
+
+# ================= DATABASE =================
+
+[database.identity_db]
+type = "postgresql"
+url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
+username = "postgres"
+password = "postgres"
+driver = "org.postgresql.Driver"
+
+[database.shared_db]
+type = "postgresql"
+url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
+username = "postgres"
+password = "postgres"
+driver = "org.postgresql.Driver"
+
+[database.apim_db]
+type = "postgresql"
+url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
+username = "postgres"
+password = "postgres"
+driver = "org.postgresql.Driver"
+
+# ================= SECURITY =================
+
+[keystore.primary]
+file_name = "wso2carbon.jks"
+password = "wso2carbon"
+type = "JKS"
+
+[truststore]
+file_name = "client-truststore.jks"
+password = "wso2carbon"
+type = "JKS"
+
+# ================= API GATEWAY =================
+
+[api_gateway]
+enable = true
+endpoint_host = "apim.local"
+endpoint_http_port = 8280
+endpoint_https_port = 8243
+
+api_endpoint_host = "apim.local"
+api_endpoint_http_port = 8280
+api_endpoint_https_port = 8243
+
+web_sub_event_receiver_http_port = 9021
+web_sub_event_receiver_https_port = 8021
+
+# ================= OAUTH =================
+
+[[oauth.grant_types]]
+name = "authorization_code"
+enable = true
+
+# ================= KEY MANAGER =================
+
+[[apim.key_manager]]
+server_url = "https://apim.local:9443"
+username = "admin"
+password = "admin"
+type = "WSO2-IS"
+
+configuration.TokenEndpoint = "https://apim.local:9443/oauth2/token"
+configuration.RevokeEndpoint = "https://apim.local:9443/oauth2/revoke"
+configuration.UserInfoEndpoint = "https://apim.local:9443/oauth2/userinfo"
+
+# ================= ANALYTICS =================
+
+[apim.analytics]
+enable = false
+
+# ================= THROTTLING =================
+
+[apim.throttling]
+enable = false
+
+# ================= PORTAL URLS =================
+
+[apim.devportal]
+url = "https://apim.local:9443/devportal"
+
+[apim.publisher]
+url = "https://apim.local:9443/publisher"
+
+[apim.admin]
+url = "https://apim.local:9443/admin"

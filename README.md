@@ -522,13 +522,33 @@ WSO2 API Manager is an enterprise-grade API management platform that provides ce
 ### Quick Start
 
 **Access WSO2 APIM:**
-```
-Admin Console:      https://localhost:9443/admin
-Publisher Portal:   https://localhost:9443/publisher
-Developer Portal:   https://localhost:9443/devportal
-API Gateway (HTTP):  http://localhost:8280
-API Gateway (HTTPS): https://localhost:8243
-```
+
+1. **Add `apim.local` to your hosts file** (on your client machine):
+   ```bash
+   # Linux/Mac
+   echo "127.0.0.1 apim.local" | sudo tee -a /etc/hosts
+   
+   # Windows (run as Administrator)
+   Add "127.0.0.1 apim.local" to C:\Windows\System32\drivers\etc\hosts
+   ```
+
+2. **Access using hostname:**
+   ```
+   Admin Console:      https://apim.local:9443/admin
+   Publisher Portal:   https://apim.local:9443/publisher
+   Developer Portal:   https://apim.local:9443/devportal
+   API Gateway (HTTP):  http://apim.local:8280
+   API Gateway (HTTPS): https://apim.local:8243
+   ```
+   
+   **Alternative (without hostname):**
+   ```
+   Admin Console:      https://localhost:9443/admin
+   Publisher Portal:   https://localhost:9443/publisher
+   Developer Portal:   https://localhost:9443/devportal
+   API Gateway (HTTP):  http://localhost:8280
+   API Gateway (HTTPS): https://localhost:8243
+   ```
 
 **Default Credentials:**
 - Username: `admin`
@@ -543,6 +563,7 @@ API Gateway (HTTPS): https://localhost:8243
 - Policy enforcement (throttling, authentication, CORS)
 - Traffic shaping and rate limiting
 - Request/response logging and analytics
+- Full API lifecycle management
 
 ✅ **Publisher Portal**
 - Create and publish APIs
@@ -565,45 +586,145 @@ API Gateway (HTTPS): https://localhost:8243
 - Request validation
 - Data transformation and masking
 
+✅ **PostgreSQL Backend** (Production Ready)
+- Persistent data storage using PostgreSQL
+- 252 database tables for full API management
+- User management and authentication store
+- API registry and subscription tracking
+- Audit logs and analytics data
+
 ### Architecture
 
 ```
 wso2-stack/apim/
 ├── README.md                    # Quick start guide
 ├── API_REGISTRATION.md          # Step-by-step API registration
+├── COMPLETE_API_REGISTRATION_GUIDE.md  # Comprehensive API registration guide
 ├── POLICIES.md                  # Policy configuration guide
 ├── PRODUCTION.md                # Production deployment guide
-├── POLICIES.md                  # API security policies
-├── Dockerfile                   # APIM container image
+├── APIM_INTEGRATION.md          # WSO2 stack integration notes
+├── Dockerfile                   # APIM container image (includes PostgreSQL JDBC driver)
 ├── docker-compose.yml           # APIM Docker service definition
+├── deployment.toml              # APIM configuration with PostgreSQL backend
 ├── .env                         # Environment configuration
 ├── start.sh                     # Quick start script
 └── cms-api-definition.json      # OpenAPI/Swagger definition for CMS APIs
 ```
 
+**APIM Database Schema:**
+- **Location:** PostgreSQL `wso2am` database
+- **Total Tables:** 252 (51 core + 201 APIM-specific)
+- **Core Tables:** User management, registry, permissions, domains
+- **APIM Tables:** APIs, subscriptions, policies, gateway configurations
+- **Initialization:** Automatic via SQL scripts on first startup (manual if needed)
+
 ### Configuration
+
+**APIM Hostname Configuration:**
+
+The APIM is configured with hostname `apim.local` for modern API gateway patterns:
+
+```toml
+# deployment.toml - Server Configuration
+[server]
+hostname = "apim.local"           # API Gateway hostname
+base_path = "https://apim.local:9443"
+server_name = "WSO2 API Manager"
+```
+
+**PostgreSQL Database Configuration:**
+
+```toml
+# deployment.toml - Database Configuration
+[database.identity_db]
+type = "postgresql"
+url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
+username = "postgres"
+password = "postgres"
+driver = "org.postgresql.Driver"
+
+[database.shared_db]
+type = "postgresql"
+url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
+username = "postgres"
+password = "postgres"
+driver = "org.postgresql.Driver"
+
+[database.apim_db]
+type = "postgresql"
+url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
+username = "postgres"
+password = "postgres"
+driver = "org.postgresql.Driver"
+```
 
 **Environment Variables:**
 ```env
-DB_TYPE=postgresql                  # Database type
+# Database Configuration
+DB_TYPE=postgresql                  # Database type (PostgreSQL)
 DB_HOSTNAME=cms-postgresql          # PostgreSQL host
 DB_PORT=5432                        # PostgreSQL port
 DB_NAME=wso2am                      # Database name
 DB_USERNAME=postgres                # DB username
 DB_PASSWORD=postgres                # DB password
+
+# APIM Admin Configuration
 ADMIN_USERNAME=admin                # APIM admin user
 ADMIN_PASSWORD=admin                # APIM admin password
-API_GATEWAY_HOST=cms-apim           # Gateway hostname
+
+# Gateway Configuration
+API_GATEWAY_HOST=apim.local         # Gateway hostname (or localhost)
 API_GATEWAY_HTTP_PORT=8280          # Gateway HTTP port
 API_GATEWAY_HTTPS_PORT=8243         # Gateway HTTPS port
+ADMIN_CONSOLE_PORT=9443             # Admin console HTTPS port
 ```
+
+**PostgreSQL JDBC Driver:**
+- **Version:** 42.5.0
+- **Location in Container:** `/home/wso2carbon/wso2am-4.3.0/lib/postgresql-42.5.0.jar`
+- **Status:** Automatically included in Docker image build
+- **Configuration:** Located in Dockerfile via curl download
+
+### Database Schema Initialization
+
+**Automatic Initialization (Docker Startup):**
+When APIM starts for the first time with PostgreSQL backend, the schema is automatically initialized through database initialization scripts located in the container.
+
+**Manual Initialization (if needed):**
+If the database schema needs to be manually created:
+
+```bash
+# Initialize core WSO2 Carbon schema (51 tables)
+cd /home/samehabib/CMS-Platform
+docker compose exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql | \
+  docker compose exec -T cms-postgresql psql -U postgres wso2am
+
+# Initialize APIM-specific schema (201 tables)
+docker compose exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql | \
+  docker compose exec -T cms-postgresql psql -U postgres wso2am
+
+# Verify schema creation
+docker compose exec cms-postgresql psql -U postgres wso2am -c \
+  "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = 'public';"
+```
+
+**Expected Result:**
+```
+ table_count
+-------------
+         252
+```
+
+**Database Tables Created:**
+- **Core User Store (51 tables):** um_domain, um_user, um_role, reg_resource, reg_path, etc.
+- **APIM Gateway (201 tables):** am_api, am_api_resource, am_gateway_config, am_subscription, etc.
 
 ### Registering CMS APIs
 
 **Step 1: Access Publisher Portal**
-1. Open https://localhost:9443/publisher
-2. Login with admin credentials
-3. Accept SSL certificate
+1. Open https://apim.local:9443/publisher (or https://localhost:9443/publisher)
+2. Login with admin credentials (admin / admin)
+3. Accept SSL certificate warning (self-signed)
 
 ### Registering CMS Backend API
 
@@ -611,13 +732,13 @@ API_GATEWAY_HTTPS_PORT=8243         # Gateway HTTPS port
 
 | Step | Action |
 |------|--------|
-| 1 | Access Publisher: https://localhost:9443/publisher (admin/admin) |
+| 1 | Access Publisher: https://apim.local:9443/publisher (or localhost:9443) with admin/admin |
 | 2 | Click **Create** → **Design a new REST API** |
 | 3 | Enter Name: `CMS Test API`, Context: `/cms`, Backend: `http://cms-backend:8000` |
 | 4 | Add Resources: `/oracle/test`, `/postgres/test`, `/health` |
 | 5 | Configure endpoints and apply OAuth2 + throttling policies |
 | 6 | Click **Publish** |
-| 7 | Gateway endpoints available at: `https://localhost:8243/cms/1.0.0/` |
+| 7 | Gateway endpoints available at: `https://apim.local:8243/cms/1.0.0/` (or localhost:8243) |
 
 **For Complete Step-by-Step Instructions:**
 
@@ -632,40 +753,44 @@ See **[wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md](wso2-stack/apim/COMPL
 **Key Endpoints After Registration:**
 
 ```
+# Using apim.local hostname (recommended)
 # Oracle Test API
-GET    https://localhost:8243/cms/1.0.0/oracle/test
-GET    https://localhost:8243/cms/1.0.0/oracle/test/{id}
-POST   https://localhost:8243/cms/1.0.0/oracle/test
-PUT    https://localhost:8243/cms/1.0.0/oracle/test/{id}
-DELETE https://localhost:8243/cms/1.0.0/oracle/test/{id}
+GET    https://apim.local:8243/cms/1.0.0/oracle/test
+GET    https://apim.local:8243/cms/1.0.0/oracle/test/{id}
+POST   https://apim.local:8243/cms/1.0.0/oracle/test
+PUT    https://apim.local:8243/cms/1.0.0/oracle/test/{id}
+DELETE https://apim.local:8243/cms/1.0.0/oracle/test/{id}
 
 # PostgreSQL Test API
-GET    https://localhost:8243/cms/1.0.0/postgres/test
-GET    https://localhost:8243/cms/1.0.0/postgres/test/{id}
-POST   https://localhost:8243/cms/1.0.0/postgres/test
-PUT    https://localhost:8243/cms/1.0.0/postgres/test/{id}
-DELETE https://localhost:8243/cms/1.0.0/postgres/test/{id}
+GET    https://apim.local:8243/cms/1.0.0/postgres/test
+GET    https://apim.local:8243/cms/1.0.0/postgres/test/{id}
+POST   https://apim.local:8243/cms/1.0.0/postgres/test
+PUT    https://apim.local:8243/cms/1.0.0/postgres/test/{id}
+DELETE https://apim.local:8243/cms/1.0.0/postgres/test/{id}
 
 # Health Check
-GET    https://localhost:8243/cms/1.0.0/health
+GET    https://apim.local:8243/cms/1.0.0/health
+
+# Alternative using localhost
+# Replace apim.local with localhost in all URLs above
 ```
 
 **Quick Test with cURL:**
 
 ```bash
 # 1. Generate OAuth2 token
-TOKEN=$(curl -s -X POST "https://localhost:9443/oauth2/token" \
+TOKEN=$(curl -s -X POST "https://apim.local:9443/oauth2/token" \
   -H "Authorization: Basic YWRtaW46YWRtaW4=" \
   -d "grant_type=client_credentials" \
   -k | jq -r '.access_token')
 
 # 2. Test the API
-curl -X GET "https://localhost:8243/cms/1.0.0/oracle/test" \
+curl -X GET "https://apim.local:8243/cms/1.0.0/oracle/test" \
   -H "Authorization: Bearer $TOKEN" \
   -k -s | jq '.'
 
 # 3. Create a new record
-curl -X POST "https://localhost:8243/cms/1.0.0/oracle/test" \
+curl -X POST "https://apim.local:8243/cms/1.0.0/oracle/test" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -675,6 +800,8 @@ curl -X POST "https://localhost:8243/cms/1.0.0/oracle/test" \
     "status": "active"
   }' \
   -k -s | jq '.'
+
+# Note: Replace apim.local with localhost if hostname is not configured
 ```
 
 **Update Frontend to Use APIM:**
@@ -686,7 +813,7 @@ import axios from 'axios';
 
 // Use APIM gateway instead of direct backend
 const apiClient = axios.create({
-  baseURL: 'https://localhost:8243/cms/1.0.0',
+  baseURL: 'https://apim.local:8243/cms/1.0.0',  // or localhost:8243 if hostname not configured
   timeout: 5000,
   httpsAgent: {
     rejectUnauthorized: false  // For development only!
@@ -730,6 +857,90 @@ In frontend, after getting access token from APIM:
 const token = response.data.access_token;
 localStorage.setItem('accessToken', token);
 ```
+
+### Troubleshooting APIM with PostgreSQL
+
+**Issue 1: ClassNotFoundException: org.postgresql.Driver**
+
+Error in logs:
+```
+ClassNotFoundException: org.postgresql.Driver
+```
+
+Cause: PostgreSQL JDBC driver is not present in APIM container classpath
+
+Solution:
+- Ensure Dockerfile includes JDBC driver download:
+  ```dockerfile
+  RUN cd /home/wso2carbon/wso2am-4.3.0/lib && \
+      curl -L -o postgresql-42.5.0.jar https://jdbc.postgresql.org/download/postgresql-42.5.0.jar && \
+      chmod 644 postgresql-42.5.0.jar
+  ```
+- Rebuild APIM image: `docker compose build --no-cache cms-apim`
+- Restart APIM: `docker compose restart cms-apim`
+
+**Issue 2: ERROR: relation 'um_domain' does not exist**
+
+Error in logs:
+```
+PSQLException: ERROR: relation 'um_domain' does not exist
+```
+
+Cause: Database schema is not initialized. WSO2 APIM does NOT auto-create PostgreSQL schema on first startup (unlike embedded H2 database)
+
+Solution:
+- Manually initialize the database schema (see **Database Schema Initialization** section above)
+- Run the two SQL scripts in order:
+  1. `postgresql.sql` (core WSO2 tables)
+  2. `apimgt/postgresql.sql` (APIM-specific tables)
+- Restart APIM after schema creation
+
+**Issue 3: apim.local hostname not resolving**
+
+Error in browser:
+```
+Cannot reach apim.local
+```
+
+Cause: Hostname not added to client machine's hosts file
+
+Solution:
+- Add entry to `/etc/hosts` (Linux/Mac) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
+  ```
+  127.0.0.1 apim.local
+  ```
+- Use alternative: `https://localhost:9443` instead of `https://apim.local:9443`
+
+**Issue 4: Connection refused on port 8280, 8243, or 9443**
+
+Error in browser:
+```
+Connection refused
+```
+
+Cause: APIM container not running or ports not mapped correctly
+
+Solution:
+- Check container status: `docker compose ps cms-apim`
+- View logs: `docker compose logs cms-apim`
+- If container is exiting, check for JDBC driver or schema errors (Issues 1-2)
+- Verify ports in docker-compose.yml are published correctly
+
+**Issue 5: Database connection pool error**
+
+Error in logs:
+```
+Failed to obtain JDBC Connection
+PSQLException: Connection to localhost:5432 refused
+```
+
+Cause: PostgreSQL container is not running or not accessible from APIM container
+
+Solution:
+- Ensure PostgreSQL is running: `docker compose ps cms-postgresql`
+- Check containers are on same network: `docker network inspect cms-platform_cms-platform-net`
+- Verify database credentials in deployment.toml match PostgreSQL configuration
+- Restart both services: `docker compose restart cms-postgresql cms-apim`
 
 ### Documentation & Guides
 

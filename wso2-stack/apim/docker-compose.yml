@@ -1,18 +1,16 @@
-# WSO2 API Manager Docker Compose Configuration
-# This file defines the WSO2 APIM service
-
 version: '3.8'
 
 services:
   cms-apim:
     image: wso2/wso2am:4.3.0
     container_name: cms-apim
-    hostname: cms-apim
+    hostname: apim.local
+
     depends_on:
       cms-postgresql:
         condition: service_started
+
     environment:
-      # Database Configuration
       DB_DRIVER: org.postgresql.Driver
       DB_TYPE: postgresql
       DB_HOSTNAME: cms-postgresql
@@ -20,30 +18,37 @@ services:
       DB_NAME: wso2am
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
-      
-      # Admin User
+
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: admin
-      
-      # API Manager Configuration
-      API_GATEWAY_HOST: cms-apim
+
+      API_MANAGER_HOSTNAME: apim.local
+      API_MANAGER_HTTP_PORT: 9763
+      API_MANAGER_HTTPS_PORT: 9443
+
+      API_GATEWAY_HOST: apim.local
       API_GATEWAY_HTTP_PORT: 8280
       API_GATEWAY_HTTPS_PORT: 8243
+
     ports:
-      - "8280:8280"      # API Gateway (HTTP)
-      - "8243:8243"      # API Gateway (HTTPS)
-      - "9443:9443"      # Admin/Publisher Console (HTTPS)
-      - "9611:9611"      # Analytics (optional)
+      - "8280:8280"
+      - "8243:8243"
+      - "9443:9443"
+
     volumes:
-      # Mount custom configuration if needed
-      # - ./api-manager.xml:/home/wso2carbon/wso2am-4.1.0/repository/conf/api-manager.xml
-      # Mount data for persistence
-      - wso2am-data:/home/wso2carbon/wso2am-4.1.0/repository/data
-      - wso2am-logs:/home/wso2carbon/wso2am-4.1.0/repository/logs
+      - wso2am-data:/home/wso2carbon/wso2am-4.3.0/repository/data
+      - wso2am-logs:/home/wso2carbon/wso2am-4.3.0/repository/logs
+      - ./deployment.toml:/home/wso2carbon/wso2am-4.3.0/repository/conf/deployment.toml
+
     networks:
-      - cms-platform-net
+      cms-platform-net:
+        aliases:
+          - apim.local   # 🔥 مهم جدًا عشان باقي containers تشوفه
+
+    restart: unless-stopped
+
     healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost:9443/api/am/admin/v0.17/system-info", "-k"]
+      test: ["CMD", "curl", "-k", "-f", "https://apim.local:9443/api/am/admin/v0.17/system-info"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -51,10 +56,8 @@ services:
 
 volumes:
   wso2am-data:
-    driver: local
   wso2am-logs:
-    driver: local
 
 networks:
   cms-platform-net:
-    driver: bridge
+    external: true
