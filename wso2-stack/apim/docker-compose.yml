@@ -5,7 +5,7 @@ version: '3.8'
 
 services:
   cms-apim:
-    image: wso2/wso2am:4.0.0
+    image: wso2/wso2am:4.3.0
     container_name: cms-apim
     hostname: cms-apim
     depends_on:

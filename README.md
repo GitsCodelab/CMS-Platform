@@ -45,6 +45,9 @@ docker compose down
 
 ## 📱 Frontend - React with Bootstrap
 
+### Status
+✅ **Frontend is fully operational and accessible at http://localhost:3000**
+
 ### Overview
 
 The frontend is a modern React application built with:
@@ -52,6 +55,11 @@ The frontend is a modern React application built with:
 - **Vite 5.4.21** - Build tool for fast development
 - **Bootstrap 5.3.0** - CSS framework for professional styling
 - **Axios 1.15.0** - HTTP client for API communication
+
+**Recent Fixes:**
+- ✅ Fixed PostCSS configuration error (removed unused tailwindcss plugin)
+- ✅ Corrected Docker port mapping (3000 instead of 3001)
+- ✅ Frontend now starts successfully and serves on http://localhost:3000
 
 ### Architecture
 
@@ -501,7 +509,7 @@ SimpleAuthManager is configured with:
 | cms-oracle-xe | gvenzl/oracle-xe:21.3.0 | 1521 | Oracle database |
 | cms-postgresql | postgres:15.3 | 5432 | PostgreSQL database |
 | cms-airflow | apache/airflow:3.0.0 | 8080 | Airflow orchestration |
-| cms-apim | wso2/wso2am:4.0.0 | 8280, 8243, 9443, 9611 | WSO2 API Manager gateway |
+| cms-apim | wso2/wso2am:4.3.0 | 8280, 8243, 9443, 9611 | WSO2 API Manager gateway |
 
 ---
 
@@ -597,67 +605,140 @@ API_GATEWAY_HTTPS_PORT=8243         # Gateway HTTPS port
 2. Login with admin credentials
 3. Accept SSL certificate
 
-**Step 2: Create API**
-1. Click **Create** → **Create New API**
-2. Select **REST API**
-3. Enter API details:
-   - Name: `CMS Test API`
-   - Context: `/cms/test`
-   - Version: `1.0.0`
-   - Backend URL: `http://cms-backend:8000/test`
+### Registering CMS Backend API
 
-**Step 3: Publish API**
-1. Configure endpoints
-2. Apply policies (OAuth2, throttling, CORS)
-3. Click **Publish**
-4. API available at: `https://localhost:8243/cms/test/1.0.0`
+**Quick Reference:**
 
-**Step 4: Test API**
-```bash
-# Generate OAuth2 token
-TOKEN=$(curl -X POST "https://localhost:9443/oauth2/token" \
-  -H "Authorization: Basic YWRtaW46YWRtaW4=" \
-  -d "grant_type=client_credentials" -k -s | jq -r '.access_token')
+| Step | Action |
+|------|--------|
+| 1 | Access Publisher: https://localhost:9443/publisher (admin/admin) |
+| 2 | Click **Create** → **Design a new REST API** |
+| 3 | Enter Name: `CMS Test API`, Context: `/cms`, Backend: `http://cms-backend:8000` |
+| 4 | Add Resources: `/oracle/test`, `/postgres/test`, `/health` |
+| 5 | Configure endpoints and apply OAuth2 + throttling policies |
+| 6 | Click **Publish** |
+| 7 | Gateway endpoints available at: `https://localhost:8243/cms/1.0.0/` |
 
-# Call API
-curl -X GET "https://localhost:8243/cms/test/1.0.0/oracle" \
-  -H "Authorization: Bearer $TOKEN" -k
+**For Complete Step-by-Step Instructions:**
+
+See **[wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md](wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md)** with:
+- Detailed screenshots and workflows
+- API testing examples (cURL, Postman, API try-it-out)
+- Frontend integration code samples
+- OAuth2 token generation
+- Troubleshooting guide
+- Production best practices
+
+**Key Endpoints After Registration:**
+
+```
+# Oracle Test API
+GET    https://localhost:8243/cms/1.0.0/oracle/test
+GET    https://localhost:8243/cms/1.0.0/oracle/test/{id}
+POST   https://localhost:8243/cms/1.0.0/oracle/test
+PUT    https://localhost:8243/cms/1.0.0/oracle/test/{id}
+DELETE https://localhost:8243/cms/1.0.0/oracle/test/{id}
+
+# PostgreSQL Test API
+GET    https://localhost:8243/cms/1.0.0/postgres/test
+GET    https://localhost:8243/cms/1.0.0/postgres/test/{id}
+POST   https://localhost:8243/cms/1.0.0/postgres/test
+PUT    https://localhost:8243/cms/1.0.0/postgres/test/{id}
+DELETE https://localhost:8243/cms/1.0.0/postgres/test/{id}
+
+# Health Check
+GET    https://localhost:8243/cms/1.0.0/health
 ```
 
-### Integration with Frontend
+**Quick Test with cURL:**
 
-Update frontend API client to route through APIM gateway:
+```bash
+# 1. Generate OAuth2 token
+TOKEN=$(curl -s -X POST "https://localhost:9443/oauth2/token" \
+  -H "Authorization: Basic YWRtaW46YWRtaW4=" \
+  -d "grant_type=client_credentials" \
+  -k | jq -r '.access_token')
+
+# 2. Test the API
+curl -X GET "https://localhost:8243/cms/1.0.0/oracle/test" \
+  -H "Authorization: Bearer $TOKEN" \
+  -k -s | jq '.'
+
+# 3. Create a new record
+curl -X POST "https://localhost:8243/cms/1.0.0/oracle/test" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 1,
+    "name": "APIM Test Record",
+    "description": "Created through API Manager",
+    "status": "active"
+  }' \
+  -k -s | jq '.'
+```
+
+**Update Frontend to Use APIM:**
+
+**Step 1: Update `frontend/src/api/client.js`**
 
 ```javascript
-// frontend/src/api/client.js
 import axios from 'axios';
 
+// Use APIM gateway instead of direct backend
 const apiClient = axios.create({
-  baseURL: 'https://localhost:8243/cms/v1',
+  baseURL: 'https://localhost:8243/cms/1.0.0',
+  timeout: 5000,
   httpsAgent: {
-    rejectUnauthorized: false  // For development only
+    rejectUnauthorized: false  // For development only!
   }
 });
 
-// Add token injection
+// Inject API Key or OAuth2 token
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
   return config;
 });
 
+export const oracleAPI = {
+  getAll: () => apiClient.get('/oracle/test'),
+  getById: (id) => apiClient.get(`/oracle/test/${id}`),
+  create: (data) => apiClient.post('/oracle/test', data),
+  update: (id, data) => apiClient.put(`/oracle/test/${id}`, data),
+  delete: (id) => apiClient.delete(`/oracle/test/${id}`)
+};
+
+export const postgresAPI = {
+  getAll: () => apiClient.get('/postgres/test'),
+  getById: (id) => apiClient.get(`/postgres/test/${id}`),
+  create: (data) => apiClient.post('/postgres/test', data),
+  update: (id, data) => apiClient.put(`/postgres/test/${id}`, data),
+  delete: (id) => apiClient.delete(`/postgres/test/${id}`)
+};
+
 export default apiClient;
 ```
 
-### Documentation
+**Step 2: Generate Access Token**
+
+In frontend, after getting access token from APIM:
+
+```javascript
+// Store token for API calls
+const token = response.data.access_token;
+localStorage.setItem('accessToken', token);
+```
+
+### Documentation & Guides
 
 For detailed information, see:
+- **[wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md](wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md)** - ⭐ **START HERE** - Complete step-by-step guide with all details
 - **[wso2-stack/apim/README.md](wso2-stack/apim/README.md)** - APIM overview and quick start
-- **[wso2-stack/apim/API_REGISTRATION.md](wso2-stack/apim/API_REGISTRATION.md)** - API registration guide
-- **[wso2-stack/apim/POLICIES.md](wso2-stack/apim/POLICIES.md)** - Policy configuration
-- **[wso2-stack/apim/PRODUCTION.md](wso2-stack/apim/PRODUCTION.md)** - Production deployment
+- **[wso2-stack/apim/API_REGISTRATION.md](wso2-stack/apim/API_REGISTRATION.md)** - Additional API registration tips
+- **[wso2-stack/apim/POLICIES.md](wso2-stack/apim/POLICIES.md)** - Policy configuration and security
+- **[wso2-stack/apim/PRODUCTION.md](wso2-stack/apim/PRODUCTION.md)** - Production deployment checklist
 
 ### Docker Commands
 

@@ -105,7 +105,7 @@ In WSO2 APIM, apply these common policies:
 WSO2 APIM connects to the CMS Platform via the `cms-platform-net` bridge network:
 - PostgreSQL: `cms-postgresql:5432`
 - Backend: `cms-backend:8000`
-- Frontend: `cms-frontend:3001`
+- Frontend: `cms-frontend:3000`
 - Oracle: `cms-oracle-xe:1521`
 
 ## Health Check
