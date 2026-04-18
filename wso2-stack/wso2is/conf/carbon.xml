@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server xmlns="http://wso2.org/projects/carbon/carbon.xml">
+    <!-- For cApp deployment, we have to identify the roles played by this server. The roles are used to act as selective workers for cApp deployment -->
+    <ServerRoles>
+        <Role>IdentityServer</Role>
+    </ServerRoles>
+
+    <!--
+       The fully qualified name of the server as it will be presented in the
+       Carbon UI title bar. This is optional. If not present, the default title is used.
+    -->
+    <ServerName>WSO2 Identity Server</ServerName>
+
+    <!--
+       The server hostname for server presented externally.
+       If this is set, it overrides the System hostname.
+       For slave nodes behind load balancers and proxies, this should be set to the load balancer's host name.
+    -->
+    <HostName>is.local</HostName>
+
+    <!--
+       The hostname to be used for the Admin Console.
+       If this is set, it overrides the HostName element.
+    -->
+    <MgtHostName>is.local</MgtHostName>
+
+    <!--
+        The description of the server
+    -->
+    <Description>WSO2 Identity Server with PostgreSQL Backend</Description>
+
+    <!--
+    IP address of the network interface to be used for the Carbon server. Use this if you have multiple network adapters
+    and want to bind the Carbon server to a specific network interface. Server will listen on all network interfaces if this is null.
+
+    NOTE: If this is given, it will override the value of the "system.config.file" URL parameter.
+    -->
+    <!-- <NetworkInterface>127.0.0.1</NetworkInterface> -->
+
+    <!--
+    This is the base path for all web apps deployed on this server. By default, apps are deployed in the root (/).
+    -->
+    <WebContextRoot>/</WebContextRoot>
+
+    <!--
+    Ports used by this server
+    -->
+    <Ports>
+        <!--
+        Servlet port that is used as the main entry point
+        of the Carbon server.
+        -->
+        <ServletPort>9763</ServletPort>
+
+        <!--
+        Secure servlet port that is used as the secure entry point
+        of the Carbon server.
+        -->
+        <ServletSecurePort>9443</ServletSecurePort>
+
+        <!--
+        Tomcat AJP port.
+        -->
+        <AjpPort>8009</AjpPort>
+    </Ports>
+
+    <!--
+    This is the proxy port used when a request is proxied through a load balancer or reverse proxy to this Carbon instance.
+    All links generated in Carbon UI are generated using this port. This is required only if different ports are used
+    for the actual and proxied requests. By default, this is not used.
+
+    If MultitenantDispatcher is configured with "MgtHostName" and "/t/TenantDomain/" in the incoming
+    request, above "ProxyPort" is overridden by the proxied request port.
+    -->
+    <!-- <ProxyPort>443</ProxyPort> -->
+
+    <!--
+    The number of milliseconds it takes for a request to time out. Don't set this to a value less than 250000ms,
+    since the socket connection is also bound by the "SO_TIMEOUT" value of 250000ms set in the root cause of the issue.
+    See "java.net.SocketTimeoutException" errors in the log after connection is time out.
+
+    Note : This value is set to 250000ms in server start up. If you need to change the socket time out you can change to, but after the
+    time out Microsoft IE will display 'This page cannot be displayed' message.
+    -->
+    <RequestTimeout>250000</RequestTimeout>
+
+    <!--
+    Enable accessing the Carbon admin console and web applications using the web context root.
+    e.g https://is.local:9443/
+    -->
+    <EnableContextRoot>true</EnableContextRoot>
+
+    <!--
+    When you have deployed the Carbon server as IaaS connectors, set this property to 'true' and point the
+    "LoadBalancerConfig" location.
+    -->
+    <IaaS>
+        <Property name="provider">ec2</Property>
+        <Property name="instanceId">i-123456</Property>
+        <Property name="imageId">ami-123456</Property>
+        <Property name="keyLocation">/path/to/key</Property>
+        <Property name="ccAdmin">admin</Property>
+        <Property name="ccPassword">password</Property>
+    </IaaS>
+
+    <!--
+    Deployment synchronizer Configuration. Uncomment and set the following for Deployment Synchronizer.
+    This is used for multi-instance deployments, where you have multiple Carbon instances that need to be synchronized.
+    Enable this only if you have a shared file system (NFS) or S3 for deployment synchronization.
+    -->
+    <!--
+    <DeploymentSynchronizer>
+        <Enabled>true</Enabled>
+        <AutoCommit>false</AutoCommit>
+        <RepositoryType>svn</RepositoryType>
+        <SvnUrl>http://svn.example.com/repos/deploy/latest/</SvnUrl>
+        <SvnUser>username</SvnUser>
+        <SvnPassword>password</SvnPassword>
+        <SvnAppendTenantId>true</SvnAppendTenantId>
+    </DeploymentSynchronizer>
+    -->
+
+    <!--
+       The setting to read the OSGI bundles provided by the plugins.
+       If this is set to true, the factory will read the OSGI bundles from the plugins directory (../plugins)
+       and initialize the container.
+    -->
+    <ReadPluginsBundles>true</ReadPluginsBundles>
+
+    <!--
+       The Carbon Logging Configuration can be controlled here.
+       During the deployment time, this configuration, in the "repository/conf/log4j.properties" file,
+       is copied into the deployer, and used for logging.
+       If you want to customize the log4j configurations for your Carbon server instance,
+       you can add the following section to the top level "/" element in the carbon.xml. REMOVE THIS SECTION IN PRODUCTION.
+    -->
+
+    <Logging>
+        <Level>INFO</Level>
+        <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%X{ip}-%X{session}] [%t] %5p {%c} - %m%n</Pattern>
+    </Logging>
+
+    <!--
+       Enable following property to activate Enterprise Security Manager (ESM) in your setup.
+       Note that ESM is available only as a commercial product. For more information about ESM,
+       contact WSO2 sales team.
+    -->
+    <!-- <ESMEnabled>true</ESMEnabled> -->
+
+    <!--
+       Security configurations
+    -->
+    <Security>
+        <!--
+           KeyStore used to store self signed certificate
+        -->
+        <KeyStore>
+            <!--
+               Keystore file location
+            -->
+            <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
+
+            <!--
+               Keystore type (JKS/PKCS12 etc.)
+            -->
+            <Type>JKS</Type>
+
+            <!--
+               Keystore password
+            -->
+            <Password>wso2carbon</Password>
+
+            <!--
+               Private Key password
+            -->
+            <KeyPassword>wso2carbon</KeyPassword>
+        </KeyStore>
+
+        <!--
+           System wide trust-store which is used to maintain the certificate chain.
+        -->
+        <TrustStore>
+            <!--
+               trust store file location
+            -->
+            <Location>${carbon.home}/repository/resources/security/client-truststore.jks</Location>
+
+            <!--
+               trust store type (JKS/PKCS12 etc.)
+            -->
+            <Type>JKS</Type>
+
+            <!--
+               trust store password
+            -->
+            <Password>wso2carbon</Password>
+        </TrustStore>
+
+        <!--
+            Enable hostname verification on SSL connections
+        -->
+        <!-- <HostNameVerificationEnabled>true</HostNameVerificationEnabled> -->
+
+        <!--
+            Authenticators configuration
+        -->
+        <Authenticators>
+            <Authenticator name="BasicAuthenticator" class="org.wso2.carbon.server.admin.common.IServerAdmin">
+                <Property name="help">UsernamePasswordLogin</Property>
+                <Property name="inactive">false</Property>
+            </Authenticator>
+        </Authenticators>
+    </Security>
+
+    <!--
+       Enable JAAS Security Manager. This is required for SOAP message encryption.
+       NOTE: This should only be enabled in production deployments and test environments.
+       It is not recommended to enable it in development environments.
+    -->
+    <EnableJAASSecurityManager>false</EnableJAASSecurityManager>
+
+    <!--
+       SOAP message encryption is enabled when WSO2 Carbon is deployed in an application server.
+    -->
+    <SOAPMessageEncryption>
+        <Enable>false</Enable>
+    </SOAPMessageEncryption>
+
+    <!--
+       The "sslProtocol" property is used to configure the SSL protocol used by the server.
+       The values supported are:
+            - TLSv1
+            - TLSv1.1
+            - TLSv1.2
+       By default TLSv1.2 is used.
+    -->
+    <SslProtocol>TLSv1.2</SslProtocol>
+
+</Server>

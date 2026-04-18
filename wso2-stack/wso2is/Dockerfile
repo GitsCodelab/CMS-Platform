@@ -1,10 +1,7 @@
 FROM wso2/wso2is:7.0.0
 
-# Install required packages
-RUN apk add --no-cache curl wget bash
-
 # Copy configuration files
-COPY ./conf/* /home/wso2carbon/wso2is-7.0.0/repository/conf/
+COPY ./conf/carbon.xml /home/wso2carbon/wso2is-7.0.0/repository/conf/carbon.xml
 
 # Expose ports
 EXPOSE 4443 9443 8280 8243
