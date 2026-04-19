@@ -1,6 +1,6 @@
 # CMS Platform
 
-A comprehensive content management system with dual-database support (Oracle XE & PostgreSQL), built with FastAPI backend and React/Bootstrap frontend, orchestrated with Apache Airflow.
+A comprehensive content management system with dual-database support (Oracle XE & PostgreSQL), built with FastAPI backend and React/Bootstrap frontend, orchestrated with Apache Airflow and API management through WSO2 APIM.
 
 ## 🚀 Quick Start
 
@@ -43,7 +43,30 @@ docker compose down
 
 ---
 
-## 📱 Frontend - React with Bootstrap
+## � Architecture Overview
+
+### Services
+- **Frontend**: React 18.2.0 with Vite (http://localhost:3000)
+- **Backend**: FastAPI with dual database support (http://localhost:8000)
+- **Airflow**: Data pipeline orchestration (http://localhost:8080)
+- **WSO2 APIM**: API management and gateway (https://localhost:9443)
+- **Databases**: Oracle XE + PostgreSQL 15.3
+- **Networking**: Docker bridge network (cms-platform-net)
+
+### Recent Changes (April 2026)
+
+#### ✅ WSO2 Identity Server Removal
+- **Removed** WSO2 Identity Server (IS) configuration and all related files
+- **Reason**: Simplification - APIM remains for API management
+- **Deleted**: 
+  - `/wso2-stack/wso2is/` directory (Dockerfile, configs, scripts)
+  - Related volumes and Docker compose configuration
+- **Impact**: No breaking changes to existing services
+- **Ports freed**: 9444, 8281, 8244 (previously mapped IS ports)
+
+---
+
+## �📱 Frontend - React with Bootstrap
 
 ### Status
 ✅ **Frontend is fully operational and accessible at http://localhost:3000**
