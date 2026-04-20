@@ -25,6 +25,12 @@ services:
       - postgres-data:/var/lib/postgresql/data # Persistent volume for PostgreSQL data
     networks:
       - cms-platform-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cms"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   cms-airflow:
     image: apache/airflow:3.0.0
@@ -32,7 +38,7 @@ services:
     command: ["standalone"]
     depends_on:
       cms-postgresql:
-        condition: service_started
+        condition: service_healthy
       cms-oracle-xe:
         condition: service_started
     healthcheck:
@@ -63,7 +69,7 @@ services:
     command: sh -c "pip install --no-cache-dir -r requirements.txt && python run.py"
     depends_on:
       cms-postgresql:
-        condition: service_started
+        condition: service_healthy
       cms-oracle-xe:
         condition: service_started
     env_file:
@@ -102,7 +108,7 @@ services:
     hostname: localhost
     depends_on:
       cms-postgresql:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8280:8280"      # API Gateway (HTTP)
       - "8243:8243"      # API Gateway (HTTPS)
@@ -143,7 +149,7 @@ services:
     container_name: cms-jposee
     depends_on:
       cms-postgresql:
-        condition: service_started
+        condition: service_healthy
       cms-backend:
         condition: service_started
     ports:
