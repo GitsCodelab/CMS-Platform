@@ -395,6 +395,28 @@ python3 jpos-test/jposee-custom-runner.py
 - CVV: `123`
 - Status: Valid for all test operations
 
+#### Complete Testing Suite Directory
+
+The complete jPOS testing suite is located in [jpos-test/](jpos-test/) directory:
+
+```
+jpos-test/
+├── README.md                      # Comprehensive testing guide
+├── Python-test.py                 # Basic connectivity test
+├── Python-test-improved.py        # Enhanced connectivity test with detailed output
+├── jposee-test-profile.py         # Interactive test profile suite
+├── jposee-custom-runner.py        # Configuration-driven test runner
+└── test-profiles.json             # Customizable test configuration
+
+Total: 6 files with 1,144+ lines of testing code
+```
+
+**Quick Links:**
+- 📖 [Complete Testing Guide](jpos-test/README.md)
+- 🧪 Run all tests: `python3 jpos-test/jposee-test-profile.py`
+- 🔧 Custom tests: `python3 jpos-test/jposee-custom-runner.py`
+- ✅ Basic test: `python3 jpos-test/Python-test.py`
+
 ---
 
 ## 📱 Frontend - React with Bootstrap
