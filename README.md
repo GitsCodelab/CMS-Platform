@@ -58,36 +58,53 @@ docker compose down
 ### Full Service Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         CMS PLATFORM                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                       │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐           │
-│  │  Frontend    │    │ WSO2 APIM    │    │  Backend     │           │
-│  │  (React)     │───▶│ (API Gate)   │───▶│ (FastAPI)    │           │
-│  │  Port 3000   │    │ Port 9443    │    │ Port 8000    │           │
-│  └──────────────┘    │ 8280/8243    │    └──────────────┘           │
-│                      └──────┬───────┘           │                    │
-│                             │                  │                    │
-│                    ┌────────▼──────────┐  ┌────▼────────┐          │
-│                    │   Databases       │  │   Airflow   │          │
-│                    │                   │  │ (Scheduler) │          │
-│                    ├─ Oracle XE (1521) │  │ (Port 8080) │          │
-│                    ├─ PostgreSQL (5432)│  └─────────────┘          │
-│                    └───────────────────┘                             │
-│                                                                       │
-│  ┌──────────────┐  ┌──────────────┐                                │
-│  │ jPOS         │  │ jPOS EE      │                                │
-│  │ (Port 5000)  │  │ (5001/5002)  │                                │
-│  │ ISO 8583     │  │ ISO 8583     │                                │
-│  │ Payment      │  │ Enterprise   │                                │
-│  └──────────────┘  └──────────────┘                                │
-│                                                                       │
-│              🔗 Docker Bridge Network (cms-platform-net)            │
-│                All services communicate via container DNS            │
-│                                                                       │
-└─────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│                           CMS PLATFORM                                    │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│                      ┌──────────────────┐                                │
+│                      │  Frontend        │                                │
+│                      │  (React)         │                                │
+│                      │  Port 3000       │                                │
+│                      └────────┬─────────┘                                │
+│                               │                                          │
+│                      ┌────────▼────────────┐                            │
+│                      │   WSO2 APIM         │                            │
+│                      │  (API Gateway)      │                            │
+│                      │  Port 9443/8280     │                            │
+│                      │    /8243            │                            │
+│                      └────┬───┬────┬───────┘                            │
+│           ┌────────────────┘   │    └──────────────┐                   │
+│           │                    │                   │                   │
+│    ┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐             │
+│    │  Backend    │    │  jPOS       │    │  jPOS EE    │             │
+│    │ (FastAPI)   │    │ (Port 5000) │    │ (5001/5002) │             │
+│    │ Port 8000   │    │ ISO 8583    │    │ ISO 8583    │             │
+│    └──────┬──────┘    │ Payment     │    │ Enterprise  │             │
+│           │           └─────────────┘    └─────────────┘             │
+│    ┌──────▼─────────────────┐                                         │
+│    │   Supporting Services  │                                         │
+│    ├────────────────────────┤                                         │
+│    │ • Databases            │                                         │
+│    │   ├─ Oracle XE (1521)  │                                         │
+│    │   └─ PostgreSQL (5432) │                                         │
+│    │ • Airflow (Port 8080)  │                                         │
+│    │   Scheduler & Workflow │                                         │
+│    └────────────────────────┘                                         │
+│                                                                            │
+│        🔗 Docker Bridge Network: cms-platform-net                        │
+│           All services communicate via container DNS resolution           │
+│                                                                            │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
+
+**Request Flow:**
+- User requests → Frontend (React, port 3000)
+- API calls → WSO2 APIM (port 9443/8280/8243) [API Gateway]
+- Data operations → Backend (FastAPI, port 8000)
+- Payment operations → jPOS (port 5000) or jPOS EE (5001/5002)
+- Data persistence → Oracle XE or PostgreSQL
+- Batch jobs → Apache Airflow (port 8080)
 
 ### Services Overview
 
