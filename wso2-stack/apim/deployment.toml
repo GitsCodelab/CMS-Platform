@@ -1,7 +1,7 @@
 [server]
-hostname = "apim.local"
+hostname = "localhost"
 node_ip = "0.0.0.0"
-base_path = "https://apim.local:9443"
+base_path = "https://localhost:9443"
 server_name = "WSO2 API Manager"
 
 [super_admin]
@@ -51,11 +51,11 @@ type = "JKS"
 
 [api_gateway]
 enable = true
-endpoint_host = "apim.local"
+endpoint_host = "localhost"
 endpoint_http_port = 8280
 endpoint_https_port = 8243
 
-api_endpoint_host = "apim.local"
+api_endpoint_host = "localhost"
 api_endpoint_http_port = 8280
 api_endpoint_https_port = 8243
 
@@ -71,14 +71,14 @@ enable = true
 # ================= KEY MANAGER =================
 
 [[apim.key_manager]]
-server_url = "https://apim.local:9443"
+server_url = "https://localhost:9443"
 username = "admin"
 password = "admin"
 type = "WSO2-IS"
 
-configuration.TokenEndpoint = "https://apim.local:9443/oauth2/token"
-configuration.RevokeEndpoint = "https://apim.local:9443/oauth2/revoke"
-configuration.UserInfoEndpoint = "https://apim.local:9443/oauth2/userinfo"
+configuration.TokenEndpoint = "https://localhost:9443/oauth2/token"
+configuration.RevokeEndpoint = "https://localhost:9443/oauth2/revoke"
+configuration.UserInfoEndpoint = "https://localhost:9443/oauth2/userinfo"
 
 # ================= ANALYTICS =================
 
@@ -93,10 +93,10 @@ enable = false
 # ================= PORTAL URLS =================
 
 [apim.devportal]
-url = "https://apim.local:9443/devportal"
+url = "https://localhost:9443/devportal"
 
 [apim.publisher]
-url = "https://apim.local:9443/publisher"
+url = "https://localhost:9443/publisher"
 
 [apim.admin]
-url = "https://apim.local:9443/admin"
+url = "https://localhost:9443/admin"
