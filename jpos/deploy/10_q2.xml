@@ -1,0 +1,7 @@
+<q2>
+    <server class="org.jpos.iso.ISOServer" name="iso-server" logger="Q2">
+        <attr name="port" type="java.lang.Integer">5000</attr>
+        <channel class="org.jpos.iso.channel.ASCIIChannel"
+                 packager="org.jpos.iso.packager.ISO87APackager"/>
+    </server>
+</q2>

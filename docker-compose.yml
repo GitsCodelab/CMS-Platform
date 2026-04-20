@@ -120,7 +120,43 @@ services:
       retries: 5
       start_period: 120s
 
+  cms-jpos:
+    build:
+      context: ./jpos
+      dockerfile: Dockerfile
+    container_name: cms-jpos
+    depends_on:
+      cms-backend:
+        condition: service_started
+    ports:
+      - "5000:5000"   # ISO8583 port
+    volumes:
+      - ./jpos/deploy:/opt/jpos/deploy
+      - ./jpos/config:/opt/jpos/config
+    networks:
+      - cms-platform-net
 
+  cms-jposee:
+    build:
+      context: ./jposee
+      dockerfile: Dockerfile
+    container_name: cms-jposee
+    depends_on:
+      cms-postgresql:
+        condition: service_started
+      cms-backend:
+        condition: service_started
+    ports:
+      - "5001:5000"   # ISO 8583 standard
+      - "5002:5001"   # ISO 8583 secondary
+    volumes:
+      - ./jposee/deploy:/opt/jposee/dist/deploy
+      - ./jposee/config:/opt/jposee/dist/config
+      - ./jposee/log:/opt/jposee/dist/log
+    networks:
+      - cms-platform-net
+    environment:
+      - JPOS_LOG_LEVEL=info
 
 volumes:
   oracle-data:

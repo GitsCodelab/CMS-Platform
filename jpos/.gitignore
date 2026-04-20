@@ -1,0 +1,30 @@
+# jPOS Build Artifacts
+dist/
+build/
+*.class
+*.jar
+*.zip
+
+# Logs
+log/
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
+.gradle/
+.m2/
+*.swp
+*.swo
+*~
+
+# Docker volumes
+jpos-data/
