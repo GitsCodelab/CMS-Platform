@@ -10,76 +10,284 @@ WSO2 API Manager is an enterprise-grade API management platform that provides:
 - **Developer Portal**: Allows developers to discover and subscribe to APIs
 - **Admin Portal**: System administration and configuration
 
-## Quick Start
+## 🚀 Quick Start - First Time Setup
 
-### First-Time Setup: Initialize the Database
+### ⚡ AUTOMATIC SETUP (RECOMMENDED - 1 Command)
 
-**Important**: Before starting APIM for the first time, you must create and initialize the PostgreSQL database.
+This is the easiest way to set up WSO2 APIM - Docker Compose handles everything:
 
-#### Step 1: Create the Database
+```bash
+# From repository root directory
+cd /path/to/CMS-Platform
+
+# Start all services (builds image, initializes DB, starts APIM)
+docker compose up -d
+
+# Verify APIM is running
+docker ps | grep cms-apim
+
+# Check initialization status
+docker logs cms-apim | tail -50
+```
+
+**What happens automatically:**
+✅ PostgreSQL starts first  
+✅ WSO2 APIM image is built from Dockerfile  
+✅ Database is created and initialized  
+✅ APIM starts on ports 8280, 8243, 9443, 9611  
+✅ All configurations are applied  
+✅ Container becomes healthy in ~2-5 minutes  
+
+---
+
+### 🔧 MANUAL SETUP (Step-by-Step)
+
+If you prefer more control or Docker Compose isn't available:
+
+#### Step 1: Start PostgreSQL First
+
+```bash
+cd /path/to/CMS-Platform
+docker compose up cms-postgresql -d
+sleep 10
+docker ps | grep postgresql
+```
+
+#### Step 2: Create WSO2 Database
 
 ```bash
 docker exec cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;"
 ```
 
-#### Step 2: Initialize Database Schema
+#### Step 3: Build WSO2 APIM Image
 
-APIM requires two schemas to be initialized:
-
-**Main Schema (Identity & Config)**:
 ```bash
-docker exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql > /tmp/wso2-init.sql
-docker exec -i cms-postgresql psql -U postgres -d wso2am < /tmp/wso2-init.sql
+docker compose build --no-cache cms-apim
 ```
 
-**API Manager Schema**:
+#### Step 4: Start APIM Service
+
 ```bash
-docker exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql > /tmp/wso2-apimgt.sql
-docker exec -i cms-postgresql psql -U postgres -d wso2am < /tmp/wso2-apimgt.sql
+docker compose up cms-apim -d
+sleep 60  # Wait for full initialization
 ```
 
-Or use the quick setup script (if available):
+#### Step 5: Verify Service is Healthy
+
 ```bash
-bash ./wso2-setup-db.sh
+# Check container is running
+docker ps | grep cms-apim
+
+# Verify service is ready
+docker logs cms-apim | grep "Started"
+
+# Check health status
+docker inspect --format='{{.State.Health.Status}}' cms-apim
 ```
 
-### Start WSO2 APIM with Docker Compose
+#### Step 6: Restart for Final Initialization (Optional but Recommended)
 
-From the root directory:
-```bash
-docker compose up cms-apim
-```
-
-This will:
-1. Pull the official WSO2 API Manager image (wso2/wso2am:4.3.0)
-2. Connect to the pre-initialized PostgreSQL database
-3. Start the API Manager on the configured ports
-
-**Note**: After the first startup, you should restart the container to ensure all services are fully initialized:
 ```bash
 docker restart cms-apim
+sleep 30
 ```
 
-### Access WSO2 APIM
+---
 
-**Admin Console (Publisher & Admin Portal)**
-- URL: https://localhost:9443/admin
-- Username: `admin`
-- Password: `admin`
-- Note: Accept the self-signed certificate
+### 🤖 FULLY AUTOMATED SETUP SCRIPT
 
-**Publisher Portal (Create/Publish APIs)**
-- URL: https://localhost:9443/publisher
-- Username: `admin`
-- Password: `admin`
+Create a file called `setup-wso2.sh`:
 
-**Developer Portal (API Discovery)**
-- URL: https://localhost:9443/devportal
-- Public API discovery and subscription
+```bash
+#!/bin/bash
+set -e
 
-**API Gateway Endpoints**
-- HTTP: `http://localhost:8280`
-- HTTPS: `http://localhost:8243`
+echo "🚀 WSO2 APIM Automated Setup"
+echo "======================================"
+
+cd /path/to/CMS-Platform
+
+# Step 1: Build
+echo "📦 Building WSO2 APIM image..."
+docker compose build --no-cache cms-apim
+
+# Step 2: Start PostgreSQL
+echo "🐳 Starting PostgreSQL..."
+docker compose up cms-postgresql -d
+sleep 10
+
+# Step 3: Create database
+echo "🗄️  Creating WSO2 database..."
+docker exec cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;" 2>/dev/null || echo "✓ DB already exists"
+
+# Step 4: Start APIM
+echo "🚀 Starting WSO2 APIM..."
+docker compose up cms-apim -d
+sleep 60
+
+# Step 5: Verify
+echo ""
+echo "✅ Verification:"
+docker ps | grep -E "(postgresql|apim)" || echo "⚠️  Containers not found"
+
+echo ""
+echo "======================================"
+echo "✅ WSO2 APIM Setup Complete!"
+echo "======================================"
+echo ""
+echo "🔐 Access Points:"
+echo "   Admin Console: https://localhost:9443/admin"
+echo "   Publisher: https://localhost:9443/publisher"
+echo "   Developer Portal: https://localhost:9443/devportal"
+echo "   API Gateway (HTTP): http://localhost:8280"
+echo "   API Gateway (HTTPS): https://localhost:8243"
+echo ""
+echo "🔑 Default Credentials:"
+echo "   Username: admin"
+echo "   Password: admin"
+echo ""
+echo "⏱️  Note: First startup takes 2-5 minutes. Check logs: docker logs -f cms-apim"
+```
+
+Run it:
+```bash
+chmod +x setup-wso2.sh
+bash setup-wso2.sh
+```
+
+---
+
+### ✅ First-Run Verification Checklist
+
+After setup is complete, verify everything:
+
+```bash
+# 1. Check containers are running
+docker ps | grep -E "postgresql|apim"
+# Should show: cms-postgresql and cms-apim as "Up"
+
+# 2. Check APIM is initialized
+docker logs cms-apim | tail -20
+# Should show: "Started WSO2 API Manager"
+
+# 3. Check database connection
+docker exec cms-apim curl -s https://localhost:9443/api/am/admin/v0.17/system-info -k | head -20
+# Should return JSON response (not connection error)
+
+# 4. Verify database exists
+docker exec cms-postgresql psql -U postgres -l | grep wso2am
+# Should show: wso2am database
+
+# 5. Test API Gateway port
+curl -v http://localhost:8280/
+# Should respond (not connection refused)
+
+# 6. Test APIM console (with valid SSL warning)
+curl -k https://localhost:9443/admin
+# Should return HTML (not connection error)
+```
+
+---
+
+### 🌐 Access WSO2 APIM Portals
+
+| Portal | URL | Username | Password | Purpose |
+|--------|-----|----------|----------|---------|
+| **Admin Console** | https://localhost:9443/admin | admin | admin | System settings & user management |
+| **Publisher** | https://localhost:9443/publisher | admin | admin | Create & publish APIs |
+| **Developer Portal** | https://localhost:9443/devportal | - | - | Discover & subscribe to APIs |
+| **API Gateway (HTTP)** | http://localhost:8280 | - | - | Route API traffic (unencrypted) |
+| **API Gateway (HTTPS)** | https://localhost:8243 | - | - | Route API traffic (encrypted) |
+| **Analytics** | http://localhost:9611 | admin | admin | Analytics dashboard (optional) |
+
+**Note**: The first login may take 1-2 minutes as the system initializes. If you get connection errors, wait a bit and retry.
+
+---
+
+### ⚠️ TROUBLESHOOTING First-Run Issues
+
+**Container won't start:**
+```bash
+# View detailed error logs
+docker logs cms-apim
+
+# Check if port is already in use
+lsof -i :9443
+lsof -i :8280
+lsof -i :8243
+
+# If ports in use, stop conflicting containers and rebuild
+docker compose down
+docker compose up -d
+```
+
+**Database connection error:**
+```bash
+# Verify PostgreSQL is running
+docker ps | grep postgresql
+
+# Check database was created
+docker exec cms-postgresql psql -U postgres -l | grep wso2am
+
+# Recreate database if needed
+docker exec cms-postgresql psql -U postgres -c "DROP DATABASE IF EXISTS wso2am;"
+docker exec cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;"
+```
+
+**Portal returns 500 error:**
+```bash
+# Wait longer for startup (can take 5+ minutes on first run)
+docker logs cms-apim -f
+# Wait for "Started WSO2 API Manager" message
+
+# Restart if still hanging
+docker restart cms-apim
+sleep 30
+```
+
+**Can't access https://localhost:9443:**
+```bash
+# Check if service is listening
+docker exec cms-apim netstat -tlnp | grep 9443
+
+# Try with curl
+curl -k https://localhost:9443/admin
+
+# Verify health status
+docker inspect --format='{{.State.Health}}' cms-apim
+```
+
+---
+
+### 📊 Expected First-Run Timeline
+
+| Time | Event |
+|------|-------|
+| 0-5s | Container starts, Java initializes |
+| 5-30s | Database connection established |
+| 30-60s | Initial services load |
+| 60-120s | Full startup complete, portals accessible |
+| 120-300s | Full optimization, all services ready |
+
+**First startup may be slow - this is normal!**
+
+---
+
+### 🔑 API Gateway Endpoints
+
+Once running, API traffic routes through:
+
+```
+Your Client
+    ↓
+https://localhost:9443 (Admin/Publisher)
+http://localhost:8280 (API Gateway HTTP)
+https://localhost:8243 (API Gateway HTTPS)
+    ↓
+CMS Backend (cms-backend:8000)
+    ↓
+Oracle/PostgreSQL Databases
+```
 
 ## Configuration
 
