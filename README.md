@@ -204,6 +204,175 @@ docker compose restart cms-jpos cms-jposee
 - `jposee/deploy/00_logger.xml` - Logging setup
 - `jposee/deploy/*.xml` - Q2 deployment files
 
+### Testing & Validation
+
+#### Quick Connectivity Test
+
+Test jPOS connectivity with ISO 8583 messages:
+
+```bash
+cd /home/samehabib/CMS-Platform
+
+# Test jPOS open-source (port 5000)
+python3 jpos-test/Python-test.py
+
+# Test with detailed output
+python3 jpos-test/Python-test-improved.py
+```
+
+**Expected Output:**
+```
+✓ Connected successfully
+✓ Message sent (52 bytes)
+✓ jPOS processing acknowledged
+✓ Service is operational
+```
+
+#### Comprehensive Test Profiles for jPOS EE
+
+Test realistic payment scenarios with multiple card brands:
+
+```bash
+# Interactive menu-driven test
+python3 jpos-test/jposee-test-profile.py
+```
+
+**Available Test Profiles:**
+
+1. **Visa Transactions** (4 scenarios)
+   - Auth $100 purchase
+   - Auth $50.99 purchase
+   - Refund $100 return
+   - Reversal
+
+2. **Mastercard Transactions** (4 scenarios)
+   - Auth $150 purchase
+   - Auth $75.50 purchase
+   - Refund $150 return
+   - Reversal
+
+3. **Mixed Card Brands** (8 scenarios)
+   - Visa, Mastercard, AMEX, Discover
+   - Purchase and refund for each
+
+4. **Stress Test** (10 transactions)
+   - Multiple rapid transactions
+   - Performance validation
+
+5. **Run All Tests** (Complete suite)
+   - All profiles sequentially
+   - Comprehensive validation
+
+**Example - Run Visa Profile:**
+```bash
+echo "1" | python3 jpos-test/jposee-test-profile.py
+```
+
+**Example Output:**
+```
+======================================================================
+VISA TRANSACTION TESTS
+======================================================================
+
+✓ Transaction: Visa Auth - $100 Purchase
+   Status: PROCESSED
+   Message: 01008220000000000000000100002026042018363000000100004111111111111111
+
+✓ Transaction: Visa Auth - $50.99 Purchase
+   Status: PROCESSED
+   Message: 01008220000000000000000050992026042018363000000100004111111111111111
+
+✓ Transaction: Visa Refund - $100 Return
+   Status: PROCESSED
+   Message: 02008220000000000000000100002026042018363000000100004111111111111111
+
+✓ Transaction: Visa Reversal
+   Status: PROCESSED
+   Message: 04008220000000000000000100002026042018363000000100004111111111111111
+
+======================================================================
+TEST SUMMARY
+======================================================================
+Total Transactions: 4
+Successful: 4 (100%)
+Failed: 0 (0%)
+======================================================================
+```
+
+#### Custom Test Runner
+
+For automated testing with configuration profiles:
+
+```bash
+# Run custom test scenarios
+python3 jpos-test/jposee-custom-runner.py
+
+# Test configuration file: jpos-test/test-profiles.json
+# Edit test-profiles.json to add custom transactions
+```
+
+**Test Profile Configuration:**
+```json
+{
+  "profiles": [
+    {
+      "name": "Quick Smoke Test",
+      "description": "Fast validation of jPOS connectivity",
+      "transactions": [
+        {
+          "card_brand": "visa",
+          "amount": 100,
+          "operation": "auth",
+          "description": "Basic Visa auth"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Test Files
+
+| File | Purpose | Usage |
+|------|---------|-------|
+| `Python-test.py` | Basic connectivity test | `python3 jpos-test/Python-test.py` |
+| `Python-test-improved.py` | Detailed connectivity test | `python3 jpos-test/Python-test-improved.py` |
+| `jposee-test-profile.py` | Interactive profile suite | `python3 jpos-test/jposee-test-profile.py` |
+| `jposee-custom-runner.py` | Configuration-driven tests | `python3 jpos-test/jposee-custom-runner.py` |
+| `test-profiles.json` | Test configuration | Edit for custom scenarios |
+| `README.md` | Complete testing guide | Detailed documentation |
+
+#### Transaction Operations Supported
+
+| Operation | Type | Description |
+|-----------|------|-------------|
+| **Auth** | Purchase | Authorize transaction amount |
+| **Capture** | Purchase | Capture previously authorized amount |
+| **Refund** | Return | Full refund of transaction |
+| **Reversal** | Reversal | Reverse transaction (void) |
+| **Echo** | Network | Network connectivity check |
+
+#### Supported Card Brands
+
+- 🔵 **Visa** (BIN: 4111111111111111)
+- 🔴 **Mastercard** (BIN: 5105105105105100)
+- 🟢 **American Express** (BIN: 378282246310005)
+- 🟡 **Discover** (BIN: 6011111111111117)
+
+#### Test Data Details
+
+**Visa Test Card:**
+- Card Number: `4111 1111 1111 1111`
+- Expiry: `12/25`
+- CVV: `123`
+- Status: Valid for all test operations
+
+**Mastercard Test Card:**
+- Card Number: `5105 1051 0510 5100`
+- Expiry: `12/25`
+- CVV: `123`
+- Status: Valid for all test operations
+
 ---
 
 ## 📱 Frontend - React with Bootstrap
