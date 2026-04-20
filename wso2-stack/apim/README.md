@@ -12,6 +12,37 @@ WSO2 API Manager is an enterprise-grade API management platform that provides:
 
 ## Quick Start
 
+### First-Time Setup: Initialize the Database
+
+**Important**: Before starting APIM for the first time, you must create and initialize the PostgreSQL database.
+
+#### Step 1: Create the Database
+
+```bash
+docker exec cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;"
+```
+
+#### Step 2: Initialize Database Schema
+
+APIM requires two schemas to be initialized:
+
+**Main Schema (Identity & Config)**:
+```bash
+docker exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql > /tmp/wso2-init.sql
+docker exec -i cms-postgresql psql -U postgres -d wso2am < /tmp/wso2-init.sql
+```
+
+**API Manager Schema**:
+```bash
+docker exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql > /tmp/wso2-apimgt.sql
+docker exec -i cms-postgresql psql -U postgres -d wso2am < /tmp/wso2-apimgt.sql
+```
+
+Or use the quick setup script (if available):
+```bash
+bash ./wso2-setup-db.sh
+```
+
 ### Start WSO2 APIM with Docker Compose
 
 From the root directory:
@@ -20,9 +51,14 @@ docker compose up cms-apim
 ```
 
 This will:
-1. Pull the official WSO2 API Manager image (wso2/wso2am:4.1.0)
-2. Initialize the PostgreSQL database connection (wso2am_db)
+1. Pull the official WSO2 API Manager image (wso2/wso2am:4.3.0)
+2. Connect to the pre-initialized PostgreSQL database
 3. Start the API Manager on the configured ports
+
+**Note**: After the first startup, you should restart the container to ensure all services are fully initialized:
+```bash
+docker restart cms-apim
+```
 
 ### Access WSO2 APIM
 
@@ -120,13 +156,27 @@ Check health:
 docker inspect --format='{{.State.Health.Status}}' cms-apim
 ```
 
-## Database Setup
+## Database Information
 
-The PostgreSQL container will automatically create the `wso2am_db` database if it doesn't exist. First-time initialization may take 2-3 minutes.
+The `wso2am` PostgreSQL database stores:
+- User and role management data
+- API definitions and metadata
+- Subscription and throttling information
+- Analytics data
 
-To manually check the database:
+To verify database exists:
 ```bash
 docker exec cms-postgresql psql -U postgres -l | grep wso2am
+```
+
+To backup the database:
+```bash
+docker exec cms-postgresql pg_dump -U postgres wso2am > wso2am-backup.sql
+```
+
+To restore from backup:
+```bash
+docker exec -i cms-postgresql psql -U postgres -d wso2am < wso2am-backup.sql
 ```
 
 ## Volumes
@@ -168,20 +218,40 @@ docker exec cms-apim tail -f /home/wso2carbon/wso2am-4.1.0/repository/logs/wso2c
 
 ## Troubleshooting
 
+### Database does not exist error (FATAL: database "wso2am" does not exist)
+This occurs on first startup if the database hasn't been initialized.
+
+**Solution**:
+```bash
+# 1. Create the database
+docker exec cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;"
+
+# 2. Initialize schemas
+docker exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql > /tmp/wso2-init.sql
+docker exec -i cms-postgresql psql -U postgres -d wso2am < /tmp/wso2-init.sql
+
+docker exec cms-apim cat /home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql > /tmp/wso2-apimgt.sql
+docker exec -i cms-postgresql psql -U postgres -d wso2am < /tmp/wso2-apimgt.sql
+
+# 3. Restart APIM
+docker restart cms-apim
+```
+
 ### Service won't start
 - Check PostgreSQL is running: `docker compose up cms-postgresql`
 - Wait 2-3 minutes for database initialization
 - Check logs: `docker logs cms-apim`
 
 ### Connection refused on port 9443
-- APIM startup takes 2-3 minutes
-- Check health: `docker healthcheck inspect cms-apim`
+- APIM startup takes 2-3 minutes after database initialization
+- Check health: `docker inspect --format='{{.State.Health.Status}}' cms-apim`
 - Ensure certificate is accepted (self-signed)
 
 ### Database connection error
-- Verify PostgreSQL credentials match (.env file)
-- Ensure PostgreSQL container is running
+- Verify PostgreSQL credentials match deployment.toml
+- Ensure PostgreSQL container is running: `docker ps | grep cms-postgresql`
 - Check network connectivity: `docker network inspect cms-platform-net`
+- Verify database exists: `docker exec cms-postgresql psql -U postgres -l | grep wso2am`
 
 ### Can't access internal services
 - Verify Docker network: `docker network inspect cms-platform-net`
