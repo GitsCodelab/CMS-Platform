@@ -34,6 +34,30 @@ docker compose ps
 docker compose down
 ```
 
+### First-Time Setup: Initialize Databases
+
+After starting containers, initialize databases with sample data and schemas:
+
+```bash
+# Initialize test tables (Oracle + PostgreSQL)
+./init_databases.sh
+
+# Initialize WSO2 APIM database (76 tables, 5 tiers, 7 alert types)
+./init_wso2_apim.sh
+
+# Verify setup
+curl http://localhost:8000/oracle/test       # Check Oracle data
+curl http://localhost:8000/postgres/test     # Check PostgreSQL data
+```
+
+**What Gets Initialized:**
+- ✅ Test tables in Oracle XE and PostgreSQL (5 sample records each)
+- ✅ WSO2 APIM database (76 tables, 5 throttling tiers, 7 alert types)
+- ✅ Default subscribers, alert types, and throttling policies
+- ✅ Performance indexes for optimal query execution
+
+📖 See [DATABASE_INIT_README.md](DATABASE_INIT_README.md) for complete documentation
+
 ### Access Points
 
 | Service | URL | Default Credentials | Port(s) |
