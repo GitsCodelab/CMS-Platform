@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException, status, Query
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 from app.database.jposee import JposEEDB
+from app.services.iso_message_handler import ISOMessageHandler
 from app.schemas.jposee_schemas import (
     TransactionCreate, TransactionResponse, TransactionListResponse,
     TransactionUpdate, TransactionFilterParams,
@@ -546,4 +547,147 @@ async def get_system_health():
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching system health: {str(e)}"
+        )
+
+
+# ============================================================================
+# WEBHOOK ENDPOINTS - ISO MESSAGE PERSISTENCE
+# ============================================================================
+
+@router.post("/webhook/iso-message", status_code=status.HTTP_201_CREATED)
+async def receive_iso_message(iso_data: Dict[str, Any]):
+    """
+    Webhook endpoint to receive and persist ISO 8583 messages from jPOS
+    
+    This endpoint is called by jPOS after processing a transaction.
+    The ISO message is parsed and persisted to the database.
+    
+    Example payload:
+    {
+        "mti": "0100",
+        "field_2": "4532015112830366",
+        "field_3": "000000",
+        "field_4": "5000",
+        "field_7": "042114132157",
+        "field_11": "000001",
+        "field_18": "MERCHANT_001",
+        "txn_id": "TEST_001",
+        "merchant_id": "MERCHANT_001",
+        "currency": "USD"
+    }
+    """
+    try:
+        # Handle ISO message and persist to database
+        result = ISOMessageHandler.handle_iso_message(iso_data)
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "message": result["message"],
+                "transaction_id": result["transaction_id"],
+                "txn_id": result["txn_id"]
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=result["error"]
+            )
+            
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing ISO message: {str(e)}"
+        )
+
+
+@router.post("/webhook/iso-response", status_code=status.HTTP_201_CREATED)
+async def receive_iso_response(response_data: Dict[str, Any]):
+    """
+    Webhook endpoint to receive and persist ISO response messages
+    
+    This endpoint receives the final response from jPOS after processing.
+    
+    Example payload:
+    {
+        "txn_id": "TEST_001",
+        "mti": "0110",
+        "field_39": "00",
+        "field_2": "4532015112830366",
+        "field_4": "5000",
+        "response_code": "00",
+        "status": "approved"
+    }
+    """
+    try:
+        # Handle ISO response and persist to database
+        result = await ISOMessageHandler.handle_iso_message(response_data)
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "message": result["message"],
+                "transaction_id": result["transaction_id"],
+                "txn_id": result["txn_id"]
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=result["error"]
+            )
+            
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing ISO response: {str(e)}"
+        )
+
+
+@router.post("/webhook/parse-iso", status_code=status.HTTP_200_OK)
+async def parse_iso_string(payload: Dict[str, str]):
+    """
+    Parse raw ISO 8583 string and convert to structured format
+    
+    This endpoint helps convert raw ISO strings into structured fields
+    that can be persisted.
+    
+    Example payload:
+    {
+        "iso_string": "01082200000000050004211413215700000100004532015112830366"
+    }
+    """
+    try:
+        iso_string = payload.get("iso_string", "")
+        
+        if not iso_string:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="iso_string is required"
+            )
+        
+        # Parse the ISO string
+        parsed_fields = ISOMessageHandler.parse_raw_iso_string(iso_string)
+        
+        # Persist to database
+        result = await ISOMessageHandler.handle_iso_message(parsed_fields)
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "parsed_fields": parsed_fields,
+                "transaction_id": result["transaction_id"],
+                "txn_id": result["txn_id"],
+                "message": "ISO message parsed and persisted"
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=result["error"]
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error parsing ISO message: {str(e)}"
         )

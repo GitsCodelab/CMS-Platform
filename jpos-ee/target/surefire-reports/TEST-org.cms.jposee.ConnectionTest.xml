@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="org.cms.jposee.ConnectionTest" time="1.757" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/samehabib/CMS-Platform/jpos-ee/target/test-classes:/home/samehabib/CMS-Platform/jpos-ee/target/classes:/home/samehabib/.m2/repository/org/hibernate/hibernate-core/5.6.15.Final/hibernate-core-5.6.15.Final.jar:/home/samehabib/.m2/repository/org/jboss/logging/jboss-logging/3.4.3.Final/jboss-logging-3.4.3.Final.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy/1.12.18/byte-buddy-1.12.18.jar:/home/samehabib/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/samehabib/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar:/home/samehabib/.m2/repository/org/jboss/jandex/2.4.2.Final/jandex-2.4.2.Final.jar:/home/samehabib/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar:/home/samehabib/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/samehabib/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar:/home/samehabib/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/home/samehabib/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/home/samehabib/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/home/samehabib/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-entitymanager/5.6.15.Final/hibernate-entitymanager-5.6.15.Final.jar:/home/samehabib/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:/home/samehabib/.m2/repository/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar:/home/samehabib/.m2/repository/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-c3p0/5.6.15.Final/hibernate-c3p0-5.6.15.Final.jar:/home/samehabib/.m2/repository/com/mchange/c3p0/0.9.5.5/c3p0-0.9.5.5.jar:/home/samehabib/.m2/repository/com/mchange/mchange-commons-java/0.2.19/mchange-commons-java-0.2.19.jar:/home/samehabib/.m2/repository/org/slf4j/slf4j-api/2.0.5/slf4j-api-2.0.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar:/home/samehabib/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar:/home/samehabib/.m2/repository/org/hibernate/validator/hibernate-validator/6.2.5.Final/hibernate-validator-6.2.5.Final.jar:/home/samehabib/.m2/repository/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar:/home/samehabib/.m2/repository/org/jpos/jpos/2.1.9/jpos-2.1.9.jar:/home/samehabib/.m2/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.jar:/home/samehabib/.m2/repository/org/javatuples/javatuples/1.2/javatuples-1.2.jar:/home/samehabib/.m2/repository/org/jline/jline/3.23.0/jline-3.23.0.jar:/home/samehabib/.m2/repository/org/apache-extras/beanshell/bsh/2.0b6/bsh-2.0b6.jar:/home/samehabib/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcprov-lts8on/2.73.2/bcprov-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcpg-lts8on/2.73.2/bcpg-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/samehabib/.m2/repository/org/osgi/org.osgi.core/6.0.0/org.osgi.core-6.0.0.jar:/home/samehabib/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/samehabib/.m2/repository/jdbm/jdbm/1.0/jdbm-1.0.jar:/home/samehabib/.m2/repository/com/sleepycat/je/18.3.12/je-18.3.12.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-core/2.9.2/sshd-core-2.9.2.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-common/2.9.2/sshd-common-2.9.2.jar:/home/samehabib/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.32/jcl-over-slf4j-1.7.32.jar:/home/samehabib/.m2/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:/home/samehabib/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/samehabib/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-core/4.11.0/mockito-core-4.11.0.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar:/home/samehabib/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-junit-jupiter/4.11.0/mockito-junit-jupiter-4.11.0.jar:/home/samehabib/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.1/junit-jupiter-api-5.9.1.jar:/home/samehabib/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/samehabib/.m2/repository/org/junit/platform/junit-platform-commons/1.9.1/junit-platform-commons-1.9.1.jar:/home/samehabib/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/samehabib/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:"/>
+    <property name="java.vm.vendor" value="Ubuntu"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://ubuntu.com/"/>
+    <property name="user.timezone" value="Africa/Cairo"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
+    <property name="sun.java.command" value="/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter-20260421234103320_3.jar /home/samehabib/CMS-Platform/jpos-ee/target/surefire 2026-04-21T23-41-03_194-jvmRun1 surefire-20260421234103320_1tmp surefire_0-20260421234103320_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/samehabib/CMS-Platform/jpos-ee/target/test-classes:/home/samehabib/CMS-Platform/jpos-ee/target/classes:/home/samehabib/.m2/repository/org/hibernate/hibernate-core/5.6.15.Final/hibernate-core-5.6.15.Final.jar:/home/samehabib/.m2/repository/org/jboss/logging/jboss-logging/3.4.3.Final/jboss-logging-3.4.3.Final.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy/1.12.18/byte-buddy-1.12.18.jar:/home/samehabib/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/samehabib/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar:/home/samehabib/.m2/repository/org/jboss/jandex/2.4.2.Final/jandex-2.4.2.Final.jar:/home/samehabib/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar:/home/samehabib/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/samehabib/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar:/home/samehabib/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/home/samehabib/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/home/samehabib/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/home/samehabib/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-entitymanager/5.6.15.Final/hibernate-entitymanager-5.6.15.Final.jar:/home/samehabib/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:/home/samehabib/.m2/repository/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar:/home/samehabib/.m2/repository/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-c3p0/5.6.15.Final/hibernate-c3p0-5.6.15.Final.jar:/home/samehabib/.m2/repository/com/mchange/c3p0/0.9.5.5/c3p0-0.9.5.5.jar:/home/samehabib/.m2/repository/com/mchange/mchange-commons-java/0.2.19/mchange-commons-java-0.2.19.jar:/home/samehabib/.m2/repository/org/slf4j/slf4j-api/2.0.5/slf4j-api-2.0.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar:/home/samehabib/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar:/home/samehabib/.m2/repository/org/hibernate/validator/hibernate-validator/6.2.5.Final/hibernate-validator-6.2.5.Final.jar:/home/samehabib/.m2/repository/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar:/home/samehabib/.m2/repository/org/jpos/jpos/2.1.9/jpos-2.1.9.jar:/home/samehabib/.m2/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.jar:/home/samehabib/.m2/repository/org/javatuples/javatuples/1.2/javatuples-1.2.jar:/home/samehabib/.m2/repository/org/jline/jline/3.23.0/jline-3.23.0.jar:/home/samehabib/.m2/repository/org/apache-extras/beanshell/bsh/2.0b6/bsh-2.0b6.jar:/home/samehabib/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcprov-lts8on/2.73.2/bcprov-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcpg-lts8on/2.73.2/bcpg-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/samehabib/.m2/repository/org/osgi/org.osgi.core/6.0.0/org.osgi.core-6.0.0.jar:/home/samehabib/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/samehabib/.m2/repository/jdbm/jdbm/1.0/jdbm-1.0.jar:/home/samehabib/.m2/repository/com/sleepycat/je/18.3.12/je-18.3.12.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-core/2.9.2/sshd-core-2.9.2.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-common/2.9.2/sshd-common-2.9.2.jar:/home/samehabib/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.32/jcl-over-slf4j-1.7.32.jar:/home/samehabib/.m2/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:/home/samehabib/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/samehabib/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-core/4.11.0/mockito-core-4.11.0.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar:/home/samehabib/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-junit-jupiter/4.11.0/mockito-junit-jupiter-4.11.0.jar:/home/samehabib/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.1/junit-jupiter-api-5.9.1.jar:/home/samehabib/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/samehabib/.m2/repository/org/junit/platform/junit-platform-commons/1.9.1/junit-platform-commons-1.9.1.jar:/home/samehabib/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/samehabib/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/samehabib"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-01-20"/>
+    <property name="java.home" value="/usr/lib/jvm/java-21-openjdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/samehabib/CMS-Platform/jpos-ee"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter-20260421234103320_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.10+7-Ubuntu-124.04"/>
+    <property name="user.name" value="samehabib"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.6.87.2-microsoft-standard-WSL2"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/home/samehabib/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugs.launchpad.net/ubuntu/+source/openjdk-21"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="21.0.10"/>
+    <property name="user.dir" value="/home/samehabib/CMS-Platform/jpos-ee"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Ubuntu"/>
+    <property name="java.vm.version" value="21.0.10+7-Ubuntu-124.04"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testDatabaseConnection" classname="org.cms.jposee.ConnectionTest" time="1.733">
+    <system-out><![CDATA[======================================================================
+Testing Hibernate/PostgreSQL Connection
+======================================================================
+Initializing EntityManagerFactory...
+23:41:04.175 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider
+23:41:04.269 [main] DEBUG org.hibernate.jpa.HibernatePersistenceProvider - Located and parsed 1 persistence units; checking each
+23:41:04.269 [main] DEBUG org.hibernate.jpa.HibernatePersistenceProvider - Checking persistence-unit [name=jposee-persistence, explicit-provider=null] against incoming persistence unit name [jposee-persistence]
+23:41:04.269 [main] DEBUG org.hibernate.jpa.boot.spi.ProviderChecker - No PersistenceProvider explicitly requested, assuming Hibernate
+23:41:04.272 [main] DEBUG org.hibernate.jpa.internal.util.LogHelper - PersistenceUnitInfo [
+	name: jposee-persistence
+	persistence provider classname: null
+	classloader: null
+	excludeUnlistedClasses: false
+	JTA datasource: null
+	Non JTA datasource: null
+	Transaction type: RESOURCE_LOCAL
+	PU root URL: file:/home/samehabib/CMS-Platform/jpos-ee/target/classes/
+	Shared Cache Mode: null
+	Validation Mode: null
+	Jar files URLs []
+	Managed classes names [
+		org.cms.jposee.entity.IsoTransaction
+		org.cms.jposee.entity.IsoTransactionAudit]
+	Mapping files names []
+	Properties [
+		hibernate.jdbc.use_get_generated_keys: true
+		javax.persistence.jdbc.url: jdbc:postgresql://localhost:5433/jposee
+		javax.persistence.jdbc.password: postgres
+		hibernate.show_sql: false
+		hibernate.c3p0.max_statements: 50
+		hibernate.jdbc.batch_size: 20
+		hibernate.autoFlush: true
+		hibernate.jdbc.fetch_size: 50
+		hibernate.c3p0.timeout: 300
+		hibernate.flush_mode: AUTO
+		hibernate.generate_statistics: false
+		hibernate.hbm2ddl.auto: validate
+		hibernate.c3p0.min_size: 5
+		hibernate.format_sql: true
+		javax.persistence.jdbc.user: postgres
+		hibernate.dialect.storage_engine: 
+		javax.persistence.jdbc.driver: org.postgresql.Driver
+		hibernate.cache.provider_class: org.hibernate.cache.NoCacheProvider
+		hibernate.use_sql_comments: true
+		hibernate.c3p0.max_size: 20
+		hibernate.dialect: org.hibernate.dialect.PostgreSQL10Dialect]
+23:41:04.274 [main] DEBUG org.hibernate.integrator.internal.IntegratorServiceImpl - Adding Integrator [org.hibernate.cfg.beanvalidation.BeanValidationIntegrator].
+23:41:04.275 [main] DEBUG org.hibernate.integrator.internal.IntegratorServiceImpl - Adding Integrator [org.hibernate.secure.spi.JaccIntegrator].
+23:41:04.277 [main] DEBUG org.hibernate.integrator.internal.IntegratorServiceImpl - Adding Integrator [org.hibernate.cache.internal.CollectionCacheInvalidator].
+23:41:04.306 [main] INFO org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+23:41:04.307 [main] DEBUG org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+23:41:04.425 [main] DEBUG org.hibernate.service.spi.ServiceBinding - Overriding existing service binding [org.hibernate.secure.spi.JaccService]
+23:41:04.432 [main] DEBUG org.hibernate.cache.internal.RegionFactoryInitiator - Cannot default RegionFactory based on registered strategies as `[]` RegionFactory strategies were registered
+23:41:04.432 [main] DEBUG org.hibernate.cache.internal.RegionFactoryInitiator - Cache region factory : org.hibernate.cache.internal.NoCachingRegionFactory
+23:41:04.444 [main] INFO org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+23:41:04.476 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration boolean -> org.hibernate.type.BooleanType@60fa3495
+23:41:04.476 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration boolean -> org.hibernate.type.BooleanType@60fa3495
+23:41:04.476 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@60fa3495
+23:41:04.476 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@1849db1a
+23:41:04.477 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration true_false -> org.hibernate.type.TrueFalseType@533b266e
+23:41:04.477 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration yes_no -> org.hibernate.type.YesNoType@62679465
+23:41:04.478 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration byte -> org.hibernate.type.ByteType@33352f32
+23:41:04.478 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration byte -> org.hibernate.type.ByteType@33352f32
+23:41:04.478 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@33352f32
+23:41:04.478 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration character -> org.hibernate.type.CharacterType@34645867
+23:41:04.478 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration char -> org.hibernate.type.CharacterType@34645867
+23:41:04.479 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@34645867
+23:41:04.479 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration short -> org.hibernate.type.ShortType@60bdf15d
+23:41:04.479 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration short -> org.hibernate.type.ShortType@60bdf15d
+23:41:04.479 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Short -> org.hibernate.type.ShortType@60bdf15d
+23:41:04.480 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration integer -> org.hibernate.type.IntegerType@2b62442c
+23:41:04.480 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration int -> org.hibernate.type.IntegerType@2b62442c
+23:41:04.480 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@2b62442c
+23:41:04.481 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration long -> org.hibernate.type.LongType@65e61854
+23:41:04.481 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration long -> org.hibernate.type.LongType@65e61854
+23:41:04.481 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Long -> org.hibernate.type.LongType@65e61854
+23:41:04.482 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration float -> org.hibernate.type.FloatType@5f4d427e
+23:41:04.482 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration float -> org.hibernate.type.FloatType@5f4d427e
+23:41:04.482 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Float -> org.hibernate.type.FloatType@5f4d427e
+23:41:04.483 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration double -> org.hibernate.type.DoubleType@1d9bec4d
+23:41:04.483 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration double -> org.hibernate.type.DoubleType@1d9bec4d
+23:41:04.483 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@1d9bec4d
+23:41:04.484 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@5fb97279
+23:41:04.484 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@5fb97279
+23:41:04.485 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration big_integer -> org.hibernate.type.BigIntegerType@40dd3977
+23:41:04.485 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@40dd3977
+23:41:04.485 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration string -> org.hibernate.type.StringType@591e58fa
+23:41:04.485 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.String -> org.hibernate.type.StringType@591e58fa
+23:41:04.485 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration nstring -> org.hibernate.type.StringNVarcharType@72ccd81a
+23:41:04.486 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@5d25e6bb
+23:41:04.486 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration url -> org.hibernate.type.UrlType@61078690
+23:41:04.486 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.net.URL -> org.hibernate.type.UrlType@61078690
+23:41:04.487 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration Duration -> org.hibernate.type.DurationType@3a1d593e
+23:41:04.487 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.Duration -> org.hibernate.type.DurationType@3a1d593e
+23:41:04.487 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration Instant -> org.hibernate.type.InstantType@5118388b
+23:41:04.487 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.Instant -> org.hibernate.type.InstantType@5118388b
+23:41:04.490 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@72f46e16
+23:41:04.490 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@72f46e16
+23:41:04.491 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration LocalDate -> org.hibernate.type.LocalDateType@37ebc9d8
+23:41:04.491 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@37ebc9d8
+23:41:04.492 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@389adf1d
+23:41:04.492 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@389adf1d
+23:41:04.493 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@5db4c359
+23:41:04.494 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@5db4c359
+23:41:04.495 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@1bdf8190
+23:41:04.495 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@1bdf8190
+23:41:04.495 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@ec0c838
+23:41:04.495 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@ec0c838
+23:41:04.496 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration date -> org.hibernate.type.DateType@4a8ab068
+23:41:04.497 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.sql.Date -> org.hibernate.type.DateType@4a8ab068
+23:41:04.497 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration time -> org.hibernate.type.TimeType@7bb3a9fe
+23:41:04.497 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.sql.Time -> org.hibernate.type.TimeType@7bb3a9fe
+23:41:04.498 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration timestamp -> org.hibernate.type.TimestampType@4b6166aa
+23:41:04.498 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@4b6166aa
+23:41:04.498 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.Date -> org.hibernate.type.TimestampType@4b6166aa
+23:41:04.499 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@a1217f9
+23:41:04.499 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration calendar -> org.hibernate.type.CalendarType@2b52c0d6
+23:41:04.499 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@2b52c0d6
+23:41:04.499 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@2b52c0d6
+23:41:04.500 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@7de0c6ae
+23:41:04.500 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration calendar_time -> org.hibernate.type.CalendarTimeType@49f5c307
+23:41:04.500 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration locale -> org.hibernate.type.LocaleType@50687efb
+23:41:04.501 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@50687efb
+23:41:04.501 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration currency -> org.hibernate.type.CurrencyType@1950e8a6
+23:41:04.501 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@1950e8a6
+23:41:04.502 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration timezone -> org.hibernate.type.TimeZoneType@37eeec90
+23:41:04.502 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@37eeec90
+23:41:04.502 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration class -> org.hibernate.type.ClassType@47428937
+23:41:04.502 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Class -> org.hibernate.type.ClassType@47428937
+23:41:04.503 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@1b0a7baf
+23:41:04.503 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@1b0a7baf
+23:41:04.503 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@6ea1bcdc
+23:41:04.503 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration binary -> org.hibernate.type.BinaryType@5ae81e1
+23:41:04.503 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration byte[] -> org.hibernate.type.BinaryType@5ae81e1
+23:41:04.504 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration [B -> org.hibernate.type.BinaryType@5ae81e1
+23:41:04.504 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@2a2da905
+23:41:04.504 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@2a2da905
+23:41:04.504 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@2a2da905
+23:41:04.505 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration row_version -> org.hibernate.type.RowVersionType@1b11ef33
+23:41:04.505 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration image -> org.hibernate.type.ImageType@2f2bf0e2
+23:41:04.506 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration characters -> org.hibernate.type.CharArrayType@363f6148
+23:41:04.506 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration char[] -> org.hibernate.type.CharArrayType@363f6148
+23:41:04.506 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration [C -> org.hibernate.type.CharArrayType@363f6148
+23:41:04.507 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@29876704
+23:41:04.507 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@29876704
+23:41:04.507 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@29876704
+23:41:04.508 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration text -> org.hibernate.type.TextType@4efcf8a
+23:41:04.508 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration ntext -> org.hibernate.type.NTextType@4a9e6faf
+23:41:04.509 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration blob -> org.hibernate.type.BlobType@2f4854d6
+23:41:04.509 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@2f4854d6
+23:41:04.509 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@6de54b40
+23:41:04.510 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration clob -> org.hibernate.type.ClobType@538613b3
+23:41:04.510 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@538613b3
+23:41:04.511 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration nclob -> org.hibernate.type.NClobType@67ef029
+23:41:04.511 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@67ef029
+23:41:04.511 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@56db847e
+23:41:04.512 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@551a20d6
+23:41:04.512 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration serializable -> org.hibernate.type.SerializableType@b5cc23a
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration object -> org.hibernate.type.ObjectType@548e76f1
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@548e76f1
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@3dd69f5a
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@3aa3193a
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@1ee4730
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@59a67c3a
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@5003041b
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@724bade8
+23:41:04.514 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@16fb356
+23:41:04.515 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@6bc248ed
+23:41:04.521 [main] DEBUG org.hibernate.boot.internal.BootstrapContextImpl - Injecting ScanEnvironment [org.hibernate.jpa.boot.internal.StandardJpaScanEnvironmentImpl@71f67a79] into BootstrapContext; was [null]
+23:41:04.522 [main] DEBUG org.hibernate.boot.internal.BootstrapContextImpl - Injecting ScanOptions [org.hibernate.boot.archive.scan.internal.StandardScanOptions@62d363ab] into BootstrapContext; was [org.hibernate.boot.archive.scan.internal.StandardScanOptions@7889a1ac]
+23:41:04.567 [main] DEBUG org.hibernate.boot.internal.BootstrapContextImpl - Injecting JPA temp ClassLoader [null] into BootstrapContext; was [null]
+23:41:04.567 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - ClassLoaderAccessImpl#injectTempClassLoader(null) [was null]
+23:41:04.573 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [uuid2] -> [org.hibernate.id.UUIDGenerator]
+23:41:04.573 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [guid] -> [org.hibernate.id.GUIDGenerator]
+23:41:04.573 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [uuid] -> [org.hibernate.id.UUIDHexGenerator]
+23:41:04.573 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [uuid.hex] -> [org.hibernate.id.UUIDHexGenerator]
+23:41:04.574 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [assigned] -> [org.hibernate.id.Assigned]
+23:41:04.574 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [identity] -> [org.hibernate.id.IdentityGenerator]
+23:41:04.574 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [select] -> [org.hibernate.id.SelectGenerator]
+23:41:04.575 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [sequence] -> [org.hibernate.id.enhanced.SequenceStyleGenerator]
+23:41:04.575 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [seqhilo] -> [org.hibernate.id.SequenceHiLoGenerator]
+23:41:04.575 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [increment] -> [org.hibernate.id.IncrementGenerator]
+23:41:04.576 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [foreign] -> [org.hibernate.id.ForeignGenerator]
+23:41:04.577 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [sequence-identity] -> [org.hibernate.id.SequenceIdentityGenerator]
+23:41:04.578 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [enhanced-sequence] -> [org.hibernate.id.enhanced.SequenceStyleGenerator]
+23:41:04.578 [main] DEBUG org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory - Registering IdentifierGenerator strategy [enhanced-table] -> [org.hibernate.id.enhanced.TableGenerator]
+23:41:04.582 [main] INFO org.hibernate.c3p0.internal.C3P0ConnectionProvider - HHH010002: C3P0 using driver: org.postgresql.Driver at URL: jdbc:postgresql://localhost:5433/jposee
+23:41:04.582 [main] INFO org.hibernate.c3p0.internal.C3P0ConnectionProvider - HHH10001001: Connection properties: {password=****, user=postgres}
+23:41:04.582 [main] INFO org.hibernate.c3p0.internal.C3P0ConnectionProvider - HHH10001003: Autocommit mode: false
+23:41:04.600 [MLog-Init-Reporter] INFO com.mchange.v2.log.MLog - MLog clients using slf4j logging.
+23:41:04.605 [MLog-Init-Reporter] DEBUG com.mchange.v2.log.MLog - Reading VM config for path list /com/mchange/v2/log/default-mchange-log.properties, /mchange-commons.properties, /c3p0.properties, hocon:/reference,/application,/c3p0,/, /mchange-log.properties, /
+23:41:04.606 [MLog-Init-Reporter] DEBUG com.mchange.v2.log.MLog - The configuration file for resource identifier '/mchange-commons.properties' could not be found. Skipping.
+23:41:04.606 [MLog-Init-Reporter] DEBUG com.mchange.v2.log.MLog - The configuration file for resource identifier '/c3p0.properties' could not be found. Skipping.
+23:41:04.606 [MLog-Init-Reporter] DEBUG com.mchange.v2.log.MLog - The configuration file for resource identifier 'hocon:/reference,/application,/c3p0,/' could not be found. Skipping.
+23:41:04.606 [MLog-Init-Reporter] DEBUG com.mchange.v2.log.MLog - The configuration file for resource identifier '/mchange-log.properties' could not be found. Skipping.
+23:41:04.608 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier '/mchange-commons.properties' could not be found. Skipping.
+23:41:04.608 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier '/mchange-log.properties' could not be found. Skipping.
+23:41:04.608 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier 'hocon:/reference,/application,/c3p0,/' could not be found. Skipping.
+23:41:04.608 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier '/c3p0.properties' could not be found. Skipping.
+23:41:04.746 [main] INFO com.mchange.v2.c3p0.C3P0Registry - Initializing c3p0-0.9.5.5 [built 11-December-2019 22:18:33 -0800; debug? true; trace: 10]
+23:41:04.758 [main] DEBUG com.mchange.v2.c3p0.management.DynamicPooledDataSourceManagerMBean - MBean: com.mchange.v2.c3p0:type=PooledDataSource,identityToken=z8kfsxbh1ddw0kxbfr1db|52a70627,name=z8kfsxbh1ddw0kxbfr1db|52a70627 registered.
+23:41:04.767 [main] DEBUG com.mchange.v2.c3p0.management.DynamicPooledDataSourceManagerMBean - MBean: com.mchange.v2.c3p0:type=PooledDataSource,identityToken=z8kfsxbh1ddw0kxbfr1db|52a70627,name=z8kfsxbh1ddw0kxbfr1db|52a70627 unregistered, in order to be reregistered after update.
+23:41:04.767 [main] DEBUG com.mchange.v2.c3p0.management.DynamicPooledDataSourceManagerMBean - MBean: com.mchange.v2.c3p0:type=PooledDataSource,identityToken=z8kfsxbh1ddw0kxbfr1db|52a70627,name=z8kfsxbh1ddw0kxbfr1db|52a70627 registered.
+23:41:04.771 [main] INFO org.hibernate.c3p0.internal.C3P0ConnectionProvider - HHH10001007: JDBC isolation level: <unknown>
+23:41:04.782 [main] INFO com.mchange.v2.c3p0.impl.AbstractPoolBackedDataSource - Initializing c3p0 pool... com.mchange.v2.c3p0.PoolBackedDataSource@9d870299 [ connectionPoolDataSource -> com.mchange.v2.c3p0.WrapperConnectionPoolDataSource@90c98647 [ acquireIncrement -> 3, acquireRetryAttempts -> 30, acquireRetryDelay -> 1000, autoCommitOnClose -> false, automaticTestTable -> null, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, contextClassLoaderSource -> caller, debugUnreturnedConnectionStackTraces -> false, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, forceSynchronousCheckins -> false, identityToken -> z8kfsxbh1ddw0kxbfr1db|49aa766b, idleConnectionTestPeriod -> 0, initialPoolSize -> 5, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 300, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 20, maxStatements -> 50, maxStatementsPerConnection -> 0, minPoolSize -> 5, nestedDataSource -> com.mchange.v2.c3p0.DriverManagerDataSource@f590c67a [ description -> null, driverClass -> null, factoryClassLocation -> null, forceUseNamedDriverClass -> false, identityToken -> z8kfsxbh1ddw0kxbfr1db|4d7e7435, jdbcUrl -> jdbc:postgresql://localhost:5433/jposee, properties -> {password=******, user=******} ], preferredTestQuery -> null, privilegeSpawnedThreads -> false, propertyCycle -> 0, statementCacheNumDeferredCloseThreads -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, usesTraditionalReflectiveProxies -> false; userOverrides: {} ], dataSourceName -> null, extensions -> {}, factoryClassLocation -> null, identityToken -> z8kfsxbh1ddw0kxbfr1db|52a70627, numHelperThreads -> 3 ]
+23:41:04.801 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier '/mchange-commons.properties' could not be found. Skipping.
+23:41:04.801 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier '/mchange-log.properties' could not be found. Skipping.
+23:41:04.801 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier '/c3p0.properties' could not be found. Skipping.
+23:41:04.801 [main] DEBUG com.mchange.v2.cfg.MConfig - The configuration file for resource identifier 'hocon:/reference,/application,/c3p0,/' could not be found. Skipping.
+23:41:04.802 [main] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - com.mchange.v2.resourcepool.BasicResourcePool@3051e0b2 config: [start -> 5; min -> 5; max -> 20; inc -> 3; num_acq_attempts -> 30; acq_attempt_delay -> 1000; check_idle_resources_delay -> 0; max_resource_age -> 0; max_idle_time -> 300000; excess_max_idle_time -> 0; destroy_unreturned_resc_time -> 0; expiration_enforcement_delay -> 75000; break_on_acquisition_failure -> false; debug_store_checkout_exceptions -> false; force_synchronous_checkins -> false]
+23:41:04.802 [main] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPoolManager - Created new pool for auth, username (masked): 'po******'.
+23:41:04.802 [main] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - acquire test -- pool size: 0; target_pool_size: 5; desired target? 1
+23:41:04.802 [main] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - awaitAvailable(): [unknown]
+23:41:05.075 [main] DEBUG org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator - Database ->
+       name : PostgreSQL
+    version : 15.3 (Debian 15.3-1.pgdg120+1)
+      major : 15
+      minor : 3
+23:41:05.076 [main] DEBUG org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator - Driver ->
+       name : PostgreSQL JDBC Driver
+    version : 42.7.1
+      major : 42
+      minor : 7
+23:41:05.076 [main] DEBUG org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator - JDBC version : 4.2
+23:41:05.089 [main] INFO org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+23:41:05.101 [main] DEBUG org.hibernate.engine.jdbc.env.spi.IdentifierHelperBuilder - JDBC driver metadata reported database stores quoted identifiers in neither upper, lower nor mixed case
+23:41:05.119 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration pg-uuid -> org.hibernate.type.PostgresUUIDType@1d61c6dc
+23:41:05.119 [main] DEBUG org.hibernate.type.BasicTypeRegistry - Adding type registration java.util.UUID -> org.hibernate.type.PostgresUUIDType@1d61c6dc
+23:41:05.119 [main] DEBUG org.hibernate.type.BasicTypeRegistry - HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@1b0a7baf
+23:41:05.124 [main] DEBUG org.hibernate.type.spi.TypeConfiguration$Scope - Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@681adc8f] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@3506d826]
+23:41:05.149 [main] DEBUG org.hibernate.boot.model.relational.Namespace - Created database namespace [logicalName=Name{catalog=null, schema=null}, physicalName=Name{catalog=null, schema=null}]
+23:41:05.159 [main] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: org.cms.jposee.entity.IsoTransaction
+23:41:05.168 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3DiscriminatorColumn{logicalColumnName'DTYPE', discriminatorTypeName='string'}
+23:41:05.170 [main] DEBUG org.hibernate.cfg.annotations.EntityBinder - Import with entity name IsoTransaction
+23:41:05.170 [main] DEBUG org.hibernate.boot.model.relational.Namespace - Created database namespace [logicalName=Name{catalog=null, schema=public}, physicalName=Name{catalog=null, schema=public}]
+23:41:05.171 [main] DEBUG org.hibernate.cfg.annotations.EntityBinder - Bind entity org.cms.jposee.entity.IsoTransaction on table iso_transactions
+23:41:05.186 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=id, insertable=true, updatable=true, unique=false}
+23:41:05.188 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - Not known whether passed class name [org.cms.jposee.entity.IsoTransaction] is safe
+23:41:05.188 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : org.cms.jposee.entity.IsoTransaction
+23:41:05.190 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property id with lazy=false
+23:41:05.194 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:id]
+23:41:05.196 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for id
+23:41:05.198 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property id
+23:41:05.199 [main] DEBUG org.hibernate.cfg.BinderHelper - #makeIdGenerator(org.hibernate.mapping.SimpleValue([org.hibernate.mapping.Column(id)]), id, identity, , ...)
+23:41:05.200 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=amount, insertable=true, updatable=true, unique=false}
+23:41:05.200 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property amount with lazy=false
+23:41:05.200 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:amount]
+23:41:05.200 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for amount
+23:41:05.200 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property amount
+23:41:05.200 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=auth_id_resp, insertable=true, updatable=true, unique=false}
+23:41:05.200 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property authIdResp with lazy=false
+23:41:05.200 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:authIdResp]
+23:41:05.200 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for authIdResp
+23:41:05.200 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property authIdResp
+23:41:05.201 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=compliance_checked, insertable=true, updatable=true, unique=false}
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property complianceChecked with lazy=false
+23:41:05.201 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:complianceChecked]
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for complianceChecked
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property complianceChecked
+23:41:05.201 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=created_at, insertable=true, updatable=false, unique=false}
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property createdAt with lazy=false
+23:41:05.201 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:createdAt]
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for createdAt
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property createdAt
+23:41:05.201 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=created_by, insertable=true, updatable=true, unique=false}
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property createdBy with lazy=false
+23:41:05.201 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:createdBy]
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for createdBy
+23:41:05.201 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property createdBy
+23:41:05.201 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=currency_code, insertable=true, updatable=true, unique=false}
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property currencyCode with lazy=false
+23:41:05.202 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:currencyCode]
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for currencyCode
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property currencyCode
+23:41:05.202 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=error_message, insertable=true, updatable=true, unique=false}
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property errorMessage with lazy=false
+23:41:05.202 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:errorMessage]
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for errorMessage
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property errorMessage
+23:41:05.202 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=ip_address, insertable=true, updatable=true, unique=false}
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property ipAddress with lazy=false
+23:41:05.202 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:ipAddress]
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for ipAddress
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property ipAddress
+23:41:05.202 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=merchant_id, insertable=true, updatable=true, unique=false}
+23:41:05.202 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property merchantId with lazy=false
+23:41:05.203 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:merchantId]
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for merchantId
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property merchantId
+23:41:05.203 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=merchant_name, insertable=true, updatable=true, unique=false}
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property merchantName with lazy=false
+23:41:05.203 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:merchantName]
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for merchantName
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property merchantName
+23:41:05.203 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=mti, insertable=true, updatable=true, unique=false}
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property mti with lazy=false
+23:41:05.203 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:mti]
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for mti
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property mti
+23:41:05.203 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=pan, insertable=true, updatable=true, unique=false}
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property pan with lazy=false
+23:41:05.203 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:pan]
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for pan
+23:41:05.203 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property pan
+23:41:05.204 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=pan_masked, insertable=true, updatable=true, unique=false}
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property panMasked with lazy=false
+23:41:05.204 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:panMasked]
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for panMasked
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property panMasked
+23:41:05.204 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=processing_code, insertable=true, updatable=true, unique=false}
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property processingCode with lazy=false
+23:41:05.204 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:processingCode]
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for processingCode
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property processingCode
+23:41:05.204 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=raw_request, insertable=true, updatable=true, unique=false}
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property rawRequest with lazy=false
+23:41:05.204 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:rawRequest]
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for rawRequest
+23:41:05.204 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property rawRequest
+23:41:05.204 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=raw_response, insertable=true, updatable=true, unique=false}
+23:41:05.205 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property rawResponse with lazy=false
+23:41:05.205 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:rawResponse]
+23:41:05.205 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for rawResponse
+23:41:05.205 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property rawResponse
+23:41:05.205 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=response_code, insertable=true, updatable=true, unique=false}
+23:41:05.205 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property responseCode with lazy=false
+23:41:05.205 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:responseCode]
+23:41:05.205 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for responseCode
+23:41:05.205 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property responseCode
+23:41:05.205 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=retry_count, insertable=true, updatable=true, unique=false}
+23:41:05.206 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property retryCount with lazy=false
+23:41:05.206 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:retryCount]
+23:41:05.206 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for retryCount
+23:41:05.206 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property retryCount
+23:41:05.206 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=rrn, insertable=true, updatable=true, unique=false}
+23:41:05.206 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property rrn with lazy=false
+23:41:05.206 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:rrn]
+23:41:05.206 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for rrn
+23:41:05.206 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property rrn
+23:41:05.207 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=sensitive_data_encrypted, insertable=true, updatable=true, unique=false}
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property sensitiveDataEncrypted with lazy=false
+23:41:05.207 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:sensitiveDataEncrypted]
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for sensitiveDataEncrypted
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property sensitiveDataEncrypted
+23:41:05.207 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=session_id, insertable=true, updatable=true, unique=false}
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property sessionId with lazy=false
+23:41:05.207 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:sessionId]
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for sessionId
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property sessionId
+23:41:05.207 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=stan, insertable=true, updatable=true, unique=true}
+23:41:05.207 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property stan with lazy=false
+23:41:05.207 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:stan]
+23:41:05.208 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for stan
+23:41:05.211 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property stan
+23:41:05.211 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=status, insertable=true, updatable=true, unique=false}
+23:41:05.212 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property status with lazy=false
+23:41:05.212 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:status]
+23:41:05.212 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for status
+23:41:05.212 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property status
+23:41:05.212 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=terminal_id, insertable=true, updatable=true, unique=false}
+23:41:05.212 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property terminalId with lazy=false
+23:41:05.212 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:terminalId]
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for terminalId
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property terminalId
+23:41:05.213 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=updated_at, insertable=true, updatable=true, unique=false}
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property updatedAt with lazy=false
+23:41:05.213 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:updatedAt]
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for updatedAt
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property updatedAt
+23:41:05.213 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions), mappingColumn=updated_by, insertable=true, updatable=true, unique=false}
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property updatedBy with lazy=false
+23:41:05.213 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransaction:updatedBy]
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for updatedBy
+23:41:05.213 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property updatedBy
+23:41:05.221 [main] DEBUG org.hibernate.jpa.event.internal.CallbackDefinitionResolverLegacyImpl - Adding onUpdate as PreUpdate callback for entity org.cms.jposee.entity.IsoTransaction
+23:41:05.221 [main] DEBUG org.hibernate.jpa.event.internal.CallbackDefinitionResolverLegacyImpl - Adding onCreate as PrePersist callback for entity org.cms.jposee.entity.IsoTransaction
+23:41:05.222 [main] DEBUG org.hibernate.cfg.AnnotationBinder - Binding entity from annotated class: org.cms.jposee.entity.IsoTransactionAudit
+23:41:05.223 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3DiscriminatorColumn{logicalColumnName'DTYPE', discriminatorTypeName='string'}
+23:41:05.223 [main] DEBUG org.hibernate.cfg.annotations.EntityBinder - Import with entity name IsoTransactionAudit
+23:41:05.223 [main] DEBUG org.hibernate.cfg.annotations.EntityBinder - Bind entity org.cms.jposee.entity.IsoTransactionAudit on table iso_transactions_audit
+23:41:05.225 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=id, insertable=true, updatable=true, unique=false}
+23:41:05.225 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - Not known whether passed class name [org.cms.jposee.entity.IsoTransactionAudit] is safe
+23:41:05.225 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : org.cms.jposee.entity.IsoTransactionAudit
+23:41:05.225 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property id with lazy=false
+23:41:05.225 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:id]
+23:41:05.225 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for id
+23:41:05.225 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property id
+23:41:05.225 [main] DEBUG org.hibernate.cfg.BinderHelper - #makeIdGenerator(org.hibernate.mapping.SimpleValue([org.hibernate.mapping.Column(id)]), id, identity, , ...)
+23:41:05.225 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=action, insertable=true, updatable=true, unique=false}
+23:41:05.226 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property action with lazy=false
+23:41:05.226 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:action]
+23:41:05.227 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for action
+23:41:05.227 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property action
+23:41:05.227 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=changed_by, insertable=true, updatable=true, unique=false}
+23:41:05.227 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property changedBy with lazy=false
+23:41:05.227 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:changedBy]
+23:41:05.227 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for changedBy
+23:41:05.227 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property changedBy
+23:41:05.227 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=compliance_notes, insertable=true, updatable=true, unique=false}
+23:41:05.228 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property complianceNotes with lazy=false
+23:41:05.228 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:complianceNotes]
+23:41:05.228 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for complianceNotes
+23:41:05.228 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property complianceNotes
+23:41:05.228 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=compliance_verified, insertable=true, updatable=true, unique=false}
+23:41:05.228 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property complianceVerified with lazy=false
+23:41:05.228 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:complianceVerified]
+23:41:05.228 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for complianceVerified
+23:41:05.228 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property complianceVerified
+23:41:05.229 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=created_at, insertable=true, updatable=false, unique=false}
+23:41:05.229 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property createdAt with lazy=false
+23:41:05.229 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:createdAt]
+23:41:05.229 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for createdAt
+23:41:05.229 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property createdAt
+23:41:05.229 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=field_name, insertable=true, updatable=true, unique=false}
+23:41:05.229 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property fieldName with lazy=false
+23:41:05.229 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:fieldName]
+23:41:05.229 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for fieldName
+23:41:05.229 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property fieldName
+23:41:05.229 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=ip_address, insertable=true, updatable=true, unique=false}
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property ipAddress with lazy=false
+23:41:05.230 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:ipAddress]
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for ipAddress
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property ipAddress
+23:41:05.230 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=iso_transaction_id, insertable=true, updatable=true, unique=false}
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property isoTransactionId with lazy=false
+23:41:05.230 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:isoTransactionId]
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for isoTransactionId
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property isoTransactionId
+23:41:05.230 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=new_value, insertable=true, updatable=true, unique=false}
+23:41:05.230 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property newValue with lazy=false
+23:41:05.231 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:newValue]
+23:41:05.231 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for newValue
+23:41:05.231 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property newValue
+23:41:05.231 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=notes, insertable=true, updatable=true, unique=false}
+23:41:05.231 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property notes with lazy=false
+23:41:05.231 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:notes]
+23:41:05.231 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for notes
+23:41:05.231 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property notes
+23:41:05.231 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=old_value, insertable=true, updatable=true, unique=false}
+23:41:05.231 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property oldValue with lazy=false
+23:41:05.232 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:oldValue]
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for oldValue
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property oldValue
+23:41:05.232 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=reason, insertable=true, updatable=true, unique=false}
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property reason with lazy=false
+23:41:05.232 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:reason]
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for reason
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property reason
+23:41:05.232 [main] DEBUG org.hibernate.cfg.Ejb3Column - Binding column: Ejb3Column{table=org.hibernate.mapping.Table(public.iso_transactions_audit), mappingColumn=session_id, insertable=true, updatable=true, unique=false}
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - MetadataSourceProcessor property sessionId with lazy=false
+23:41:05.232 [main] DEBUG org.hibernate.cfg.AbstractPropertyHolder - Attempting to locate auto-apply AttributeConverter for property [org.cms.jposee.entity.IsoTransactionAudit:sessionId]
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - building SimpleValue for sessionId
+23:41:05.232 [main] DEBUG org.hibernate.cfg.annotations.PropertyBinder - Building property sessionId
+23:41:05.233 [main] DEBUG org.hibernate.jpa.event.internal.CallbackDefinitionResolverLegacyImpl - Adding onCreate as PrePersist callback for entity org.cms.jposee.entity.IsoTransactionAudit
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for id
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for amount
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for authIdResp
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for complianceChecked
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for createdAt
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for createdBy
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for currencyCode
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for errorMessage
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for ipAddress
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for merchantId
+23:41:05.234 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for merchantName
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for mti
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for pan
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for panMasked
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for processingCode
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for rawRequest
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for rawResponse
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for responseCode
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for retryCount
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for rrn
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for sensitiveDataEncrypted
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for sessionId
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for stan
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for status
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for terminalId
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for updatedAt
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for updatedBy
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for id
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for action
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for changedBy
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for complianceNotes
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for complianceVerified
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for createdAt
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for fieldName
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for ipAddress
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for isoTransactionId
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for newValue
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for notes
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for oldValue
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for reason
+23:41:05.235 [main] DEBUG org.hibernate.cfg.annotations.SimpleValueBinder - Starting fillSimpleValue for sessionId
+23:41:05.236 [main] DEBUG org.hibernate.mapping.PrimaryKey - Forcing column [id] to be non-null as it is part of the primary key for table [iso_transactions]
+23:41:05.236 [main] DEBUG org.hibernate.mapping.PrimaryKey - Forcing column [id] to be non-null as it is part of the primary key for table [iso_transactions_audit]
+23:41:05.266 [main] DEBUG org.hibernate.internal.SessionFactoryImpl - Building session factory
+23:41:05.266 [main] DEBUG org.hibernate.cfg.Settings - SessionFactory name : null
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Automatic flush during beforeCompletion(): enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Automatic session close at end of transaction: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Statistics: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Deleted entity synthetic identifier rollback: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Default entity-mode: pojo
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Check Nullability in Core (should be disabled when Bean Validation is on): enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Allow initialization of lazy state outside session : disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Using BatchFetchStyle : LEGACY
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Default batch fetch size: -1
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Maximum outer join fetch depth: null
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Default null ordering: NONE
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Order SQL updates by primary key: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Order SQL inserts for batching: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - multi-tenancy strategy : NONE
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JTA Track by Thread: enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Query language substitutions: {}
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Named query checking : enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Second-level cache: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Second-level query cache: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Second-level query cache factory: null
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Second-level cache region prefix: null
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Optimize second-level cache for minimal puts: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Structured second-level cache entries: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Second-level cache direct-reference entries: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Automatic eviction of collection cache: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JDBC batch size: 20
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JDBC batch updates for versioned data: enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Scrollable result sets: enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Wrap result sets: disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JDBC3 getGeneratedKeys(): enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JDBC result set fetch size: 50
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Connection release mode: AFTER_TRANSACTION
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - Generate SQL with comments: enabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JPA compliance - query : disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JPA compliance - closed-handling : disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JPA compliance - lists : disabled
+23:41:05.267 [main] DEBUG org.hibernate.cfg.Settings - JPA compliance - transactions : disabled
+23:41:05.300 [main] DEBUG org.hibernate.service.internal.SessionFactoryServiceRegistryImpl - EventListenerRegistry access via ServiceRegistry is deprecated.  Use `sessionFactory.getEventEngine().getListenerRegistry()` instead
+23:41:05.301 [main] DEBUG org.hibernate.service.internal.SessionFactoryServiceRegistryImpl - EventListenerRegistry access via ServiceRegistry is deprecated.  Use `sessionFactory.getEventEngine().getListenerRegistry()` instead
+23:41:05.309 [main] DEBUG org.hibernate.internal.SessionFactoryImpl - Session factory constructed with filter configurations : {}
+23:41:05.309 [main] DEBUG org.hibernate.internal.SessionFactoryImpl - Instantiating session factory with properties: {hibernate.format_sql=true, hibernate.dialect.storage_engine=, java.specification.version=21, hibernate.jdbc.use_get_generated_keys=true, sun.jnu.encoding=UTF-8, hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect, hibernate.c3p0.min_size=5, java.class.path=/home/samehabib/CMS-Platform/jpos-ee/target/test-classes:/home/samehabib/CMS-Platform/jpos-ee/target/classes:/home/samehabib/.m2/repository/org/hibernate/hibernate-core/5.6.15.Final/hibernate-core-5.6.15.Final.jar:/home/samehabib/.m2/repository/org/jboss/logging/jboss-logging/3.4.3.Final/jboss-logging-3.4.3.Final.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy/1.12.18/byte-buddy-1.12.18.jar:/home/samehabib/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/samehabib/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar:/home/samehabib/.m2/repository/org/jboss/jandex/2.4.2.Final/jandex-2.4.2.Final.jar:/home/samehabib/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar:/home/samehabib/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/samehabib/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar:/home/samehabib/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/home/samehabib/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/home/samehabib/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/home/samehabib/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-entitymanager/5.6.15.Final/hibernate-entitymanager-5.6.15.Final.jar:/home/samehabib/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:/home/samehabib/.m2/repository/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar:/home/samehabib/.m2/repository/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-c3p0/5.6.15.Final/hibernate-c3p0-5.6.15.Final.jar:/home/samehabib/.m2/repository/com/mchange/c3p0/0.9.5.5/c3p0-0.9.5.5.jar:/home/samehabib/.m2/repository/com/mchange/mchange-commons-java/0.2.19/mchange-commons-java-0.2.19.jar:/home/samehabib/.m2/repository/org/slf4j/slf4j-api/2.0.5/slf4j-api-2.0.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar:/home/samehabib/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar:/home/samehabib/.m2/repository/org/hibernate/validator/hibernate-validator/6.2.5.Final/hibernate-validator-6.2.5.Final.jar:/home/samehabib/.m2/repository/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar:/home/samehabib/.m2/repository/org/jpos/jpos/2.1.9/jpos-2.1.9.jar:/home/samehabib/.m2/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.jar:/home/samehabib/.m2/repository/org/javatuples/javatuples/1.2/javatuples-1.2.jar:/home/samehabib/.m2/repository/org/jline/jline/3.23.0/jline-3.23.0.jar:/home/samehabib/.m2/repository/org/apache-extras/beanshell/bsh/2.0b6/bsh-2.0b6.jar:/home/samehabib/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcprov-lts8on/2.73.2/bcprov-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcpg-lts8on/2.73.2/bcpg-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/samehabib/.m2/repository/org/osgi/org.osgi.core/6.0.0/org.osgi.core-6.0.0.jar:/home/samehabib/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/samehabib/.m2/repository/jdbm/jdbm/1.0/jdbm-1.0.jar:/home/samehabib/.m2/repository/com/sleepycat/je/18.3.12/je-18.3.12.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-core/2.9.2/sshd-core-2.9.2.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-common/2.9.2/sshd-common-2.9.2.jar:/home/samehabib/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.32/jcl-over-slf4j-1.7.32.jar:/home/samehabib/.m2/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:/home/samehabib/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/samehabib/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-core/4.11.0/mockito-core-4.11.0.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar:/home/samehabib/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-junit-jupiter/4.11.0/mockito-junit-jupiter-4.11.0.jar:/home/samehabib/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.1/junit-jupiter-api-5.9.1.jar:/home/samehabib/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/samehabib/.m2/repository/org/junit/platform/junit-platform-commons/1.9.1/junit-platform-commons-1.9.1.jar:/home/samehabib/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/samehabib/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:, java.vm.vendor=Ubuntu, sun.arch.data.model=64, java.vendor.url=https://ubuntu.com/, user.timezone=Africa/Cairo, javax.persistence.jdbc.user=****, javax.persistence.jdbc.url=jdbc:postgresql://localhost:5433/jposee, java.vm.specification.version=21, os.name=Linux, hibernate.generate_statistics=false, jakarta.persistence.jdbc.password=****, hibernate.jdbc.batch_size=20, sun.java.launcher=SUN_STANDARD, local.setting.IS_JTA_TXN_COORD=false, sun.boot.library.path=/usr/lib/jvm/java-21-openjdk-amd64/lib, sun.java.command=/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter-20260421234103320_3.jar /home/samehabib/CMS-Platform/jpos-ee/target/surefire 2026-04-21T23-41-03_194-jvmRun1 surefire-20260421234103320_1tmp surefire_0-20260421234103320_2tmp, hibernate.use_sql_comments=true, jdk.debug=release, surefire.test.class.path=/home/samehabib/CMS-Platform/jpos-ee/target/test-classes:/home/samehabib/CMS-Platform/jpos-ee/target/classes:/home/samehabib/.m2/repository/org/hibernate/hibernate-core/5.6.15.Final/hibernate-core-5.6.15.Final.jar:/home/samehabib/.m2/repository/org/jboss/logging/jboss-logging/3.4.3.Final/jboss-logging-3.4.3.Final.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy/1.12.18/byte-buddy-1.12.18.jar:/home/samehabib/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/samehabib/.m2/repository/org/jboss/spec/javax/transaction/jboss-transaction-api_1.2_spec/1.1.1.Final/jboss-transaction-api_1.2_spec-1.1.1.Final.jar:/home/samehabib/.m2/repository/org/jboss/jandex/2.4.2.Final/jandex-2.4.2.Final.jar:/home/samehabib/.m2/repository/com/fasterxml/classmate/1.5.1/classmate-1.5.1.jar:/home/samehabib/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar:/home/samehabib/.m2/repository/org/hibernate/common/hibernate-commons-annotations/5.1.2.Final/hibernate-commons-annotations-5.1.2.Final.jar:/home/samehabib/.m2/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar:/home/samehabib/.m2/repository/org/glassfish/jaxb/txw2/2.3.1/txw2-2.3.1.jar:/home/samehabib/.m2/repository/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar:/home/samehabib/.m2/repository/org/jvnet/staxex/stax-ex/1.8/stax-ex-1.8.jar:/home/samehabib/.m2/repository/com/sun/xml/fastinfoset/FastInfoset/1.2.15/FastInfoset-1.2.15.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-entitymanager/5.6.15.Final/hibernate-entitymanager-5.6.15.Final.jar:/home/samehabib/.m2/repository/javax/persistence/javax.persistence-api/2.2/javax.persistence-api-2.2.jar:/home/samehabib/.m2/repository/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar:/home/samehabib/.m2/repository/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar:/home/samehabib/.m2/repository/org/hibernate/hibernate-c3p0/5.6.15.Final/hibernate-c3p0-5.6.15.Final.jar:/home/samehabib/.m2/repository/com/mchange/c3p0/0.9.5.5/c3p0-0.9.5.5.jar:/home/samehabib/.m2/repository/com/mchange/mchange-commons-java/0.2.19/mchange-commons-java-0.2.19.jar:/home/samehabib/.m2/repository/org/slf4j/slf4j-api/2.0.5/slf4j-api-2.0.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-classic/1.4.5/logback-classic-1.4.5.jar:/home/samehabib/.m2/repository/ch/qos/logback/logback-core/1.4.5/logback-core-1.4.5.jar:/home/samehabib/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar:/home/samehabib/.m2/repository/org/hibernate/validator/hibernate-validator/6.2.5.Final/hibernate-validator-6.2.5.Final.jar:/home/samehabib/.m2/repository/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar:/home/samehabib/.m2/repository/org/jpos/jpos/2.1.9/jpos-2.1.9.jar:/home/samehabib/.m2/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.jar:/home/samehabib/.m2/repository/org/javatuples/javatuples/1.2/javatuples-1.2.jar:/home/samehabib/.m2/repository/org/jline/jline/3.23.0/jline-3.23.0.jar:/home/samehabib/.m2/repository/org/apache-extras/beanshell/bsh/2.0b6/bsh-2.0b6.jar:/home/samehabib/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcprov-lts8on/2.73.2/bcprov-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcpg-lts8on/2.73.2/bcpg-lts8on-2.73.2.jar:/home/samehabib/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/samehabib/.m2/repository/org/osgi/org.osgi.core/6.0.0/org.osgi.core-6.0.0.jar:/home/samehabib/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/samehabib/.m2/repository/jdbm/jdbm/1.0/jdbm-1.0.jar:/home/samehabib/.m2/repository/com/sleepycat/je/18.3.12/je-18.3.12.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-core/2.9.2/sshd-core-2.9.2.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-common/2.9.2/sshd-common-2.9.2.jar:/home/samehabib/.m2/repository/org/slf4j/jcl-over-slf4j/1.7.32/jcl-over-slf4j-1.7.32.jar:/home/samehabib/.m2/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:/home/samehabib/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/samehabib/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-core/4.11.0/mockito-core-4.11.0.jar:/home/samehabib/.m2/repository/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar:/home/samehabib/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/samehabib/.m2/repository/org/mockito/mockito-junit-jupiter/4.11.0/mockito-junit-jupiter-4.11.0.jar:/home/samehabib/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.1/junit-jupiter-api-5.9.1.jar:/home/samehabib/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/samehabib/.m2/repository/org/junit/platform/junit-platform-commons/1.9.1/junit-platform-commons-1.9.1.jar:/home/samehabib/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/samehabib/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224.jar:, jakarta.persistence.jdbc.driver=org.postgresql.Driver, sun.cpu.endian=little, user.home=/home/samehabib, hibernate.c3p0.max_statements=50, user.language=en, hibernate.jdbc.fetch_size=50, java.specification.vendor=Oracle Corporation, hibernate.cache.provider_class=org.hibernate.cache.NoCacheProvider, java.version.date=2026-01-20, hibernate.autoFlush=true, java.home=/usr/lib/jvm/java-21-openjdk-amd64, file.separator=/, basedir=/home/samehabib/CMS-Platform/jpos-ee, java.vm.compressedOopsMode=Zero based, jakarta.persistence.jdbc.user=****, line.separator=
+, hibernate.persistenceUnitName=jposee-persistence, hibernate.c3p0.timeout=300, java.specification.name=Java Platform API Specification, java.vm.specification.vendor=Oracle Corporation, hibernate.flush_mode=AUTO, hibernate.transaction.coordinator_class=class org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorBuilderImpl, javax.persistence.jdbc.driver=org.postgresql.Driver, surefire.real.class.path=/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter-20260421234103320_3.jar, hibernate.hbm2ddl.auto=validate, sun.management.compiler=HotSpot 64-Bit Tiered Compilers, hibernate.c3p0.max_size=20, java.runtime.version=21.0.10+7-Ubuntu-124.04, user.name=samehabib, stdout.encoding=UTF-8, path.separator=:, hibernate.connection.username=****, os.version=6.6.87.2-microsoft-standard-WSL2, java.runtime.name=OpenJDK Runtime Environment, hibernate.connection.url=jdbc:postgresql://localhost:5433/jposee, file.encoding=UTF-8, hibernate.ejb.persistenceUnitName=jposee-persistence, java.vm.name=OpenJDK 64-Bit Server VM, hibernate.show_sql=false, localRepository=/home/samehabib/.m2/repository, hibernate.connection.driver_class=org.postgresql.Driver, java.vendor.url.bug=https://bugs.launchpad.net/ubuntu/+source/openjdk-21, java.io.tmpdir=/tmp, java.version=21.0.10, user.dir=/home/samehabib/CMS-Platform/jpos-ee, os.arch=amd64, java.vm.specification.name=Java Virtual Machine Specification, hibernate.connection.password=****, jakarta.persistence.jdbc.url=jdbc:postgresql://localhost:5433/jposee, hibernate.boot.CfgXmlAccessService.key=org.hibernate.boot.registry.StandardServiceRegistryBuilder$1@4760f169, native.encoding=UTF-8, java.library.path=/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib, stderr.encoding=UTF-8, java.vendor=Ubuntu, java.vm.info=mixed mode, sharing, java.vm.version=21.0.10+7-Ubuntu-124.04, hibernate.bytecode.use_reflection_optimizer=false, sun.io.unicode.encoding=UnicodeLittle, javax.persistence.jdbc.password=****, java.class.version=65.0}
+23:41:05.343 [main] INFO org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+23:41:05.351 [main] DEBUG org.hibernate.validator.internal.xml.config.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+23:41:05.352 [main] DEBUG org.hibernate.validator.internal.xml.config.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+23:41:05.352 [main] DEBUG org.hibernate.validator.internal.xml.config.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+23:41:05.352 [main] DEBUG org.hibernate.validator.internal.xml.config.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+23:41:05.356 [main] DEBUG org.hibernate.validator.internal.engine.resolver.TraversableResolvers - Found javax.persistence.Persistence on classpath containing 'getPersistenceUtil'. Assuming JPA 2 environment. Trying to instantiate JPA aware TraversableResolver
+23:41:05.357 [main] DEBUG org.hibernate.validator.internal.engine.resolver.TraversableResolvers - Instantiated JPA aware TraversableResolver of type org.hibernate.validator.internal.engine.resolver.JPATraversableResolver.
+23:41:05.369 [main] DEBUG org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator - Failed to load expression factory via classloader jdk.internal.loader.ClassLoaders$AppClassLoader@639fee48
+java.lang.NoClassDefFoundError: javax/el/ExpressionFactory
+	at org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator.canLoadExpressionFactory(ResourceBundleMessageInterpolator.java:216)
+	at org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator.buildExpressionFactory(ResourceBundleMessageInterpolator.java:170)
+	at org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator.<init>(ResourceBundleMessageInterpolator.java:94)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.getDefaultMessageInterpolator(AbstractConfigurationImpl.java:573)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.getDefaultMessageInterpolatorConfiguredWithClassLoader(AbstractConfigurationImpl.java:822)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.getMessageInterpolator(AbstractConfigurationImpl.java:483)
+	at org.hibernate.validator.internal.engine.ValidatorFactoryImpl.<init>(ValidatorFactoryImpl.java:154)
+	at org.hibernate.validator.HibernateValidator.buildValidatorFactory(HibernateValidator.java:38)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.buildValidatorFactory(AbstractConfigurationImpl.java:451)
+	at javax.validation.Validation.buildDefaultValidatorFactory(Validation.java:103)
+	at org.hibernate.cfg.beanvalidation.TypeSafeActivator.getValidatorFactory(TypeSafeActivator.java:501)
+	at org.hibernate.cfg.beanvalidation.TypeSafeActivator.activate(TypeSafeActivator.java:83)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.hibernate.cfg.beanvalidation.BeanValidationIntegrator.integrate(BeanValidationIntegrator.java:137)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:300)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:471)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1498)
+	at org.hibernate.jpa.HibernatePersistenceProvider.createEntityManagerFactory(HibernatePersistenceProvider.java:56)
+	at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:79)
+	at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:54)
+	at org.cms.jposee.ConnectionTest.setUp(ConnectionTest.java:31)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+	at org.junit.vintage.engine.execution.RunnerExecutor.execute(RunnerExecutor.java:42)
+	at org.junit.vintage.engine.VintageTestEngine.executeAllChildren(VintageTestEngine.java:80)
+	at org.junit.vintage.engine.VintageTestEngine.execute(VintageTestEngine.java:72)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+Caused by: java.lang.ClassNotFoundException: javax.el.ExpressionFactory
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 64 common frames omitted
+23:41:05.372 [main] DEBUG org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator - Failed to load expression factory via classloader jdk.internal.loader.ClassLoaders$AppClassLoader@639fee48
+java.lang.NoClassDefFoundError: javax/el/ExpressionFactory
+	at org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator.canLoadExpressionFactory(ResourceBundleMessageInterpolator.java:216)
+	at org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator.buildExpressionFactory(ResourceBundleMessageInterpolator.java:183)
+	at org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator.<init>(ResourceBundleMessageInterpolator.java:94)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.getDefaultMessageInterpolator(AbstractConfigurationImpl.java:573)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.getDefaultMessageInterpolatorConfiguredWithClassLoader(AbstractConfigurationImpl.java:822)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.getMessageInterpolator(AbstractConfigurationImpl.java:483)
+	at org.hibernate.validator.internal.engine.ValidatorFactoryImpl.<init>(ValidatorFactoryImpl.java:154)
+	at org.hibernate.validator.HibernateValidator.buildValidatorFactory(HibernateValidator.java:38)
+	at org.hibernate.validator.internal.engine.AbstractConfigurationImpl.buildValidatorFactory(AbstractConfigurationImpl.java:451)
+	at javax.validation.Validation.buildDefaultValidatorFactory(Validation.java:103)
+	at org.hibernate.cfg.beanvalidation.TypeSafeActivator.getValidatorFactory(TypeSafeActivator.java:501)
+	at org.hibernate.cfg.beanvalidation.TypeSafeActivator.activate(TypeSafeActivator.java:83)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.hibernate.cfg.beanvalidation.BeanValidationIntegrator.integrate(BeanValidationIntegrator.java:137)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:300)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:471)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1498)
+	at org.hibernate.jpa.HibernatePersistenceProvider.createEntityManagerFactory(HibernatePersistenceProvider.java:56)
+	at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:79)
+	at javax.persistence.Persistence.createEntityManagerFactory(Persistence.java:54)
+	at org.cms.jposee.ConnectionTest.setUp(ConnectionTest.java:31)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+	at org.junit.vintage.engine.execution.RunnerExecutor.execute(RunnerExecutor.java:42)
+	at org.junit.vintage.engine.VintageTestEngine.executeAllChildren(VintageTestEngine.java:80)
+	at org.junit.vintage.engine.VintageTestEngine.execute(VintageTestEngine.java:72)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+Caused by: java.lang.ClassNotFoundException: javax.el.ExpressionFactory
+	... 64 common frames omitted
+23:41:05.373 [main] DEBUG org.hibernate.cfg.beanvalidation.TypeSafeActivator - Unable to acquire Bean Validation ValidatorFactory, skipping activation
+23:41:05.374 [main] DEBUG org.hibernate.secure.spi.JaccIntegrator - Skipping JACC integration as it was not enabled
+23:41:05.375 [main] DEBUG org.hibernate.internal.SessionFactoryImpl - Instantiated session factory
+23:41:05.375 [main] DEBUG org.hibernate.type.spi.TypeConfiguration$Scope - Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@681adc8f] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@17f3eefb]
+23:41:05.413 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - Not known whether passed class name [org.cms.jposee.entity.IsoTransaction] is safe
+23:41:05.413 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : org.cms.jposee.entity.IsoTransaction
+23:41:05.576 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - Not known whether passed class name [org.cms.jposee.entity.IsoTransactionAudit] is safe
+23:41:05.577 [main] DEBUG org.hibernate.boot.internal.ClassLoaderAccessImpl - No temp ClassLoader provided; using live ClassLoader for loading potentially unsafe class : org.cms.jposee.entity.IsoTransactionAudit
+23:41:05.604 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister - Static SQL for entity: org.cms.jposee.entity.IsoTransaction
+23:41:05.605 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Version select: /* get version org.cms.jposee.entity.IsoTransaction */ select id from public.iso_transactions where id =?
+23:41:05.605 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Snapshot select: /* get current state org.cms.jposee.entity.IsoTransaction */ select isotransac_.id, isotransac_.amount as amount2_0_, isotransac_.auth_id_resp as auth_id_3_0_, isotransac_.compliance_checked as complian4_0_, isotransac_.created_by as created_6_0_, isotransac_.currency_code as currency7_0_, isotransac_.error_message as error_me8_0_, isotransac_.ip_address as ip_addre9_0_, isotransac_.merchant_id as merchan10_0_, isotransac_.merchant_name as merchan11_0_, isotransac_.mti as mti12_0_, isotransac_.pan as pan13_0_, isotransac_.pan_masked as pan_mas14_0_, isotransac_.processing_code as process15_0_, isotransac_.raw_request as raw_req16_0_, isotransac_.raw_response as raw_res17_0_, isotransac_.response_code as respons18_0_, isotransac_.retry_count as retry_c19_0_, isotransac_.rrn as rrn20_0_, isotransac_.sensitive_data_encrypted as sensiti21_0_, isotransac_.session_id as session22_0_, isotransac_.stan as stan23_0_, isotransac_.status as status24_0_, isotransac_.terminal_id as termina25_0_, isotransac_.updated_at as updated26_0_, isotransac_.updated_by as updated27_0_ from public.iso_transactions isotransac_ where isotransac_.id=?
+23:41:05.605 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Insert 0: /* insert org.cms.jposee.entity.IsoTransaction */ insert into public.iso_transactions (amount, auth_id_resp, compliance_checked, created_at, created_by, currency_code, error_message, ip_address, merchant_id, merchant_name, mti, pan, pan_masked, processing_code, raw_request, raw_response, response_code, retry_count, rrn, sensitive_data_encrypted, session_id, stan, status, terminal_id, updated_at, updated_by, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+23:41:05.605 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Update 0: /* update org.cms.jposee.entity.IsoTransaction */ update public.iso_transactions set amount=?, auth_id_resp=?, compliance_checked=?, created_by=?, currency_code=?, error_message=?, ip_address=?, merchant_id=?, merchant_name=?, mti=?, pan=?, pan_masked=?, processing_code=?, raw_request=?, raw_response=?, response_code=?, retry_count=?, rrn=?, sensitive_data_encrypted=?, session_id=?, stan=?, status=?, terminal_id=?, updated_at=?, updated_by=? where id=?
+23:41:05.605 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Delete 0: /* delete org.cms.jposee.entity.IsoTransaction */ delete from public.iso_transactions where id=?
+23:41:05.605 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Identity insert: /* insert org.cms.jposee.entity.IsoTransaction */ insert into public.iso_transactions (amount, auth_id_resp, compliance_checked, created_at, created_by, currency_code, error_message, ip_address, merchant_id, merchant_name, mti, pan, pan_masked, processing_code, raw_request, raw_response, response_code, retry_count, rrn, sensitive_data_encrypted, session_id, stan, status, terminal_id, updated_at, updated_by) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+23:41:05.618 [main] DEBUG org.hibernate.loader.plan.build.internal.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:0> -> org.hibernate.loader.plan.build.internal.spaces.EntityQuerySpaceImpl@467b0f6e]
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : amount
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : authIdResp
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : complianceChecked
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : createdAt
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : createdBy
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : currencyCode
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : errorMessage
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : ipAddress
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : merchantId
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : merchantName
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : mti
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : pan
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : panMasked
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : processingCode
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : rawRequest
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : rawResponse
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : responseCode
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : retryCount
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : rrn
+23:41:05.619 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : sensitiveDataEncrypted
+23:41:05.620 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : sessionId
+23:41:05.620 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : stan
+23:41:05.620 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : status
+23:41:05.620 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : terminalId
+23:41:05.620 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : updatedAt
+23:41:05.620 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : updatedBy
+23:41:05.620 [main] DEBUG org.hibernate.loader.plan.build.internal.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
+23:41:05.626 [main] DEBUG org.hibernate.loader.plan.exec.internal.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
+23:41:05.628 [main] DEBUG org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter - LoadPlan(entity=org.cms.jposee.entity.IsoTransaction)
+    - Returns
+       - EntityReturnImpl(entity=org.cms.jposee.entity.IsoTransaction, querySpaceUid=<gen:0>, path=org.cms.jposee.entity.IsoTransaction)
+    - QuerySpaces
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=org.cms.jposee.entity.IsoTransaction)
+          - SQL table alias mapping - isotransac0_
+          - alias suffix - 0_
+          - suffixed key columns - {id1_0_0_}
+
+23:41:05.629 [main] DEBUG org.hibernate.loader.entity.plan.EntityLoader - Static select for entity org.cms.jposee.entity.IsoTransaction [NONE]: select isotransac0_.id as id1_0_0_, isotransac0_.amount as amount2_0_0_, isotransac0_.auth_id_resp as auth_id_3_0_0_, isotransac0_.compliance_checked as complian4_0_0_, isotransac0_.created_at as created_5_0_0_, isotransac0_.created_by as created_6_0_0_, isotransac0_.currency_code as currency7_0_0_, isotransac0_.error_message as error_me8_0_0_, isotransac0_.ip_address as ip_addre9_0_0_, isotransac0_.merchant_id as merchan10_0_0_, isotransac0_.merchant_name as merchan11_0_0_, isotransac0_.mti as mti12_0_0_, isotransac0_.pan as pan13_0_0_, isotransac0_.pan_masked as pan_mas14_0_0_, isotransac0_.processing_code as process15_0_0_, isotransac0_.raw_request as raw_req16_0_0_, isotransac0_.raw_response as raw_res17_0_0_, isotransac0_.response_code as respons18_0_0_, isotransac0_.retry_count as retry_c19_0_0_, isotransac0_.rrn as rrn20_0_0_, isotransac0_.sensitive_data_encrypted as sensiti21_0_0_, isotransac0_.session_id as session22_0_0_, isotransac0_.stan as stan23_0_0_, isotransac0_.status as status24_0_0_, isotransac0_.terminal_id as termina25_0_0_, isotransac0_.updated_at as updated26_0_0_, isotransac0_.updated_by as updated27_0_0_ from public.iso_transactions isotransac0_ where isotransac0_.id=?
+23:41:05.630 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister - Static SQL for entity: org.cms.jposee.entity.IsoTransactionAudit
+23:41:05.631 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Version select: /* get version org.cms.jposee.entity.IsoTransactionAudit */ select id from public.iso_transactions_audit where id =?
+23:41:05.631 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Snapshot select: /* get current state org.cms.jposee.entity.IsoTransactionAudit */ select isotransac_.id, isotransac_.action as action2_1_, isotransac_.changed_by as changed_3_1_, isotransac_.compliance_notes as complian4_1_, isotransac_.compliance_verified as complian5_1_, isotransac_.field_name as field_na7_1_, isotransac_.ip_address as ip_addre8_1_, isotransac_.iso_transaction_id as iso_tran9_1_, isotransac_.new_value as new_val10_1_, isotransac_.notes as notes11_1_, isotransac_.old_value as old_val12_1_, isotransac_.reason as reason13_1_, isotransac_.session_id as session14_1_ from public.iso_transactions_audit isotransac_ where isotransac_.id=?
+23:41:05.631 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Insert 0: /* insert org.cms.jposee.entity.IsoTransactionAudit */ insert into public.iso_transactions_audit (action, changed_by, compliance_notes, compliance_verified, created_at, field_name, ip_address, iso_transaction_id, new_value, notes, old_value, reason, session_id, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+23:41:05.631 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Update 0: /* update org.cms.jposee.entity.IsoTransactionAudit */ update public.iso_transactions_audit set action=?, changed_by=?, compliance_notes=?, compliance_verified=?, field_name=?, ip_address=?, iso_transaction_id=?, new_value=?, notes=?, old_value=?, reason=?, session_id=? where id=?
+23:41:05.631 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Delete 0: /* delete org.cms.jposee.entity.IsoTransactionAudit */ delete from public.iso_transactions_audit where id=?
+23:41:05.631 [main] DEBUG org.hibernate.persister.entity.AbstractEntityPersister -  Identity insert: /* insert org.cms.jposee.entity.IsoTransactionAudit */ insert into public.iso_transactions_audit (action, changed_by, compliance_notes, compliance_verified, created_at, field_name, ip_address, iso_transaction_id, new_value, notes, old_value, reason, session_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+23:41:05.631 [main] DEBUG org.hibernate.loader.plan.build.internal.spaces.QuerySpacesImpl - Adding QuerySpace : uid = <gen:0> -> org.hibernate.loader.plan.build.internal.spaces.EntityQuerySpaceImpl@f557c37]
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : action
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : changedBy
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : complianceNotes
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : complianceVerified
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : createdAt
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : fieldName
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : ipAddress
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : isoTransactionId
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : newValue
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : notes
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : oldValue
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : reason
+23:41:05.631 [main] DEBUG org.hibernate.persister.walking.spi.MetamodelGraphWalker - Visiting attribute path : sessionId
+23:41:05.631 [main] DEBUG org.hibernate.loader.plan.build.internal.FetchStyleLoadPlanBuildingAssociationVisitationStrategy - Building LoadPlan...
+23:41:05.632 [main] DEBUG org.hibernate.loader.plan.exec.internal.LoadQueryJoinAndFetchProcessor - processing queryspace <gen:0>
+23:41:05.632 [main] DEBUG org.hibernate.loader.plan.build.spi.LoadPlanTreePrinter - LoadPlan(entity=org.cms.jposee.entity.IsoTransactionAudit)
+    - Returns
+       - EntityReturnImpl(entity=org.cms.jposee.entity.IsoTransactionAudit, querySpaceUid=<gen:0>, path=org.cms.jposee.entity.IsoTransactionAudit)
+    - QuerySpaces
+       - EntityQuerySpaceImpl(uid=<gen:0>, entity=org.cms.jposee.entity.IsoTransactionAudit)
+          - SQL table alias mapping - isotransac0_
+          - alias suffix - 0_
+          - suffixed key columns - {id1_1_0_}
+
+23:41:05.632 [main] DEBUG org.hibernate.loader.entity.plan.EntityLoader - Static select for entity org.cms.jposee.entity.IsoTransactionAudit [NONE]: select isotransac0_.id as id1_1_0_, isotransac0_.action as action2_1_0_, isotransac0_.changed_by as changed_3_1_0_, isotransac0_.compliance_notes as complian4_1_0_, isotransac0_.compliance_verified as complian5_1_0_, isotransac0_.created_at as created_6_1_0_, isotransac0_.field_name as field_na7_1_0_, isotransac0_.ip_address as ip_addre8_1_0_, isotransac0_.iso_transaction_id as iso_tran9_1_0_, isotransac0_.new_value as new_val10_1_0_, isotransac0_.notes as notes11_1_0_, isotransac0_.old_value as old_val12_1_0_, isotransac0_.reason as reason13_1_0_, isotransac0_.session_id as session14_1_0_ from public.iso_transactions_audit isotransac0_ where isotransac0_.id=?
+23:41:05.662 [main] INFO org.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@1e1232cf] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+23:41:05.728 [main] DEBUG org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - No JtaPlatform was specified, checking resolver
+23:41:05.729 [main] DEBUG org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformResolverInitiator - No JtaPlatformResolver was specified, using default [org.hibernate.engine.transaction.jta.platform.internal.StandardJtaPlatformResolver]
+23:41:05.732 [main] DEBUG org.hibernate.engine.transaction.jta.platform.internal.StandardJtaPlatformResolver - Could not resolve JtaPlatform, using default [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+23:41:05.732 [main] INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+23:41:05.737 [main] DEBUG org.hibernate.service.internal.SessionFactoryServiceRegistryImpl - EventListenerRegistry access via ServiceRegistry is deprecated.  Use `sessionFactory.getEventEngine().getListenerRegistry()` instead
+23:41:05.739 [main] DEBUG org.hibernate.hql.internal.QueryTranslatorFactoryInitiator - QueryTranslatorFactory: org.hibernate.hql.internal.ast.ASTQueryTranslatorFactory@20801cbb
+23:41:05.742 [main] DEBUG org.hibernate.query.spi.NamedQueryRepository - Checking 0 named HQL queries
+23:41:05.742 [main] DEBUG org.hibernate.query.spi.NamedQueryRepository - Checking 0 named SQL queries
+23:41:05.743 [main] DEBUG org.hibernate.internal.SessionFactoryRegistry - Initializing SessionFactoryRegistry : org.hibernate.internal.SessionFactoryRegistry@7b5cc918
+23:41:05.744 [main] DEBUG org.hibernate.internal.SessionFactoryRegistry - Registering SessionFactory: ca6839f2-a940-4f78-8f72-9297c4f074eb (<unnamed>)
+23:41:05.744 [main] DEBUG org.hibernate.internal.SessionFactoryRegistry - Not binding SessionFactory to JNDI, no JNDI name configured
+✅ EntityManagerFactory created successfully
+
+Creating EntityManager...
+23:41:05.786 [main] DEBUG org.hibernate.stat.internal.StatisticsInitiator - Statistics initialized [enabled=false]
+✅ EntityManager created successfully
+
+Executing test query...
+23:41:05.811 [main] DEBUG org.hibernate.SQL - 
+    /* dynamic native SQL query */ SELECT
+        COUNT(*) 
+    FROM
+        iso_transactions
+23:41:05.815 [main] DEBUG org.hibernate.loader.Loader - Result set row: 0
+23:41:05.816 [main] DEBUG org.hibernate.loader.Loader - Result row: 
+23:41:05.818 [main] DEBUG org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl - Initiating JDBC connection release from afterTransaction
+✅ Database query executed successfully
+   iso_transactions table exists with 101 records
+
+Verifying iso_transactions_audit table...
+23:41:05.820 [main] DEBUG org.hibernate.SQL - 
+    /* dynamic native SQL query */ SELECT
+        COUNT(*) 
+    FROM
+        iso_transactions_audit
+23:41:05.821 [main] DEBUG org.hibernate.loader.Loader - Result set row: 0
+23:41:05.821 [main] DEBUG org.hibernate.loader.Loader - Result row: 
+23:41:05.821 [main] DEBUG org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl - Initiating JDBC connection release from afterTransaction
+✅ iso_transactions_audit table exists with 2 records
+
+======================================================================
+✅ DATABASE CONNECTION TEST SUCCESSFUL!
+======================================================================
+Summary:
+  - Hibernate: ✅ Working
+  - PostgreSQL: ✅ Connected
+  - Database: jposee
+  - Tables: iso_transactions, iso_transactions_audit
+======================================================================
+23:41:05.822 [main] DEBUG org.hibernate.internal.SessionFactoryImpl - HHH000031: Closing
+23:41:05.824 [main] DEBUG org.hibernate.type.spi.TypeConfiguration$Scope - Un-scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration$Scope@7302ff13] from SessionFactory [org.hibernate.internal.SessionFactoryImpl@17f3eefb]
+23:41:05.825 [main] DEBUG org.hibernate.service.internal.AbstractServiceRegistryImpl - Implicitly destroying ServiceRegistry on de-registration of all child ServiceRegistries
+23:41:05.827 [main] DEBUG com.mchange.v2.c3p0.management.ActiveManagementCoordinator - MBean: com.mchange.v2.c3p0:type=PooledDataSource,identityToken=z8kfsxbh1ddw0kxbfr1db|52a70627,name=z8kfsxbh1ddw0kxbfr1db|52a70627 unregistered.
+23:41:05.827 [main] DEBUG com.mchange.v2.c3p0.management.ActiveManagementCoordinator - C3P0Registry mbean unregistered.
+23:41:05.827 [main] DEBUG org.hibernate.boot.registry.internal.BootstrapServiceRegistryImpl - Implicitly destroying Boot-strap registry on de-registration of all child ServiceRegistries
+23:41:05.827 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@2f52b1cb
+
+Resources cleaned up.
+23:41:05.827 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@2f52b1cb
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@2f52b1cb
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@2f52b1cb
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@42454a99
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@42454a99
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@42454a99
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@42454a99
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@5764a4a2
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@5764a4a2
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@5764a4a2
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@5764a4a2
+23:41:05.828 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@3fc1c9a
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@3fc1c9a
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@3fc1c9a
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@3fc1c9a
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Preparing to destroy resource: com.mchange.v2.c3p0.impl.NewPooledConnection@7053871d
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Preparing to destroy PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@7053871d
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool - Successfully destroyed PooledConnection: com.mchange.v2.c3p0.impl.NewPooledConnection@7053871d
+23:41:05.829 [Resource Destroyer in BasicResourcePool.close()] DEBUG com.mchange.v2.resourcepool.BasicResourcePool - Successfully destroyed resource: com.mchange.v2.c3p0.impl.NewPooledConnection@7053871d
+]]></system-out>
+  </testcase>
+</testsuite>

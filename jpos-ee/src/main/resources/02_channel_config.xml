@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  jPOS ISO 8583 Channel Configuration
+  
+  Purpose: Configure the ISO 8583 listener for incoming transactions
+  Port: 5001 (standard for ISO 8583)
+  Protocol: ISOChannel (binary ISO 8583 format)
+  
+  Channel Flow:
+    1. Listener accepts incoming connection on port 5001
+    2. Receives ISO 8583 binary message (0-byte TLV format)
+    3. Places message in queue for TransactionManager
+    4. TransactionManager processes through participant chain:
+       a. PersistRequest: Saves raw message immediately (status=RECEIVED)
+       b. Business logic participants (middle layers)
+       c. UpdateResponse: Updates transaction with response (status=PROCESSED/DECLINED/FAILED)
+    5. Response sent back to sender
+  
+  PCI-DSS Compliance:
+    - Requirement 10.1: All transactions logged (timestamps added by PersistRequest)
+    - Requirement 10.2: IP address captured from channel (peer_address)
+    - Requirement 10.3: Immutable audit trail created for each transaction
+  
+  Configuration: ISOServer (org.jpos.iso.ISOServer)
+  - Port: 5001 (where channel listens for connections)
+  - Backlog: 50 (queue size for pending connections)
+  - MaxClients: 100 (maximum simultaneous ISO clients)
+  
+  Author: jPOS-EE Persistence Layer
+  Version: 1.0
+  Date: April 21, 2026
+-->
+<channel>
+  <!-- ============================================================ -->
+  <!-- ISO 8583 SERVER CONFIGURATION -->
+  <!-- ============================================================ -->
+  
+  <!-- Listen for incoming ISO 8583 transactions on port 5001 -->
+  <server 
+      class="org.jpos.iso.ISOServer"
+      name="ISOServer"
+      logger="Q2"
+      realm="jposee-iso">
+    
+    <!-- Port Configuration -->
+    <!-- 5001: Standard ISO 8583 transaction port (non-privileged) -->
+    <property name="port" value="5001"/>
+    
+    <!-- Backlog: Queue size for pending client connections -->
+    <!-- 50 allows reasonable concurrent connection attempts -->
+    <property name="backlog" value="50"/>
+    
+    <!-- MaxClients: Maximum number of simultaneous ISO clients -->
+    <!-- 100 typical for moderate transaction volumes -->
+    <property name="max-clients" value="100"/>
+    
+    <!-- Socket Options -->
+    <!-- Enable TCP keep-alive to detect dropped connections -->
+    <property name="socket-keep-alive" value="true"/>
+    
+    <!-- Socket timeout: 60 seconds (60000 ms) -->
+    <!-- Time before socket times out if no activity -->
+    <property name="socket-timeout" value="60000"/>
+    
+    <!-- ============================================================ -->
+    <!-- ISO CHANNEL CONFIGURATION -->
+    <!-- ============================================================ -->
+    
+    <!-- Channel Type: ISOChannel -->
+    <!-- Handles binary ISO 8583 messages with 0-byte TLV (Type-Length-Value) encoding -->
+    <channel 
+        class="org.jpos.iso.ISOChannel"
+        logger="Q2">
+      
+      <!-- Packager: Defines ISO 8583 message structure -->
+      <!-- Uses GenericPackager for flexible field mapping -->
+      <packager 
+          class="org.jpos.iso.packager.GenericPackager">
+        
+        <!-- Packager configuration file (defines field layout) -->
+        <!-- Standard: /org/jpos/iso/packager/genericPackager.xml -->
+        <property name="config" value="org/jpos/iso/packager/genericPackager.xml"/>
+      </packager>
+      
+      <!-- Message factory for creating ISO messages from binary data -->
+      <message-factory 
+          class="org.jpos.iso.ISOMessageFactory"/>
+    </channel>
+    
+    <!-- ============================================================ -->
+    <!-- REQUEST HANDLER (Entry point for incoming transactions) -->
+    <!-- ============================================================ -->
+    
+    <!-- Request handler processes incoming ISO messages -->
+    <!-- Routes to TransactionManager for processing -->
+    <request-listener 
+        class="org.jpos.iso.ISORequestListener"
+        logger="Q2"
+        realm="jposee-iso">
+      
+      <!-- TransactionManager to use for processing -->
+      <!-- MUST reference the TransactionManager from 01_iso_persist.xml -->
+      <property name="transaction-manager" value="TransactionManager"/>
+      
+      <!-- Queue name for incoming requests -->
+      <!-- Messages placed in "REQUEST" queue for processing -->
+      <property name="queue" value="REQUEST"/>
+      
+      <!-- Timeout for request processing: 30 seconds -->
+      <!-- If processing takes longer, transaction is aborted -->
+      <property name="timeout" value="30000"/>
+      
+      <!-- Response strategy -->
+      <!-- ASYNC: Return response asynchronously (don't wait for processing) -->
+      <!-- This allows ISO client to receive response quickly -->
+      <property name="response-mode" value="ASYNC"/>
+    </request-listener>
+    
+    <!-- ============================================================ -->
+    <!-- ERROR HANDLING & LOGGING -->
+    <!-- ============================================================ -->
+    
+    <!-- Log all incoming connections -->
+    <property name="log-connections" value="true"/>
+    
+    <!-- Log all ISO messages (at TRACE level) -->
+    <property name="log-messages" value="true"/>
+    
+    <!-- Log message details (field-by-field breakdown) -->
+    <property name="log-message-details" value="true"/>
+    
+    <!-- Exception handler for socket errors -->
+    <exception-handler 
+        class="org.jpos.iso.ISOExceptionHandler"
+        logger="Q2">
+      <!-- Action on exception: LOG_AND_CONTINUE (don't crash on bad messages) -->
+      <property name="on-error" value="LOG_AND_CONTINUE"/>
+    </exception-handler>
+    
+    <!-- ============================================================ -->
+    <!-- NETWORK INFORMATION CAPTURE (PCI-DSS Requirement 10.2) -->
+    <!-- ============================================================ -->
+    
+    <!-- Capture peer IP address for audit trail -->
+    <!-- Available in context as PEER_ADDRESS -->
+    <property name="capture-peer-address" value="true"/>
+    
+    <!-- Capture remote port for audit trail -->
+    <!-- Available in context as PEER_PORT -->
+    <property name="capture-peer-port" value="true"/>
+    
+    <!-- ============================================================ -->
+    <!-- PERFORMANCE TUNING -->
+    <!-- ============================================================ -->
+    
+    <!-- Thread pool size for handling concurrent connections -->
+    <!-- Typical: 10-20 threads for moderate load -->
+    <property name="thread-pool-size" value="20"/>
+    
+    <!-- Queue depth before rejecting new requests -->
+    <!-- Set to 1000 to handle burst traffic -->
+    <property name="max-queue-depth" value="1000"/>
+    
+  </server>
+  
+  <!-- ============================================================ -->
+  <!-- RESPONSE SENDER (Sends responses back to ISO clients) -->
+  <!-- ============================================================ -->
+  
+  <!-- Listen for responses from TransactionManager and send to client -->
+  <response-sender 
+      class="org.jpos.iso.ISOResponseSender"
+      name="ISOResponseSender"
+      logger="Q2"
+      realm="jposee-iso">
+    
+    <!-- Queue to listen for responses -->
+    <!-- TransactionManager places responses in "RESPONSE" queue -->
+    <property name="response-queue" value="RESPONSE"/>
+    
+    <!-- Maximum response time: 30 seconds -->
+    <!-- If response hasn't been sent by this time, client times out -->
+    <property name="response-timeout" value="30000"/>
+    
+    <!-- Send response regardless of transaction outcome -->
+    <!-- Always respond to ISO client (even on errors) -->
+    <property name="always-respond" value="true"/>
+    
+    <!-- Log all responses sent -->
+    <property name="log-responses" value="true"/>
+  </response-sender>
+  
+  <!-- ============================================================ -->
+  <!-- STATISTICS & MONITORING -->
+  <!-- ============================================================ -->
+  
+  <!-- Collect performance metrics -->
+  <statistics 
+      class="org.jpos.iso.ISOChannelStatistics"
+      name="ChannelStatistics"
+      logger="Q2">
+    
+    <!-- Metrics: Transactions/sec, Avg response time, Errors/sec -->
+    <!-- Report every 60 seconds -->
+    <property name="report-interval" value="60000"/>
+    
+    <!-- Log statistics to separate file for analysis -->
+    <property name="statistics-file" value="logs/channel-stats.log"/>
+  </statistics>
+
+</channel>

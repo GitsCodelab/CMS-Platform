@@ -1,0 +1,13 @@
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/repository/impl/IsoTransactionRepositoryTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/repository/impl/IsoTransactionAuditRepositoryTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/integration/load/LoadTestingIntegrationTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/entity/IsoTransactionAuditTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/util/IsoUtilTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/entity/IsoTransactionTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/PersistenceProviderTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/integration/SimpleTransactionTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/integration/POSSimulationTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/integration/TransactionAuditTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/DebugConnectionTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/integration/TransactionFlowIntegrationTest.java
+/home/samehabib/CMS-Platform/jpos-ee/src/test/java/org/cms/jposee/ConnectionTest.java

@@ -1,0 +1,9 @@
+org/cms/jposee/repository/impl/IsoTransactionAuditRepositoryImpl.class
+org/cms/jposee/entity/IsoTransaction.class
+org/cms/jposee/entity/IsoTransactionAudit.class
+org/cms/jposee/participant/UpdateResponse.class
+org/cms/jposee/repository/IsoTransactionAuditRepository.class
+org/cms/jposee/util/IsoUtil.class
+org/cms/jposee/repository/impl/IsoTransactionRepositoryImpl.class
+org/cms/jposee/repository/IsoTransactionRepository.class
+org/cms/jposee/participant/PersistRequest.class

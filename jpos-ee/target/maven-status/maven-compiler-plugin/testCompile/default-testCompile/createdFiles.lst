@@ -1,0 +1,13 @@
+org/cms/jposee/util/IsoUtilTest.class
+org/cms/jposee/integration/TransactionFlowIntegrationTest.class
+org/cms/jposee/entity/IsoTransactionAuditTest.class
+org/cms/jposee/integration/POSSimulationTest.class
+org/cms/jposee/entity/IsoTransactionTest.class
+org/cms/jposee/PersistenceProviderTest.class
+org/cms/jposee/integration/SimpleTransactionTest.class
+org/cms/jposee/ConnectionTest.class
+org/cms/jposee/repository/impl/IsoTransactionRepositoryTest.class
+org/cms/jposee/integration/TransactionAuditTest.class
+org/cms/jposee/repository/impl/IsoTransactionAuditRepositoryTest.class
+org/cms/jposee/DebugConnectionTest.class
+org/cms/jposee/integration/load/LoadTestingIntegrationTest.class

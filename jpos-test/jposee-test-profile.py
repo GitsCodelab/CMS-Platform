@@ -8,8 +8,11 @@ Supports: Auth, Capture, Reversal, Refund, and other payment operations
 import socket
 import struct
 import time
+import requests
+import json
 from enum import Enum
 from typing import Dict, Tuple
+from datetime import datetime
 
 class TransactionType(Enum):
     """ISO 8583 Message Type Identifiers"""
@@ -65,6 +68,9 @@ class jPOSEETestProfile:
         self.port = port
         self.timeout = timeout
         self.results = []
+        self.api_url = "http://localhost:8000/jposee"  # Backend API URL
+        self.persisted_count = 0
+        self.transaction_counter = 0  # Counter for unique transaction IDs
     
     def send_transaction(self, transaction: TestTransaction) -> Dict:
         """Send a single transaction to jPOS EE"""
@@ -73,7 +79,10 @@ class jPOSEETestProfile:
             "status": "PENDING",
             "message": "",
             "response": None,
-            "error": None
+            "error": None,
+            "api_persisted": False,
+            "api_error": None,
+            "transaction_id": None
         }
         
         try:
@@ -97,10 +106,23 @@ class jPOSEETestProfile:
                 if response:
                     result["response"] = response
                     result["status"] = "SUCCESS"
+                    
+                    # NEW: Persist response to backend API
+                    api_result = self._persist_to_api(transaction, response)
+                    result["api_persisted"] = api_result.get("success", False)
+                    result["transaction_id"] = api_result.get("transaction_id")
+                    result["api_error"] = api_result.get("error") if not api_result.get("success") else None
+                    
             except socket.timeout:
                 result["status"] = "TIMEOUT"
             except ConnectionResetError:
                 result["status"] = "PROCESSED"  # Normal for jPOS
+                
+                # NEW: Still try to persist even if connection reset
+                api_result = self._persist_to_api(transaction, None)
+                result["api_persisted"] = api_result.get("success", False)
+                result["transaction_id"] = api_result.get("transaction_id")
+                result["api_error"] = api_result.get("error") if not api_result.get("success") else None
             
             s.close()
             
@@ -114,6 +136,60 @@ class jPOSEETestProfile:
         self.results.append(result)
         return result
     
+    def _persist_to_api(self, transaction: TestTransaction, response: bytes) -> Dict:
+        """Persist transaction to backend API"""
+        try:
+            # Increment counter to ensure unique txn_id
+            self.transaction_counter += 1
+            
+            # Build ISO-like payload from transaction
+            iso_data = {
+                "mti": transaction.trans_type.value,
+                "txn_id": f"TEST-{transaction.timestamp}-{self.transaction_counter}",  # Unique ID
+                "field_2": transaction.card_number,  # PAN
+                "field_3": "000000",  # Processing code
+                "field_4": str(transaction.amount),
+                "field_7": transaction.timestamp,
+                "field_11": "000001",  # STAN
+                "field_18": "5411",  # MCC
+                "merchant_id": "TEST_MERCHANT",
+                "currency": "USD",
+                "card_last4": transaction.card_number[-4:],
+                "card_bin": transaction.card_number[:6]
+            }
+            
+            # POST to webhook endpoint
+            response_obj = requests.post(
+                f"{self.api_url}/webhook/iso-message",
+                json=iso_data,
+                timeout=5
+            )
+            
+            if response_obj.status_code == 201:
+                data = response_obj.json()
+                return {
+                    "success": True,
+                    "transaction_id": data.get("transaction_id"),
+                    "txn_id": data.get("txn_id"),
+                    "message": data.get("message")
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": f"API returned {response_obj.status_code}"
+                }
+                
+        except requests.exceptions.ConnectionError:
+            return {
+                "success": False,
+                "error": f"Cannot connect to API at {self.api_url}"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
     def print_result(self, result: Dict):
         """Print formatted result"""
         status_emoji = {
@@ -126,9 +202,17 @@ class jPOSEETestProfile:
         }
         
         emoji = status_emoji.get(result["status"], "?")
+        persist_emoji = "💾" if result.get("api_persisted") else "❌"
+        
         print(f"\n{emoji} Transaction: {result['name']}")
         print(f"   Status: {result['status']}")
         print(f"   Message: {result['message']}")
+        if result.get("transaction_id"):
+            print(f"   Database ID: {result['transaction_id']}")
+        persist_status = "✅ SAVED" if result.get("api_persisted") else "❌ NOT SAVED"
+        if result.get("api_error"):
+            persist_status += f" ({result['api_error']})"
+        print(f"   {persist_emoji} API Persistence: {persist_status}")
         if result["error"]:
             print(f"   Error: {result['error']}")
     
@@ -141,6 +225,7 @@ class jPOSEETestProfile:
         total = len(self.results)
         success = len([r for r in self.results if r["status"] in ["SUCCESS", "PROCESSED"]])
         failed = len([r for r in self.results if r["status"] == "FAILED"])
+        persisted = len([r for r in self.results if r.get("api_persisted")])
         
         print("\n" + "=" * 70)
         print("TEST SUMMARY")
@@ -148,6 +233,7 @@ class jPOSEETestProfile:
         print(f"Total Transactions: {total}")
         print(f"Successful: {success} ({success*100//total if total else 0}%)")
         print(f"Failed: {failed} ({failed*100//total if total else 0}%)")
+        print(f"💾 Persisted to Database: {persisted}/{total} ({persisted*100//total if total else 0}%)")
         print("=" * 70)
 
 def run_visa_tests():

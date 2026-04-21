@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+                                 http://java.sun.com/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <!-- ====================================================================
+         JPOSEE Persistence Unit
+         Purpose: JPA configuration for ISO 8583 transaction persistence
+         Database: PostgreSQL (cms-postgresql)
+         Date: April 21, 2026
+         ==================================================================== -->
+
+    <persistence-unit name="jposee-persistence" transaction-type="RESOURCE_LOCAL">
+        
+        <!-- ================================================================
+             JPA Provider Configuration
+             Using Hibernate as the JPA implementation
+             ================================================================ -->
+        <provider>org.hibernate.jpa.HibernateJpaProvider</provider>
+        
+        <!-- ================================================================
+             ENTITY CLASSES (Will add these in Phase 2)
+             ================================================================ -->
+        <class>org.cms.jposee.entity.IsoTransaction</class>
+        <class>org.cms.jposee.entity.IsoTransactionAudit</class>
+        
+        <!-- ================================================================
+             PROPERTIES: DATABASE CONNECTION
+             ================================================================ -->
+        <properties>
+            
+            <!-- Database Driver (PostgreSQL JDBC Driver) -->
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            
+            <!-- Database URL
+                 Format: jdbc:postgresql://HOST:PORT/DATABASE
+                 Connection to jposee-db database -->
+            <property name="javax.persistence.jdbc.url" 
+                      value="jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:jposee}"/>
+            
+            <!-- Database Credentials 
+                 These should come from environment variables in production -->
+            <property name="javax.persistence.jdbc.user" value="${DB_USER:postgres}"/>
+            <property name="javax.persistence.jdbc.password" value="${DB_PASS:postgres}"/>
+            
+            <!-- ============================================================
+                 HIBERNATE PROPERTIES
+                 ============================================================ -->
+            
+            <!-- SQL Dialect for PostgreSQL
+                 Ensures Hibernate generates correct SQL for PostgreSQL -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            
+            <!-- Schema Generation Policy
+                 validate = Don't change schema, just validate
+                 update = Update schema if needed
+                 create = Drop and recreate on startup
+                 create-drop = Create on startup, drop on shutdown
+                 
+                 PRODUCTION: Use "validate" or "none" -->
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            
+            <!-- Connection Pool Configuration
+                 Using HikariCP connection pool for optimal performance -->
+            <property name="hibernate.c3p0.min_size" value="5"/>
+            <property name="hibernate.c3p0.max_size" value="20"/>
+            <property name="hibernate.c3p0.timeout" value="300"/>
+            <property name="hibernate.c3p0.max_statements" value="50"/>
+            
+            <!-- ============================================================
+                 DEBUGGING & LOGGING
+                 ============================================================ -->
+            
+            <!-- Show SQL statements (disable in production) -->
+            <property name="hibernate.show_sql" value="false"/>
+            
+            <!-- Format SQL for readability -->
+            <property name="hibernate.format_sql" value="true"/>
+            
+            <!-- Include SQL comments in logs -->
+            <property name="hibernate.use_sql_comments" value="true"/>
+            
+            <!-- Generate statistics (useful for performance tuning) -->
+            <property name="hibernate.generate_statistics" value="false"/>
+            
+            <!-- ============================================================
+                 PERFORMANCE TUNING
+                 ============================================================ -->
+            
+            <!-- Batch size for inserts (improves write performance) -->
+            <property name="hibernate.jdbc.batch_size" value="20"/>
+            
+            <!-- Batch updates -->
+            <property name="hibernate.jdbc.fetch_size" value="50"/>
+            
+            <!-- Use generated IDs -->
+            <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
+            
+            <!-- ============================================================
+                 TRANSACTION SETTINGS
+                 ============================================================ -->
+            
+            <!-- Flush mode (when to sync to DB) -->
+            <property name="hibernate.flush_mode" value="AUTO"/>
+            
+            <!-- Automatic flushing before queries -->
+            <property name="hibernate.autoFlush" value="true"/>
+            
+            <!-- ============================================================
+                 CACHING (for development, disable in production)
+                 ============================================================ -->
+            
+            <!-- Second-level cache provider -->
+            <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+            
+            <!-- ============================================================
+                 POSTGRESQL-SPECIFIC SETTINGS
+                 ============================================================ -->
+            
+            <!-- Use PostgreSQL-specific SQL functions if needed -->
+            <property name="hibernate.dialect.storage_engine" value=""/>
+            
+            <!-- For UUID support in PostgreSQL -->
+            <property name="hibernate.use_sql_comments" value="true"/>
+            
+        </properties>
+    </persistence-unit>
+
+    <!-- ====================================================================
+         NOTES FOR CONFIGURATION
+         ==================================================================== 
+         
+         Environment Variables (Production):
+         - DB_HOST: PostgreSQL host (default: localhost)
+         - DB_PORT: PostgreSQL port (default: 5433)
+         - DB_NAME: Database name (default: jposee)
+         - DB_USER: Database user (default: postgres)
+         - DB_PASS: Database password (default: postgres)
+         
+         Example Docker environment:
+         DB_HOST=jposee-db
+         DB_PORT=5433
+         DB_NAME=jposee
+         DB_USER=postgres
+         DB_PASS=postgres
+         
+         Connection Pool Tuning:
+         - min_size: Minimum connections kept open (5 for dev, 10+ for prod)
+         - max_size: Maximum connections allowed (20 for dev, 50-100 for prod)
+         - timeout: Connection idle timeout in seconds (300 = 5 minutes)
+         
+         For High Volume (1000+ txn/sec):
+         - Increase min_size to 10-20
+         - Increase max_size to 50-100
+         - Increase batch_size to 50-100
+         - Consider async persistence
+         
+         ==================================================================== -->
+
+</persistence>
