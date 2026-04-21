@@ -364,11 +364,29 @@ PostgreSQL jposee-db
 - See [jpos-ee/PHASE_5_COMPLETION_PLAN.md](jpos-ee/PHASE_5_COMPLETION_PLAN.md) for complete Phase 5 details
 - Transaction flow diagram, test results, PCI-DSS mapping, Phase 6 roadmap
 
+**Webhook Approach**: ✅ **REMOVED** (April 21, 2026)
+- Previous webhook-based approach completely removed:
+  - ❌ Deleted: `backend/app/services/iso_message_handler.py`
+  - ❌ Removed: `/webhook/iso-message` endpoint
+  - ❌ Removed: `/webhook/iso-response` endpoint
+  - ❌ Removed: `/webhook/parse-iso` endpoint
+- **Reason**: Native jPOS persistence is simpler, faster, and more reliable
+- **Benefits**:
+  - Direct database storage (no HTTP latency)
+  - Guaranteed transaction consistency
+  - Immutable audit trail built-in
+  - Cleaner architecture with fewer moving parts
+  - Better PCI-DSS compliance (no callback delays)
+
 **Next Phase (Phase 6)**:
-- [ ] Staging deployment and parallel validation
-- [ ] Dual-transaction logging (webhook + native comparison)
-- [ ] 24-48 hour production readiness verification
+- [ ] Staging deployment and native persistence validation
+- [ ] Production readiness verification (24-48 hour load testing)
 - [ ] Final cutover to production with zero downtime
+
+**Webhook Approach**: ✅ **REMOVED** - Replaced with native jPOS persistence
+- All ISO transactions now persisted directly by jPOS-EE Participants
+- No webhook callbacks needed - direct PostgreSQL storage
+- Cleaner architecture, better performance, guaranteed consistency
 
 ---
 
