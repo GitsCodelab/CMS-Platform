@@ -60,41 +60,104 @@ export function RecordForm({ onSubmit, initialData, onCancel, loading }) {
   }
 
   return (
-    <div className="card">
-      <div className="card-header bg-primary text-white">
-        <h5 className="mb-0">{initialData ? 'Edit Record' : 'Add New Record'}</h5>
+    <div style={{
+      backgroundColor: '#FFFFFF',
+      borderRadius: '4px',
+      border: '1px solid var(--sap-border-light)',
+      boxShadow: 'var(--sap-shadow)',
+      overflow: 'hidden'
+    }}>
+      {/* Form Header */}
+      <div style={{
+        backgroundColor: '#F0F0F0',
+        borderBottom: '1px solid var(--sap-border-light)',
+        padding: '1.5rem',
+        borderLeft: '4px solid var(--sap-primary)'
+      }}>
+        <h5 style={{
+          margin: 0,
+          fontSize: '1.125rem',
+          fontWeight: '600',
+          color: 'var(--sap-primary)'
+        }}>
+          {initialData ? '✏️ Edit Record' : '➕ Add New Record'}
+        </h5>
       </div>
-      <div className="card-body">
+
+      {/* Form Body */}
+      <div style={{ padding: '2rem' }}>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="id" className="form-label">ID</label>
+          {/* ID Field */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label htmlFor="id" style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              color: 'var(--sap-text)'
+            }}>
+              ID
+            </label>
             <input
               type="text"
-              className={`form-control ${errors.id ? 'is-invalid' : ''}`}
+              className="form-control"
               id="id"
               name="id"
               value={formData.id}
               onChange={handleChange}
               disabled={!!initialData}
+              style={{
+                borderColor: errors.id ? 'var(--sap-error)' : 'var(--sap-border)',
+                backgroundColor: initialData ? '#F5F5F5' : 'white'
+              }}
             />
-            {errors.id && <div className="invalid-feedback d-block">{errors.id}</div>}
+            {errors.id && <div style={{
+              color: 'var(--sap-error)',
+              fontSize: '0.8125rem',
+              marginTop: '0.375rem'
+            }}>⚠️ {errors.id}</div>}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">Name</label>
+          {/* Name Field */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label htmlFor="name" style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              color: 'var(--sap-text)'
+            }}>
+              Name
+            </label>
             <input
               type="text"
-              className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+              className="form-control"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
+              style={{
+                borderColor: errors.name ? 'var(--sap-error)' : 'var(--sap-border)'
+              }}
             />
-            {errors.name && <div className="invalid-feedback d-block">{errors.name}</div>}
+            {errors.name && <div style={{
+              color: 'var(--sap-error)',
+              fontSize: '0.8125rem',
+              marginTop: '0.375rem'
+            }}>⚠️ {errors.name}</div>}
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
+          {/* Description Field */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label htmlFor="description" style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              color: 'var(--sap-text)'
+            }}>
+              Description
+            </label>
             <textarea
               className="form-control"
               id="description"
@@ -102,38 +165,103 @@ export function RecordForm({ onSubmit, initialData, onCancel, loading }) {
               value={formData.description}
               onChange={handleChange}
               rows="3"
+              style={{
+                borderColor: 'var(--sap-border)',
+                resize: 'vertical'
+              }}
             />
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="status" className="form-label">Status</label>
+          {/* Status Field */}
+          <div style={{ marginBottom: '2rem' }}>
+            <label htmlFor="status" style={{
+              display: 'block',
+              marginBottom: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              color: 'var(--sap-text)'
+            }}>
+              Status
+            </label>
             <select
               className="form-select"
               id="status"
               name="status"
               value={formData.status}
               onChange={handleChange}
+              style={{
+                borderColor: 'var(--sap-border)'
+              }}
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="active">✓ Active</option>
+              <option value="inactive">✗ Inactive</option>
             </select>
           </div>
 
-          <div className="d-grid gap-2">
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', gap: '1rem' }}>
             <button
               type="submit"
-              className="btn btn-primary"
               disabled={loading}
+              style={{
+                flex: 1,
+                padding: '0.75rem 1.5rem',
+                backgroundColor: loading ? '#CCC' : 'var(--sap-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = 'var(--sap-primary-dark)'
+                  e.target.style.transform = 'translateY(-1px)'
+                  e.target.style.boxShadow = 'var(--sap-shadow-md)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = 'var(--sap-primary)'
+                  e.target.style.transform = 'translateY(0)'
+                  e.target.style.boxShadow = 'var(--sap-shadow)'
+                }
+              }}
             >
-              {loading ? 'Saving...' : 'Save'}
+              💾 {loading ? 'Saving...' : 'Save Record'}
             </button>
             <button
               type="button"
-              className="btn btn-secondary"
               onClick={onCancel}
               disabled={loading}
+              style={{
+                flex: 1,
+                padding: '0.75rem 1.5rem',
+                backgroundColor: '#FFFFFF',
+                color: 'var(--sap-secondary)',
+                border: '1px solid var(--sap-border)',
+                borderRadius: '4px',
+                fontSize: '0.875rem',
+                fontWeight: '600',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = 'var(--sap-secondary-light)'
+                  e.target.style.transform = 'translateY(-1px)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) {
+                  e.target.style.backgroundColor = '#FFFFFF'
+                  e.target.style.transform = 'translateY(0)'
+                }
+              }}
             >
-              Cancel
+              ✕ Cancel
             </button>
           </div>
         </form>
