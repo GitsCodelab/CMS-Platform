@@ -1,9 +1,13 @@
 # ISO to API Integration - Implementation Status
 
+> **📝 HISTORICAL DOCUMENT**: This document describes the webhook-based integration approach that was explored.
+> The webhook approach has been **REMOVED** in favor of native jPOS persistence (April 21, 2026).
+> For current implementation, see [README.md](README.md) Phase 5 section and [jpos-ee/PHASE_5_COMPLETION_PLAN.md](jpos-ee/PHASE_5_COMPLETION_PLAN.md).
+
 **Date**: April 21, 2026  
 **Issue**: ISO messages sent to jPOS (port 5001) don't appear in backend API  
-**Status**: ✅ **RESOLVED - INTEGRATION LAYER IMPLEMENTED**  
-**Persistence Rate**: 100% (4/4 transactions successfully persisted)
+**Original Status**: ✅ **RESOLVED** (Webhook approach implemented)  
+**Current Status**: ✅ **SUPERSEDED** - Native jPOS persistence now used instead
 
 ---
 
