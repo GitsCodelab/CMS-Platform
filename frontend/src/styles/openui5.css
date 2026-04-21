@@ -1,0 +1,873 @@
+/* OpenUI5 SAP Horizon Theme - Comprehensive Styling */
+
+:root {
+  /* SAP Horizon Color Palette */
+  --ui5-primary: #0B5394;
+  --ui5-primary-dark: #073B7D;
+  --ui5-primary-light: #E8F4FD;
+  
+  --ui5-secondary: #107E8B;
+  --ui5-secondary-dark: #0C5A68;
+  --ui5-secondary-light: #E8F4F7;
+  
+  --ui5-success: #107E3B;
+  --ui5-warning: #E67E22;
+  --ui5-error: #D32F2F;
+  --ui5-info: #0B5394;
+  
+  --ui5-text: #32363A;
+  --ui5-text-secondary: #6A6D70;
+  --ui5-text-muted: #9DA0A4;
+  
+  --ui5-bg-light: #F9F9F9;
+  --ui5-bg: #FFFFFF;
+  --ui5-border-light: #D9D9D9;
+  --ui5-border: #BDBDBD;
+  
+  --ui5-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --ui5-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --ui5-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+  
+  --ui5-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ui5-spacing-xs: 0.25rem;
+  --ui5-spacing-sm: 0.5rem;
+  --ui5-spacing-md: 1rem;
+  --ui5-spacing-lg: 1.5rem;
+  --ui5-spacing-xl: 2rem;
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+  font-family: var(--ui5-font-family);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #FAFAFA;
+  color: var(--ui5-text);
+}
+
+/* ============================================
+   OPENUI5 SHELL - Main Application Container
+   ============================================ */
+
+.ui5-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #FAFAFA;
+}
+
+/* Shell Header */
+.ui5-shell-header {
+  background: linear-gradient(135deg, var(--ui5-primary) 0%, var(--ui5-primary-dark) 100%);
+  color: white;
+  padding: 0 var(--ui5-spacing-lg);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: var(--ui5-spacing-md);
+  box-shadow: var(--ui5-shadow-md);
+  border-bottom: 3px solid var(--ui5-secondary);
+}
+
+.ui5-shell-header-button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: var(--ui5-spacing-sm);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.ui5-shell-header-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.ui5-shell-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.ui5-shell-header-spacer {
+  flex: 1;
+}
+
+.ui5-shell-user {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Shell Body */
+.ui5-shell-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Shell Footer */
+.ui5-shell-footer {
+  background-color: var(--ui5-bg-light);
+  border-top: 1px solid var(--ui5-border-light);
+  padding: var(--ui5-spacing-md);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ui5-text-secondary);
+}
+
+.ui5-shell-footer p {
+  margin: 0;
+}
+
+/* ============================================
+   OPENUI5 SIDE NAVIGATION
+   ============================================ */
+
+.ui5-sidenav {
+  width: 280px;
+  background-color: var(--ui5-bg);
+  border-right: 1px solid var(--ui5-border-light);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: width 300ms ease-in-out;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.ui5-sidenav.closed {
+  width: 0;
+  overflow: hidden;
+}
+
+.ui5-sidenav-content {
+  flex: 1;
+  padding: var(--ui5-spacing-md) 0;
+}
+
+.ui5-sidenav-group {
+  margin-bottom: var(--ui5-spacing-md);
+}
+
+.ui5-sidenav-item,
+.ui5-sidenav-subitem {
+  display: flex;
+  align-items: center;
+  gap: var(--ui5-spacing-md);
+  padding: var(--ui5-spacing-md) var(--ui5-spacing-lg);
+  text-decoration: none;
+  color: var(--ui5-text);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  font-weight: 500;
+}
+
+.ui5-sidenav-item:hover {
+  background-color: var(--ui5-bg-light);
+  color: var(--ui5-primary);
+}
+
+.ui5-sidenav-subitem {
+  font-size: 0.9rem;
+  padding-left: calc(var(--ui5-spacing-lg) * 2.5);
+  color: var(--ui5-text-secondary);
+  border-left: 3px solid transparent;
+}
+
+.ui5-sidenav-subitem:hover {
+  background-color: var(--ui5-bg-light);
+  color: var(--ui5-primary);
+}
+
+.ui5-sidenav-subitem.active {
+  background-color: var(--ui5-primary-light);
+  color: var(--ui5-primary);
+  border-left-color: var(--ui5-primary);
+  font-weight: 600;
+}
+
+.ui5-sidenav-icon {
+  font-size: 1.25rem;
+}
+
+.ui5-sidenav-submenu {
+  display: flex;
+  flex-direction: column;
+}
+
+.ui5-sidenav-footer {
+  padding: var(--ui5-spacing-md) var(--ui5-spacing-lg);
+  border-top: 1px solid var(--ui5-border-light);
+  text-align: center;
+}
+
+.ui5-sidenav-version {
+  font-size: 0.75rem;
+  color: var(--ui5-text-muted);
+}
+
+/* ============================================
+   OPENUI5 MAIN CONTENT
+   ============================================ */
+
+.ui5-main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #FAFAFA;
+  padding: 0.75rem;
+}
+
+.ui5-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ui5-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+/* ============================================
+   OPENUI5 OBJECT PAGE HEADER
+   ============================================ */
+
+.ui5-object-page-header {
+  background: linear-gradient(135deg, var(--ui5-primary) 0%, var(--ui5-primary-dark) 100%);
+  padding: var(--ui5-spacing-xl);
+  border-radius: 4px;
+  box-shadow: var(--ui5-shadow-md);
+  color: white;
+}
+
+.ui5-object-page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 var(--ui5-spacing-sm) 0;
+  letter-spacing: -0.5px;
+}
+
+.ui5-object-page-subtitle {
+  font-size: 0.95rem;
+  margin: 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+/* ============================================
+   OPENUI5 ALERTS
+   ============================================ */
+
+.ui5-alert {
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  border-left: 4px solid;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: slideIn 0.3s ease-out;
+  font-size: 0.8rem;
+}
+
+.ui5-alert-error {
+  background-color: #FFEBEE;
+  color: var(--ui5-error);
+  border-left-color: var(--ui5-error);
+}
+
+.ui5-alert-success {
+  background-color: #E8F5E9;
+  color: var(--ui5-success);
+  border-left-color: var(--ui5-success);
+}
+
+.ui5-alert-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.ui5-alert-message {
+  margin: 0.25rem 0 0 0;
+  opacity: 0.9;
+}
+
+/* ============================================
+   OPENUI5 TAB NAVIGATION
+   ============================================ */
+
+.ui5-tabbar {
+  display: flex;
+  background-color: var(--ui5-bg);
+  border-bottom: 3px solid var(--ui5-border-light);
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  box-shadow: var(--ui5-shadow);
+}
+
+.ui5-tab {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ui5-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: all 0.3s ease;
+  position: relative;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+}
+
+.ui5-tab:hover {
+  background-color: var(--ui5-bg-light);
+  color: var(--ui5-primary);
+}
+
+.ui5-tab.active {
+  background-color: var(--ui5-bg);
+  color: var(--ui5-primary);
+  border-bottom-color: var(--ui5-primary);
+  font-weight: 600;
+}
+
+.ui5-tab-icon {
+  font-size: 1rem;
+}
+
+.ui5-tab-label {
+  text-transform: none;
+}
+
+.ui5-spinner {
+  font-size: 0.8rem;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   OPENUI5 TABLE
+   ============================================ */
+
+.ui5-table-container {
+  background-color: var(--ui5-bg);
+  border-radius: 4px;
+  box-shadow: var(--ui5-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ui5-table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ui5-spacing-lg);
+  background: linear-gradient(135deg, var(--ui5-bg-light) 0%, #F5F5F5 100%);
+  border-bottom: 2px solid var(--ui5-border);
+  gap: var(--ui5-spacing-lg);
+}
+
+.ui5-toolbar-content {
+  flex: 1;
+}
+
+.ui5-toolbar-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ui5-text);
+}
+
+.ui5-toolbar-subtitle {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--ui5-text-secondary);
+}
+
+.ui5-table-wrapper {
+  overflow-x: auto;
+  flex: 1;
+}
+
+.ui5-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.ui5-table-header-row {
+  background: linear-gradient(135deg, var(--ui5-bg-light) 0%, #F5F5F5 100%);
+  border-bottom: 3px solid var(--ui5-primary);
+  font-weight: 700;
+  color: var(--ui5-text);
+}
+
+.ui5-table-header-row th {
+  padding: var(--ui5-spacing-lg);
+  text-align: left;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  border-right: 1px solid var(--ui5-border-light);
+  vertical-align: middle;
+}
+
+.ui5-table-header-row th:last-child {
+  border-right: none;
+}
+
+.ui5-table-row {
+  border-bottom: 1px solid var(--ui5-border-light);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ui5-table-row.even {
+  background-color: var(--ui5-bg);
+}
+
+.ui5-table-row.odd {
+  background-color: #FAFAFA;
+}
+
+.ui5-table-row:hover {
+  background-color: var(--ui5-primary-light);
+  box-shadow: inset 2px 0 0 var(--ui5-primary);
+}
+
+.ui5-table-cell {
+  padding: var(--ui5-spacing-lg);
+  color: var(--ui5-text);
+  vertical-align: middle;
+}
+
+.ui5-table-cell-description {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ui5-text-secondary);
+}
+
+.ui5-table-cell-actions {
+  text-align: center;
+  width: 180px;
+}
+
+/* Status Badges */
+.ui5-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui5-spacing-sm);
+  padding: 0.4rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.ui5-status-active {
+  background-color: #E8F5E9;
+  color: var(--ui5-success);
+}
+
+.ui5-status-inactive {
+  background-color: #FFF3E0;
+  color: var(--ui5-warning);
+}
+
+.ui5-status-dot {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* ============================================
+   OPENUI5 BUTTONS
+   ============================================ */
+
+.ui5-button {
+  border-radius: 4px;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui5-spacing-sm);
+  white-space: nowrap;
+  font-family: var(--ui5-font-family);
+}
+
+.ui5-button-sm {
+  padding: 0.45rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+.ui5-button-primary {
+  background-color: var(--ui5-primary);
+  color: white;
+  box-shadow: var(--ui5-shadow);
+}
+
+.ui5-button-primary:hover {
+  background-color: var(--ui5-primary-dark);
+  box-shadow: var(--ui5-shadow-md);
+  transform: translateY(-1px);
+}
+
+.ui5-button-primary:active {
+  transform: translateY(0);
+}
+
+.ui5-button-secondary {
+  background-color: var(--ui5-secondary);
+  color: white;
+  box-shadow: var(--ui5-shadow);
+}
+
+.ui5-button-secondary:hover {
+  background-color: var(--ui5-secondary-dark);
+  box-shadow: var(--ui5-shadow-md);
+}
+
+.ui5-button-danger {
+  background-color: var(--ui5-error);
+  color: white;
+  box-shadow: var(--ui5-shadow);
+}
+
+.ui5-button-danger:hover {
+  background-color: #B71C1C;
+  box-shadow: var(--ui5-shadow-md);
+}
+
+.ui5-button-ghost {
+  background-color: transparent;
+  color: var(--ui5-text-secondary);
+  border: 2px solid var(--ui5-border-light);
+}
+
+.ui5-button-ghost:hover {
+  background-color: var(--ui5-bg-light);
+  border-color: var(--ui5-primary);
+  color: var(--ui5-primary);
+}
+
+/* ============================================
+   OPENUI5 FORMS
+   ============================================ */
+
+.ui5-form-group {
+  margin-bottom: 1rem;
+}
+
+.ui5-form-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--ui5-text);
+}
+
+.ui5-required {
+  color: var(--ui5-error);
+  margin-left: 0.2rem;
+}
+
+.ui5-input,
+.ui5-textarea {
+  width: 100%;
+  border: 1px solid var(--ui5-border-light);
+  border-radius: 4px;
+  padding: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--ui5-text);
+  background-color: white;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.ui5-input:focus,
+.ui5-textarea:focus {
+  outline: none;
+  border-color: var(--ui5-primary);
+  box-shadow: 0 0 0 2px rgba(11, 83, 148, 0.08);
+}
+
+.ui5-input-error,
+.ui5-textarea-error {
+  border-color: var(--ui5-error);
+  background-color: #FFEBEE;
+}
+
+.ui5-input-error:focus,
+.ui5-textarea-error:focus {
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.08);
+}
+
+.ui5-input::placeholder,
+.ui5-textarea::placeholder {
+  color: var(--ui5-text-muted);
+}
+
+.ui5-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.ui5-error-message {
+  display: block;
+  color: var(--ui5-error);
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+  animation: slideIn 0.2s ease-out;
+}
+
+.ui5-input-hint {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ui5-text-muted);
+  margin-top: 0.2rem;
+}
+
+/* ============================================
+   OPENUI5 MODAL - DIALOG
+   ============================================ */
+
+.ui5-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ui5-modal-dialog {
+  position: relative;
+  max-width: 500px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ui5-modal-sm {
+  max-width: 400px;
+}
+
+.ui5-modal-content {
+  background-color: var(--ui5-bg);
+  border-radius: 4px;
+  box-shadow: var(--ui5-shadow-lg);
+  overflow: hidden;
+  border: 1px solid var(--ui5-border-light);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ui5-modal-header {
+  background: linear-gradient(135deg, var(--ui5-primary) 0%, var(--ui5-primary-dark) 100%);
+  color: white;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--ui5-border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ui5-modal-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.ui5-modal-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.ui5-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.ui5-modal-body {
+  padding: 1rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.ui5-modal-body p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.8rem;
+}
+
+.ui5-modal-footer {
+  background-color: var(--ui5-bg-light);
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid var(--ui5-border-light);
+}
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+
+.ui5-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background-color: var(--ui5-bg);
+  border-radius: 4px;
+}
+
+.ui5-empty-state p {
+  font-size: 1rem;
+  color: var(--ui5-text-secondary);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .ui5-sidenav {
+    position: fixed;
+    height: 100%;
+    z-index: 999;
+    left: -280px;
+    transition: left 300ms ease-in-out;
+  }
+
+  .ui5-sidenav.open {
+    left: 0;
+  }
+
+  .ui5-shell-header {
+    padding: 0 var(--ui5-spacing-md);
+  }
+
+  .ui5-main-content {
+    padding: var(--ui5-spacing-md);
+  }
+
+  .ui5-table-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ui5-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ui5-table {
+    font-size: 0.75rem;
+  }
+
+  .ui5-table-cell {
+    padding: var(--ui5-spacing-sm);
+  }
+
+  .ui5-modal-dialog {
+    max-width: 95%;
+  }
+
+  .ui5-tabbar {
+    flex-wrap: wrap;
+  }
+
+  .ui5-tab {
+    padding: var(--ui5-spacing-md);
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ui5-bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ui5-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ui5-secondary);
+}

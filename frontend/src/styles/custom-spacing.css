@@ -1,0 +1,368 @@
+/* Custom App Spacing Overrides - Component Level Only */
+/* This file applies custom spacing to components without modifying openui5.css library */
+
+/* Compact Table Styling */
+.ui5-table-toolbar {
+  padding: 0.75rem 1rem !important;
+  gap: 0.75rem !important;
+}
+
+.ui5-toolbar-title {
+  font-size: 0.875rem !important;
+}
+
+.ui5-toolbar-subtitle {
+  font-size: 0.7rem !important;
+  margin-top: 0.15rem !important;
+}
+
+.ui5-table-header-row th {
+  padding: 0.65rem 0.75rem !important;
+  font-size: 0.8rem !important;
+}
+
+.ui5-table-cell {
+  padding: 0.65rem 0.75rem !important;
+  font-size: 0.8rem !important;
+}
+
+.ui5-table-cell-actions {
+  width: auto !important;
+}
+
+/* Table Layout - Fixed width to prevent horizontal scrollbar */
+.ui5-table-wrapper {
+  width: 100% !important;
+  overflow: hidden !important;
+  display: block !important;
+}
+
+.ui5-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+.ui5-table-cell {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+.ui5-table-cell-description {
+  max-width: 300px !important;
+}
+
+/* Compact Status Badges */
+.ui5-status-badge {
+  padding: 0.3rem 0.6rem !important;
+  font-size: 0.75rem !important;
+  border-radius: 12px !important;
+  gap: 0.35rem !important;
+}
+
+/* OpenUI5 Compliant Button Styling */
+.ui5-button {
+  padding: 0.65rem 1.1rem !important;
+  font-size: 0.85rem !important;
+  gap: 0.4rem !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+  border: 1px solid transparent !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+}
+
+/* Small button variant - must come after base button and be more specific */
+.ui5-button.ui5-button-sm {
+  padding: 0.35rem 0.6rem !important;
+  font-size: 0.7rem !important;
+  gap: 0.25rem !important;
+  height: 28px !important;
+  line-height: 1 !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Table action buttons - extra compact with no background */
+.ui5-table-cell-actions .ui5-button {
+  padding: 0.35rem 0.6rem !important;
+  font-size: 0.7rem !important;
+  gap: 0.25rem !important;
+  height: 28px !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ui5-table-cell-actions .ui5-button-secondary {
+  background-color: transparent !important;
+  color: #107E8B !important;
+  box-shadow: none !important;
+}
+
+.ui5-table-cell-actions .ui5-button-secondary:hover {
+  background-color: rgba(16, 126, 139, 0.08) !important;
+  color: #0C5A68 !important;
+  box-shadow: none !important;
+}
+
+.ui5-table-cell-actions .ui5-button-danger {
+  background-color: transparent !important;
+  color: #D32F2F !important;
+  box-shadow: none !important;
+}
+
+.ui5-table-cell-actions .ui5-button-danger:hover {
+  background-color: rgba(211, 47, 47, 0.08) !important;
+  color: #B71C1C !important;
+  box-shadow: none !important;
+}
+
+.ui5-button:active {
+  transform: translateY(0) !important;
+}
+
+.ui5-button-primary {
+  background-color: #0B5394 !important;
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ui5-button-primary:hover {
+  background-color: #073B7D !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-1px) !important;
+}
+
+.ui5-button-primary:focus {
+  outline: 2px solid #0B5394 !important;
+  outline-offset: 2px !important;
+}
+
+.ui5-button-secondary {
+  background-color: #107E8B !important;
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ui5-button-secondary:hover {
+  background-color: #0C5A68 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.ui5-button-secondary:focus {
+  outline: 2px solid #107E8B !important;
+  outline-offset: 2px !important;
+}
+
+.ui5-button-danger {
+  background-color: #D32F2F !important;
+  color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ui5-button-danger:hover {
+  background-color: #B71C1C !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.ui5-button-danger:focus {
+  outline: 2px solid #D32F2F !important;
+  outline-offset: 2px !important;
+}
+
+.ui5-button-ghost {
+  background-color: transparent !important;
+  color: #6A6D70 !important;
+  border: 1px solid #D9D9D9 !important;
+  box-shadow: none !important;
+}
+
+.ui5-button-ghost:hover {
+  background-color: #F9F9F9 !important;
+  border-color: #0B5394 !important;
+  color: #0B5394 !important;
+}
+
+/* Compact Object Page Header */
+.ui5-object-page-header {
+  padding: 1rem 1.25rem !important;
+}
+
+.ui5-object-page-title {
+  font-size: 1.5rem !important;
+  margin-bottom: 0.3rem !important;
+}
+
+.ui5-object-page-subtitle {
+  font-size: 0.85rem !important;
+  line-height: 1.4 !important;
+}
+
+/* OpenUI5 Tab Button Styling */
+.ui5-tab {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.9rem !important;
+  gap: 0.4rem !important;
+  font-weight: 500 !important;
+  color: #6A6D70 !important;
+  border-bottom: 3px solid transparent !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+  cursor: pointer !important;
+  border: none !important;
+  text-transform: none !important;
+}
+
+.ui5-tab:hover {
+  background-color: #F9F9F9 !important;
+  color: #0B5394 !important;
+}
+
+.ui5-tab.active {
+  background-color: #FFFFFF !important;
+  color: #0B5394 !important;
+  border-bottom-color: #0B5394 !important;
+  font-weight: 600 !important;
+  margin-bottom: -3px !important;
+}
+
+.ui5-tab-icon {
+  font-size: 1.1rem !important;
+}
+
+/* Compact Alerts */
+.ui5-alert {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.8rem !important;
+  gap: 0.75rem !important;
+}
+
+.ui5-alert-icon {
+  font-size: 1rem !important;
+  margin-top: 0.1rem !important;
+}
+
+/* Compact Form Elements */
+.ui5-form-group {
+  margin-bottom: 1rem !important;
+}
+
+.ui5-form-label {
+  font-size: 0.8rem !important;
+  margin-bottom: 0.4rem !important;
+}
+
+.ui5-input,
+.ui5-textarea {
+  padding: 0.6rem !important;
+  font-size: 0.8rem !important;
+}
+
+.ui5-textarea {
+  min-height: 80px !important;
+}
+
+.ui5-input:focus,
+.ui5-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(11, 83, 148, 0.08) !important;
+}
+
+.ui5-error-message {
+  font-size: 0.75rem !important;
+  margin-top: 0.2rem !important;
+}
+
+.ui5-input-hint {
+  font-size: 0.7rem !important;
+  margin-top: 0.2rem !important;
+}
+
+/* Compact Modal */
+.ui5-modal-header {
+  padding: 0.85rem 1rem !important;
+}
+
+.ui5-modal-title {
+  font-size: 0.95rem !important;
+}
+
+.ui5-modal-close {
+  font-size: 1.2rem !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.ui5-modal-body {
+  padding: 1rem !important;
+}
+
+.ui5-modal-body p {
+  font-size: 0.8rem !important;
+  line-height: 1.5 !important;
+}
+
+.ui5-modal-footer {
+  padding: 0.75rem 1rem !important;
+  gap: 0.75rem !important;
+}
+
+/* Compact Main Content */
+.ui5-main-content {
+  padding: 0.75rem !important;
+}
+
+.ui5-content {
+  gap: 0.75rem !important;
+}
+
+/* Compact Table Row Height */
+.ui5-table-row {
+  line-height: 1.4 !important;
+}
+
+/* Pagination Controls */
+.ui5-pagination {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 1rem !important;
+  background-color: #F9F9F9 !important;
+  border-top: 1px solid #D9D9D9 !important;
+}
+
+.ui5-pagination-info {
+  font-size: 0.8rem !important;
+  color: #6A6D70 !important;
+  font-weight: 500 !important;
+  min-width: 120px !important;
+  text-align: center !important;
+}
+
+.ui5-pagination button[disabled] {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ui5-button {
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .ui5-table-cell {
+    padding: 0.5rem 0.6rem !important;
+    font-size: 0.75rem !important;
+  }
+}
