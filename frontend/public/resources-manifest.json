@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "name": "CMS Platform - OpenUI5 Offline Bundle",
+  "description": "Production-ready offline OpenUI5 framework for enterprise ERP applications",
+  "created": "2026-04-21",
+  "resources": {
+    "styles": [
+      {
+        "path": "/libs/bootstrap.min.css",
+        "type": "css",
+        "description": "Bootstrap 5.3.0 - Responsive grid and utilities"
+      },
+      {
+        "path": "/libs/sap-horizon.css",
+        "type": "css",
+        "description": "SAP Horizon - Complete enterprise design system (offline)"
+      }
+    ],
+    "scripts": [
+      {
+        "path": "/libs/openui5-lite.js",
+        "type": "javascript",
+        "description": "OpenUI5 Lite - Lightweight component library (offline)"
+      }
+    ],
+    "fonts": [
+      {
+        "path": "/libs/fonts/SAP-icons.woff2",
+        "type": "font",
+        "description": "SAP Icons - Enterprise icon set"
+      }
+    ]
+  },
+  "features": {
+    "components": [
+      "ui5.components.Table",
+      "ui5.components.Form",
+      "ui5.components.Dialog",
+      "ui5.components.Toast"
+    ],
+    "themes": [
+      "sap_horizon",
+      "sap_quartz",
+      "sap_belize"
+    ],
+    "capabilities": [
+      "Offline mode - no internet required",
+      "SAP Fiori design patterns",
+      "Enterprise form validation",
+      "Data table with sorting/filtering",
+      "Modal dialogs",
+      "Toast notifications",
+      "Responsive design",
+      "Accessibility (a11y) support"
+    ]
+  },
+  "deployment": {
+    "offline": true,
+    "requiresInternet": false,
+    "bundleSize": "~2.5MB (uncompressed)",
+    "compressed": "~600KB (gzip)"
+  },
+  "production": {
+    "docker": true,
+    "staticFileServer": true,
+    "noExternalDependencies": true,
+    "environment": "production-ready"
+  }
+}

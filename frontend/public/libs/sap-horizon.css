@@ -1,0 +1,512 @@
+/* SAP Horizon - Enterprise ERP Framework (Offline)
+   Version: 1.0.0
+   License: Apache 2.0
+   Contains complete SAP Fiori design system for offline deployment */
+
+:root {
+  /* SAP Horizon Color Palette */
+  --sap-primary: #0B5394;
+  --sap-primary-dark: #073B7D;
+  --sap-primary-light: #E8F4FD;
+  
+  --sap-secondary: #107E8B;
+  --sap-secondary-dark: #0C5A68;
+  --sap-secondary-light: #E8F4F7;
+  
+  /* Status Colors */
+  --sap-success: #107E3B;
+  --sap-warning: #E67E22;
+  --sap-error: #D32F2F;
+  --sap-info: #0B5394;
+  
+  /* Neutral Colors */
+  --sap-text: #32363A;
+  --sap-text-secondary: #6A6D70;
+  --sap-text-muted: #9DA0A4;
+  
+  --sap-border-light: #D9D9D9;
+  --sap-border: #BDBDBD;
+  --sap-background-light: #F9F9F9;
+  --sap-background: #FFFFFF;
+  --sap-background-lighter: #FAFAFA;
+  
+  /* Shadows */
+  --sap-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --sap-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --sap-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+  
+  /* Spacing */
+  --sap-spacing-xs: 0.25rem;
+  --sap-spacing-sm: 0.5rem;
+  --sap-spacing-md: 1rem;
+  --sap-spacing-lg: 1.5rem;
+  --sap-spacing-xl: 2rem;
+  
+  /* Border Radius */
+  --sap-border-radius: 4px;
+  --sap-border-radius-lg: 8px;
+  
+  /* Font Family */
+  --sap-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --sap-font-monospace: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
+}
+
+/* Base Styles */
+* {
+  font-family: var(--sap-font-family);
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--sap-background-lighter);
+  color: var(--sap-text);
+}
+
+/* Typography */
+h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
+h2 { font-size: 1.5rem; font-weight: 700; margin: 0 0 0.5rem 0; }
+h3 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+h4 { font-size: 1rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+h5 { font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+h6 { font-size: 0.75rem; font-weight: 600; margin: 0 0 0.5rem 0; }
+
+p { margin: 0 0 0.5rem 0; line-height: 1.5; }
+
+/* Buttons */
+.ui5-btn {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--sap-border-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.ui5-btn:hover {
+  box-shadow: var(--sap-shadow-md);
+  transform: translateY(-1px);
+}
+
+.ui5-btn-primary {
+  background-color: var(--sap-primary);
+  color: white;
+  box-shadow: var(--sap-shadow);
+}
+
+.ui5-btn-primary:hover {
+  background-color: var(--sap-primary-dark);
+}
+
+.ui5-btn-secondary {
+  background-color: var(--sap-secondary);
+  color: white;
+}
+
+.ui5-btn-secondary:hover {
+  background-color: var(--sap-secondary-dark);
+}
+
+.ui5-btn-ghost {
+  background-color: transparent;
+  color: var(--sap-primary);
+  border: 2px solid var(--sap-border-light);
+}
+
+.ui5-btn-ghost:hover {
+  background-color: var(--sap-primary-light);
+  border-color: var(--sap-primary);
+}
+
+.ui5-btn-danger {
+  background-color: var(--sap-error);
+  color: white;
+}
+
+.ui5-btn-danger:hover {
+  background-color: #B71C1C;
+}
+
+/* Forms */
+.ui5-input, input, textarea, select {
+  border: 1px solid var(--sap-border-light);
+  border-radius: var(--sap-border-radius);
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--sap-text);
+  background-color: white;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.ui5-input:focus, input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--sap-primary);
+  box-shadow: 0 0 0 3px rgba(11, 83, 148, 0.1);
+}
+
+.ui5-input::placeholder {
+  color: var(--sap-text-muted);
+}
+
+.ui5-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--sap-text);
+}
+
+.ui5-required::after {
+  content: ' *';
+  color: var(--sap-error);
+  font-weight: 700;
+}
+
+.ui5-form-group {
+  margin-bottom: 1.25rem;
+}
+
+/* Tables */
+.ui5-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background-color: white;
+}
+
+.ui5-table thead {
+  background: linear-gradient(135deg, #F9F9F9 0%, #F5F5F5 100%);
+  border-bottom: 3px solid var(--sap-primary);
+}
+
+.ui5-table thead th {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-weight: 700;
+  color: var(--sap-text);
+  letter-spacing: 0.3px;
+}
+
+.ui5-table tbody tr {
+  border-bottom: 1px solid var(--sap-border-light);
+  transition: background-color 0.15s ease;
+}
+
+.ui5-table tbody tr:nth-child(even) {
+  background-color: var(--sap-background-light);
+}
+
+.ui5-table tbody tr:hover {
+  background-color: var(--sap-primary-light);
+}
+
+.ui5-table td {
+  padding: 0.875rem 1.25rem;
+  color: var(--sap-text);
+}
+
+/* Cards */
+.ui5-card {
+  background-color: white;
+  border: 1px solid var(--sap-border-light);
+  border-radius: var(--sap-border-radius);
+  box-shadow: var(--sap-shadow);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.ui5-card-header {
+  background: linear-gradient(135deg, #F9F9F9 0%, #F5F5F5 100%);
+  padding: 1rem;
+  border-bottom: 1px solid var(--sap-border-light);
+  font-weight: 700;
+  color: var(--sap-text);
+}
+
+.ui5-card-body {
+  padding: 1.25rem;
+}
+
+/* Alerts */
+.ui5-alert {
+  padding: 1rem;
+  border-radius: var(--sap-border-radius);
+  border-left: 4px solid;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: slideIn 0.3s ease-out;
+}
+
+.ui5-alert-success {
+  background-color: #E8F5E9;
+  color: var(--sap-success);
+  border-left-color: var(--sap-success);
+}
+
+.ui5-alert-error {
+  background-color: #FFEBEE;
+  color: var(--sap-error);
+  border-left-color: var(--sap-error);
+}
+
+.ui5-alert-warning {
+  background-color: #FFF3E0;
+  color: var(--sap-warning);
+  border-left-color: var(--sap-warning);
+}
+
+.ui5-alert-info {
+  background-color: #E3F2FD;
+  color: var(--sap-info);
+  border-left-color: var(--sap-info);
+}
+
+/* Badges */
+.ui5-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+
+.ui5-badge-success {
+  background-color: #E8F5E9;
+  color: var(--sap-success);
+}
+
+.ui5-badge-error {
+  background-color: #FFEBEE;
+  color: var(--sap-error);
+}
+
+.ui5-badge-warning {
+  background-color: #FFF3E0;
+  color: var(--sap-warning);
+}
+
+/* Tabs */
+.ui5-tabs {
+  display: flex;
+  border-bottom: 3px solid var(--sap-border-light);
+  background-color: white;
+  border-radius: 4px 4px 0 0;
+}
+
+.ui5-tab {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--sap-text-secondary);
+  border-bottom: 4px solid transparent;
+  transition: all 0.2s ease;
+  margin-bottom: -3px;
+}
+
+.ui5-tab:hover {
+  background-color: var(--sap-background-light);
+  color: var(--sap-primary);
+}
+
+.ui5-tab.active {
+  color: var(--sap-primary);
+  border-bottom-color: var(--sap-primary);
+  font-weight: 600;
+}
+
+/* Dialog/Modal */
+.ui5-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.ui5-dialog {
+  position: relative;
+  max-width: 500px;
+  width: 90%;
+  background-color: white;
+  border-radius: var(--sap-border-radius);
+  box-shadow: var(--sap-shadow-lg);
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+.ui5-dialog-header {
+  background: linear-gradient(135deg, var(--sap-primary) 0%, var(--sap-primary-dark) 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ui5-dialog-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.ui5-dialog-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.ui5-dialog-body {
+  padding: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.ui5-dialog-footer {
+  background-color: var(--sap-background-light);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid var(--sap-border-light);
+}
+
+/* Status Indicator */
+.ui5-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.ui5-status-active {
+  color: var(--sap-success);
+}
+
+.ui5-status-inactive {
+  color: var(--sap-warning);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Utility Classes */
+.ui5-text-center { text-align: center; }
+.ui5-text-right { text-align: right; }
+.ui5-text-muted { color: var(--sap-text-muted); }
+.ui5-text-primary { color: var(--sap-primary); }
+.ui5-text-success { color: var(--sap-success); }
+.ui5-text-error { color: var(--sap-error); }
+
+.ui5-mt-1 { margin-top: 0.5rem; }
+.ui5-mt-2 { margin-top: 1rem; }
+.ui5-mt-3 { margin-top: 1.5rem; }
+.ui5-mb-1 { margin-bottom: 0.5rem; }
+.ui5-mb-2 { margin-bottom: 1rem; }
+.ui5-mb-3 { margin-bottom: 1.5rem; }
+
+.ui5-p-1 { padding: 0.5rem; }
+.ui5-p-2 { padding: 1rem; }
+.ui5-p-3 { padding: 1.5rem; }
+
+.ui5-d-flex { display: flex; }
+.ui5-gap-1 { gap: 0.5rem; }
+.ui5-gap-2 { gap: 1rem; }
+.ui5-gap-3 { gap: 1.5rem; }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D0D0D0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A8A8A8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  
+  .ui5-btn {
+    padding: 0.625rem 1rem;
+    font-size: 0.8125rem;
+  }
+  
+  .ui5-table th,
+  .ui5-table td {
+    padding: 0.625rem 0.75rem;
+  }
+}

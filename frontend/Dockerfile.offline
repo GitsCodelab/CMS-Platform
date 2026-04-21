@@ -1,0 +1,82 @@
+FROM node:20-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY frontend/package*.json ./
+
+# Install dependencies (offline npm cache)
+RUN npm ci --prefer-offline --no-audit
+
+# Copy source code
+COPY frontend/ .
+
+# Build React application
+RUN npm run build
+
+# Production stage - Nginx
+FROM nginx:alpine
+
+# Remove default Nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy Nginx configuration
+COPY << 'EOF' /etc/nginx/conf.d/default.conf
+server {
+    listen 80;
+    server_name _;
+    
+    root /usr/share/nginx/html;
+    index index.html;
+    
+    # Gzip compression
+    gzip on;
+    gzip_types text/plain text/css text/javascript 
+               application/javascript application/json;
+    gzip_min_length 1000;
+    gzip_vary on;
+    
+    # Cache static assets
+    location ~* \.(js|css|woff2|woff|ttf)$ {
+        expires 365d;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    # Don't cache HTML
+    location ~* \.html$ {
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+    
+    # SPA routing
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+    
+    # Security headers
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    
+    # Disable directory listing
+    autoindex off;
+}
+EOF
+
+# Copy built application from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy offline libraries
+COPY frontend/public/libs /usr/share/nginx/html/libs
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+
+# Expose port
+EXPOSE 80
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
