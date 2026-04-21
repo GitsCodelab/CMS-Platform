@@ -26,6 +26,25 @@ services:
     networks:
       - cms-platform-net
 
+  jposee-db:
+    image: postgres:15.3
+    container_name: jposee-db
+    ports:
+      - "5433:5432" # jPOS EE Database port (different from cms-postgresql)
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "jposee"
+    volumes:
+      - jposee-data:/var/lib/postgresql/data # Persistent volume for jposee data
+    networks:
+      - cms-platform-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jposee"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   cms-airflow:
     image: apache/airflow:3.0.0
     container_name: cms-airflow
@@ -64,6 +83,8 @@ services:
     depends_on:
       cms-postgresql:
         condition: service_started
+      jposee-db:
+        condition: service_healthy
       cms-oracle-xe:
         condition: service_started
     env_file:
@@ -142,8 +163,8 @@ services:
       dockerfile: Dockerfile
     container_name: cms-jposee
     depends_on:
-      cms-postgresql:
-        condition: service_started
+      jposee-db:
+        condition: service_healthy
       cms-backend:
         condition: service_started
     ports:
@@ -157,11 +178,18 @@ services:
       - cms-platform-net
     environment:
       - JPOS_LOG_LEVEL=info
+      - JPOSEE_DB_HOST=jposee-db
+      - JPOSEE_DB_PORT=5432
+      - JPOSEE_DB_NAME=jposee
+      - JPOSEE_DB_USER=postgres
+      - JPOSEE_DB_PASSWORD=postgres
 
 volumes:
   oracle-data:
     driver: local
   postgres-data:
+    driver: local
+  jposee-data:
     driver: local
   airflow-data:
     driver: local

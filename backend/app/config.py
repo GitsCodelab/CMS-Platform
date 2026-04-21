@@ -13,11 +13,11 @@ class Settings(BaseSettings):
     ORACLE_SERVICE: str = "xepdb1"
     
     # PostgreSQL Configuration
-    POSTGRES_HOST: str = "cms-postgresql"
+    POSTGRES_HOST: str = "jposee-db"
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "cms"
+    POSTGRES_DB: str = "jposee"
     
     # API Configuration
     API_TITLE: str = "CMS Platform API"
