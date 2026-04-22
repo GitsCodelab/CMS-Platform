@@ -1,0 +1,7 @@
+{
+      "callbackUrl":"www.example.com",
+      "clientName":"rest_api_admin",
+      "owner":"admin",
+      "grantType":"client_credentials password refresh_token",
+      "saasApp":true
+      }

@@ -1,17 +1,5 @@
 services:
-  cms-oracle-xe:
-    image: gvenzl/oracle-xe:21.3.0
-    container_name: cms-oracle-xe
-    ports:
-      - "1521:1521" # Oracle default port
-      - "5500:5500" # Oracle EM Express port
-    environment:
-      ORACLE_PASSWORD: "oracle"
-    volumes:
-      - oracle-data:/opt/oracle/oradata # Persistent volume for Oracle data
-    networks:
-      - cms-platform-net
-
+  
   cms-postgresql:
     image: postgres:15.3
     container_name: cms-postgresql
@@ -32,74 +20,8 @@ services:
       retries: 20
       start_period: 10s
 
-  cms-airflow:
-    image: apache/airflow:3.0.0
-    container_name: cms-airflow
-    command: ["standalone"]
-    depends_on:
-      cms-postgresql:
-        condition: service_healthy
-      cms-oracle-xe:
-        condition: service_started
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/ui/"]
-      interval: 15s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-    env_file:
-      - ./airflow/.env
-    environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@cms-postgresql:5432/cms
-    volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
-      - ./airflow/simple_auth_manager_passwords.json:/opt/airflow/simple_auth_manager_passwords.json
-      - ./airflow/scripts:/opt/airflow/scripts
-    ports:
-      - "8080:8080"
-    networks:
-      - cms-platform-net
-
-  cms-backend:
-    image: python:3.12-slim
-    container_name: cms-backend
-    working_dir: /app
-    command: sh -c "pip install --no-cache-dir -r requirements.txt && python run.py"
-    depends_on:
-      cms-postgresql:
-        condition: service_healthy
-      cms-oracle-xe:
-        condition: service_started
-    env_file:
-      - ./backend/.env
-    volumes:
-      - ./backend:/app
-    ports:
-      - "8000:8000"
-    networks:
-      - cms-platform-net
-
-  cms-frontend:
-    image: node:18-alpine
-    container_name: cms-frontend
-    working_dir: /app
-    command: sh -c "npm install && npm run dev"
-    depends_on:
-      cms-backend:
-        condition: service_started
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://cms-backend:8000
-    networks:
-      - cms-platform-net
-
+ 
+ 
   cms-apim:
     build:
       context: ./wso2-stack/apim
@@ -126,14 +48,36 @@ services:
       retries: 5
       start_period: 120s
 
+  taly-api:
+    build:
+      context: ./talyapi
+      dockerfile: Dockerfile
+    container_name: cms-talyapi
+    hostname: localhost
+    depends_on:
+      cms-postgresql:
+        condition: service_healthy
+    ports:
+      - "9012:9012"   # HTTP
+      - "9013:9013"   # HTTPS
+    environment:
+       - ASPNETCORE_URLS=http://+:9012;https://+:9013
+       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+       - ASPNETCORE_Kestrel__Certificates__Default__Password=Classa9@123
+    networks:
+      - cms-platform-net
+    volumes:
+        - ./cert.pfx:/https/cert.pfx
+          -
+    
+    
+
   cms-jpos:
     build:
       context: ./jpos
       dockerfile: Dockerfile
     container_name: cms-jpos
-    depends_on:
-      cms-backend:
-        condition: service_started
+   
     ports:
       - "5000:5000"   # ISO8583 port
     volumes:
@@ -150,8 +94,7 @@ services:
     depends_on:
       cms-postgresql:
         condition: service_healthy
-      cms-backend:
-        condition: service_started
+    
     ports:
       - "5001:5000"   # ISO 8583 standard
       - "5002:5001"   # ISO 8583 secondary
@@ -159,23 +102,23 @@ services:
       - ./jposee/deploy:/opt/jposee/dist/deploy
       - ./jposee/config:/opt/jposee/dist/config
       - ./jposee/log:/opt/jposee/dist/log
+      
     networks:
       - cms-platform-net
     environment:
       - JPOS_LOG_LEVEL=info
 
 volumes:
-  oracle-data:
-    driver: local
+ 
   postgres-data:
     driver: local
-  airflow-data:
-    driver: local
+ 
   wso2am-data:
     driver: local
   wso2am-logs:
     driver: local
-
+  talyapihttp:
+    driver: local
 networks:
   cms-platform-net:
     driver: bridge

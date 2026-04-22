@@ -1,0 +1,6 @@
+@talyapi_HostAddress = http://localhost:5199
+
+GET {{talyapi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -2,3 +2,5 @@ airflow/logs/
 airflow/dags/__pycache__/
 backend/logs/
 backend/app/__pycache__/
+talyapi/bin/
+talyapi/obj/
