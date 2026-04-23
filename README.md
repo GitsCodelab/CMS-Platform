@@ -6,8 +6,8 @@ A comprehensive, enterprise-grade content management and payment processing syst
 - **Robust Backend**: FastAPI with comprehensive REST API and database abstraction
 - **Workflow Orchestration**: Apache Airflow 3.0.0 for ETL pipelines and scheduling
 - **API Management**: WSO2 APIM 4.1.0 for API lifecycle management and gateway
-- **Payment Processing**: Dual jPOS implementation (open-source & enterprise) for ISO 8583 message routing
-- **Complete Container Orchestration**: Docker Compose with 8 fully integrated microservices
+- **Payment Processing**: jPOS implementation for ISO 8583 message routing
+- **Complete Container Orchestration**: Docker Compose with fully integrated microservices
 - **Production-Ready**: Health checks, monitoring, logging, and error handling
 - **Enterprise UI**: SAP Horizon theme with 106+ test records, pagination, and professional styling
 
@@ -35,26 +35,6 @@ docker compose ps
 docker compose down
 ```
 
-### First-Time Setup: Initialize Databases
-
-After starting containers, initialize databases with sample data and schemas:
-
-```bash
-# Initialize jposee-db schema (payments database)
-cat backend/migrations/001_create_jposee_schema.sql | \
-  docker exec -i jposee-db psql -U postgres -d jposee
-
-# Verify jposee database creation
-docker exec jposee-db psql -U postgres -d jposee -c "\dt"
-```
-
-**What Gets Initialized:**
-- ✅ jPOS EE database schema (9 tables, 11 indexes)
-- ✅ Payment transaction tables with ISO 8583 field storage
-- ✅ Routing rules for transaction processing
-- ✅ Audit logging and batch processing tables
-- ✅ Dashboard and analytics views
-
 📖 See [SETUP_NEW_SERVER.md](SETUP_NEW_SERVER.md) for complete new server setup  
 📖 See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) for production environment guide
 
@@ -65,18 +45,15 @@ docker exec jposee-db psql -U postgres -d jposee -c "\dt"
 | **Frontend (React)** | http://localhost:3000 | - | 3000 |
 | **Backend API** | http://localhost:8000 | - | 8000 |
 | **Backend API Docs** | http://localhost:8000/docs | - | 8000 |
-| **jPOS EE API** | http://localhost:8000/jposee | - | 8000 |
 | **Airflow UI** | http://localhost:8080 | airflow / airflow | 8080 |
 | **WSO2 APIM Admin** | https://localhost:9443/admin | admin / admin | 9443 |
 | **WSO2 APIM Publisher** | https://localhost:9443/publisher | admin / admin | 9443 |
 | **WSO2 APIM Developer** | https://localhost:9443/devportal | - | 9443 |
 | **APIM Gateway (HTTP)** | http://localhost:8280 | - | 8280 |
 | **APIM Gateway (HTTPS)** | https://localhost:8243 | - | 8243 |
-| **jPOS (Open-source)** | localhost:5000 | ISO 8583 | 5000 |
-| **jPOS EE (Enterprise)** | localhost:5001/5002 | ISO 8583 | 5001, 5002 |
+| **jPOS** | localhost:5000 | ISO 8583 | 5000 |
 | **Oracle Database** | localhost:1521/xepdb1 | sys / oracle | 1521 |
 | **PostgreSQL (CMS)** | localhost:5432/cms | postgres / postgres | 5432 |
-| **PostgreSQL (jPOS EE)** | localhost:5433/jposee | postgres / postgres | 5433 |
 
 ---
 
@@ -103,12 +80,12 @@ docker exec jposee-db psql -U postgres -d jposee -c "\dt"
 │                      └────┬───┬────┬───────┘                            │
 │           ┌────────────────┘   │    └──────────────┐                   │
 │           │                    │                   │                   │
-│    ┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐             │
-│    │  Backend    │    │  jPOS       │    │  jPOS EE    │             │
-│    │ (FastAPI)   │    │ (Port 5000) │    │ (5001/5002) │             │
-│    │ Port 8000   │    │ ISO 8583    │    │ ISO 8583    │             │
-│    └──────┬──────┘    │ Payment     │    │ Enterprise  │             │
-│           │           └─────────────┘    └─────────────┘             │
+│    ┌──────▼──────┐    ┌──────▼──────┐             │
+│    │  Backend    │    │  jPOS       │             │
+│    │ (FastAPI)   │    │ (Port 5000) │             │
+│    │ Port 8000   │    │ ISO 8583    │             │
+│    └──────┬──────┘    │ Payment     │             │
+│           │           └─────────────┘             │
 │    ┌──────▼─────────────────┐                                         │
 │    │   Supporting Services  │                                         │
 │    ├────────────────────────┤                                         │
@@ -129,7 +106,7 @@ docker exec jposee-db psql -U postgres -d jposee -c "\dt"
 - User requests → Frontend (React, port 3000)
 - API calls → WSO2 APIM (port 9443/8280/8243) [API Gateway]
 - Data operations → Backend (FastAPI, port 8000)
-- Payment operations → jPOS (port 5000) or jPOS EE (5001/5002)
+- Payment operations → jPOS (port 5000)
 - Data persistence → Oracle XE or PostgreSQL
 - Batch jobs → Apache Airflow (port 8080)
 
@@ -142,10 +119,8 @@ docker exec jposee-db psql -U postgres -d jposee -c "\dt"
 | Airflow | Apache Airflow | 3.0.0 | 8080 | ✅ Running |
 | API Gateway | WSO2 APIM | 4.1.0 | 9443, 8280, 8243 | ✅ Running |
 | jPOS | jPOS OSS | 2.1.8 | 5000 | ✅ Running |
-| jPOS EE | jPOS Enterprise | 2.1.8 | 5001, 5002 | ✅ Running |
 | Oracle DB | Oracle XE | 21.3.0 | 1521 | ✅ Running |
 | PostgreSQL (CMS) | PostgreSQL | 15.3 | 5432 | ✅ Running |
-| PostgreSQL (jPOS EE) | PostgreSQL | 15.3 | 5433 | ✅ Running |
 
 ---
 
@@ -181,83 +156,12 @@ The platform uses a **dedicated, isolated database architecture** for optimal se
   - Content repository
   - Reference data
 
-#### 3. **PostgreSQL (jPOS EE) - Port 5433** ⭐ **NEW**
-- **Purpose**: Payment processing database (isolated from platform data)
-- **Container**: jposee-db
-- **Database**: `jposee`
-- **Volume**: jposee-data (persistent storage)
-- **Credentials**: 
-  - Username: `postgres`, Password: `postgres`
-- **Key Design**: **Dedicated instance** separate from cms-postgresql
-- **Use Cases**:
-  - jPOS Enterprise payment transactions
-  - ISO 8583 message storage
-  - Routing rules and configuration
-  - Batch payment processing
-  - Payment audit trails
-  - Transaction analytics and dashboards
-
-### Database Architecture Diagram
-
-```
-┌──────────────────────────────────────────────────────────┐
-│               CMS PLATFORM - DATABASES                    │
-├──────────────────────────────────────────────────────────┤
-│                                                            │
-│  ┌─────────────────┐   ┌────────────────────────────────┐ │
-│  │   Oracle XE     │   │    PostgreSQL (Dual Instance)  │ │
-│  │   Port 1521     │   │                                │ │
-│  ├─────────────────┤   ├────────────────────────────────┤ │
-│  │ xepdb1 Service  │   │  ┌──────────────────┐          │ │
-│  │                 │   │  │ CMS Database     │          │ │
-│  │ ✓ Transactions  │   │  │ Port 5432        │          │ │
-│  │ ✓ Records       │   │  │                  │          │ │
-│  │ ✓ History       │   │  │ Database: cms    │          │ │
-│  │ ✓ Reporting     │   │  │ Purpose: Platform│          │ │
-│  │                 │   │  │ Metadata & CMS   │          │ │
-│  └────────┬────────┘   │  └──────────┬───────┘          │ │
-│           │            │             │                  │ │
-│           │            │  ┌──────────▼───────┐          │ │
-│           │            │  │ jPOS EE Database │          │ │
-│           │            │  │ Port 5433        │          │ │
-│           │            │  │                  │          │ │
-│           │            │  │ Database: jposee │          │ │
-│           │            │  │ Purpose: Payment │          │ │
-│           │            │  │ Processing (NEW) │          │ │
-│           │            │  └──────────────────┘          │ │
-│           │            └────────────────────────────────┘ │
-│           │                                               │
-│     ┌─────▼──────────────────────────┐                   │
-│     │   Backend Services             │                   │
-│     ├─────────────────────────────────┤                   │
-│     │ • FastAPI (Port 8000)           │                   │
-│     │   └─ Routes all DB connections  │                   │
-│     │                                 │                   │
-│     │ • jPOS EE (Ports 5001/5002)     │                   │
-│     │   └─ Uses dedicated jposee-db   │                   │
-│     │                                 │                   │
-│     │ • Apache Airflow (Port 8080)    │                   │
-│     │   └─ Batch jobs & ETL           │                   │
-│     └─────────────────────────────────┘                   │
-│                                                            │
-│  🔒 Database Isolation Benefits:                         │
-│     ✓ Enhanced security (payment data isolated)          │
-│     ✓ Independent scaling and tuning                     │
-│     ✓ Separate backup/recovery strategies                │
-│     ✓ Cleaner data governance                            │
-│     ✓ Better performance characteristics                 │
-│     ✓ Easier compliance auditing                         │
-│                                                            │
-└──────────────────────────────────────────────────────────┘
-```
-
 ### Database Connection Details
 
 | Instance | Container | Host | Port (ext:int) | Database | User | Purpose |
 |----------|-----------|------|----------------|----------|------|---------|
 | **Oracle XE** | oracle-xe | N/A | 1521:1521 | xepdb1 | sys | Transactional |
 | **PostgreSQL CMS** | cms-postgresql | cms-postgresql | 5432:5432 | cms | postgres | Platform data |
-| **PostgreSQL jPOS** | jposee-db | jposee-db | 5433:5432 | jposee | postgres | Payment data |
 
 ### Connection Strings
 
@@ -268,8 +172,6 @@ sqlplus sys/oracle@localhost:1521/xepdb1
 # PostgreSQL CMS
 psql -h localhost -p 5432 -U postgres -d cms
 
-# PostgreSQL jPOS EE (Payment Processing)
-psql -h localhost -p 5433 -U postgres -d jposee
 ```
 
 ### Backup & Recovery
@@ -277,205 +179,8 @@ psql -h localhost -p 5433 -U postgres -d jposee
 Each database maintains independent backup strategies:
 - **Oracle**: Daily backups with 7-day retention
 - **PostgreSQL CMS**: Transaction logs, point-in-time recovery
-- **PostgreSQL jPOS**: Payment transaction integrity, audit logs
 
 For complete backup procedures, see [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md#backup--disaster-recovery)
-
-### Recent Changes (April 2026)
-
-#### ✅ Phase 5: Native ISO 8583 Persistence Layer - COMPLETE (LATEST - April 21, 2026)
-- **Status**: ✅ **PRODUCTION READY** - All tests passing, PCI-DSS compliant
-- **Achievement**: Complete end-to-end ISO 8583 transaction processing with database persistence
-- **Testing**: ✅ **107 Total Tests PASSING** (105 unit/integration + 2 POS simulation)
-- **Completion**: Full jPOS-EE 2.1.9 native persistence implementation with audit trail
-
-**Phase 5 Deliverables**:
-- ✅ **ISO Transaction Entity** (19 fields): Complete ISO 8583 message storage with PCI-DSS compliance
-- ✅ **ISO Transaction Audit Entity** (13 fields): Immutable audit trail for compliance (10.1, 10.2, 10.3)
-- ✅ **25+ Repository Methods**: Comprehensive query and CRUD operations with filtering
-- ✅ **PersistRequest Participant**: Receives ISO messages, masks PAN (PCI-DSS 3.2.1), persists to DB
-- ✅ **UpdateResponse Participant**: Updates transaction status, creates response audit entries
-- ✅ **End-to-End Data Flow Validation**: Complete transaction lifecycle tested with POSSimulationTest
-
-**POSSimulationTest Results** ✅:
-- **Test 1: POS Purchase Transaction Flow** (PASSED)
-  - 5-phase transaction: Request → Persist → Process → Response → Verify
-  - Transaction ID 2912 created, amount $150.75, terminal ATM001
-  - Status progression: RECEIVED → PROCESSED (verified in database)
-  - Audit entries: 2 (RECEIVE_REQUEST, SEND_RESPONSE)
-  - PAN masked: `453212****9123` (full PAN 4532123456789123)
-
-- **Test 2: Multiple POS Transactions** (PASSED)
-  - 5 transactions from different terminals (ATM001-ATM005)
-  - All persisted successfully with proper status values
-  - Batch processing validation: ✅ Complete
-
-**PCI-DSS Compliance Verified** 🔒:
-- ✅ **Requirement 3.2.1** (PAN Masking): Masked PAN stored in DB, never full PAN
-- ✅ **Requirement 10.1** (User ID Logging): CreatedBy, UpdatedBy tracked for all changes
-- ✅ **Requirement 10.2** (Audit Trail Capture): Immutable audit entries with timestamps, IP, session ID
-- ✅ **Requirement 10.3** (Accountability): Each change recorded with ChangedBy, IpAddress, SessionId, Reason
-- ✅ **Immutability**: Audit table uses CreatedAt only (no UpdatedAt), enforced at database level
-
-**Architecture**:
-```
-ISO 8583 Message (from POS) 
-    ↓
-jPOS-EE Listener (Port 5001)
-    ↓
-PersistRequest Participant
-├─ Extract fields from ISO message
-├─ Mask PAN (PCI-DSS 3.2.1)
-├─ Create IsoTransaction entity (status=RECEIVED)
-└─ Create initial audit entry
-    ↓
-TransactionManager Processing Chain
-├─ Business Logic Participants
-└─ Update transaction status (in-memory)
-    ↓
-UpdateResponse Participant
-├─ Extract response fields
-├─ Update transaction (status=PROCESSED)
-└─ Create response audit entry (immutable)
-    ↓
-PostgreSQL jposee-db
-├─ iso_transactions (19 fields, properly indexed)
-└─ iso_transactions_audit (13 fields, FK with CASCADE)
-```
-
-**Test Metrics**:
-- Total tests: 107 (105 existing + 2 new POSSimulationTest)
-- Pass rate: 100%
-- Code coverage: Entity, Repository, Participant, Utility classes
-- Execution time: ~3 seconds for POSSimulationTest
-- Database performance: All operations within acceptable thresholds
-
-**Key Files**:
-- `jpos-ee/src/main/java/org/cms/jposee/entity/IsoTransaction.java` - Transaction entity (19 fields)
-- `jpos-ee/src/main/java/org/cms/jposee/entity/IsoTransactionAudit.java` - Audit entity (13 fields)
-- `jpos-ee/src/main/java/org/cms/jposee/repository/impl/*RepositoryImpl.java` - 25+ query methods
-- `jpos-ee/src/main/java/org/cms/jposee/participant/PersistRequest.java` - ISO message persistence
-- `jpos-ee/src/main/java/org/cms/jposee/participant/UpdateResponse.java` - Response handling & audit
-- `jpos-ee/src/main/java/org/cms/jposee/util/IsoUtil.java` - PAN masking, field extraction
-- `jpos-ee/src/test/java/org/cms/jposee/integration/POSSimulationTest.java` - End-to-end validation (NEW)
-- `jpos-ee/PHASE_5_COMPLETION_PLAN.md` - Comprehensive Phase 5 documentation
-
-**Documentation**:
-- See [jpos-ee/PHASE_5_COMPLETION_PLAN.md](jpos-ee/PHASE_5_COMPLETION_PLAN.md) for complete Phase 5 details
-- Transaction flow diagram, test results, PCI-DSS mapping, Phase 6 roadmap
-
-**Webhook Approach**: ✅ **REMOVED** (April 21, 2026)
-- Previous webhook-based approach completely removed:
-  - ❌ Deleted: `backend/app/services/iso_message_handler.py`
-  - ❌ Removed: `/webhook/iso-message` endpoint
-  - ❌ Removed: `/webhook/iso-response` endpoint
-  - ❌ Removed: `/webhook/parse-iso` endpoint
-- **Reason**: Native jPOS persistence is simpler, faster, and more reliable
-- **Benefits**:
-  - Direct database storage (no HTTP latency)
-  - Guaranteed transaction consistency
-  - Immutable audit trail built-in
-  - Cleaner architecture with fewer moving parts
-  - Better PCI-DSS compliance (no callback delays)
-
-**Next Phase (Phase 6)**:
-- [ ] Staging deployment and native persistence validation
-- [ ] Production readiness verification (24-48 hour load testing)
-- [ ] Final cutover to production with zero downtime
-
-**Webhook Approach**: ✅ **REMOVED** - Replaced with native jPOS persistence
-- All ISO transactions now persisted directly by jPOS-EE Participants
-- No webhook callbacks needed - direct PostgreSQL storage
-- Cleaner architecture, better performance, guaranteed consistency
-
----
-
-#### ✅ Dedicated jPOS EE Database Architecture
-- **Status**: ✅ Production Ready
-- **Implementation**: Isolated PostgreSQL instance for payment processing
-  - **jposee-db**: Separate PostgreSQL 15.3 service on port 5433
-  - **Purpose**: Dedicated database for jPOS EE payment transactions (iso NOT on cms-postgresql)
-  - **Benefits**:
-    - 🔒 Enhanced security (payment data isolated from platform data)
-    - 📈 Independent scaling and performance tuning
-    - 🔄 Separate backup/recovery strategies for payment data
-    - 📋 Cleaner compliance auditing for payment transactions
-    - 🏗️ Better operational flexibility and maintainability
-- **Schema**: 9 tables + 2 aggregation views (11 total objects)
-  - Payment transactions with ISO 8583 field storage
-  - Routing rules and logic tables
-  - Batch job management
-  - Audit trails and analytics views
-- **API Integration**: 20+ REST endpoints under `/jposee/` namespace
-  - Full CRUD operations for transactions, routing, batches
-  - Advanced filtering and searching
-  - Dashboard statistics and analytics
-- **Testing**: ✅ All 17+ endpoints verified (100% pass rate)
-- **Documentation**:
-  - [SETUP_NEW_SERVER.md](SETUP_NEW_SERVER.md) - New server deployment guide
-  - [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) - Production hardening & deployment
-- **Files Modified**:
-  - `docker-compose.yml` - Added jposee-db service with health checks
-  - `backend/app/config.py` - Updated POSTGRES_HOST to point to jposee-db
-  - `backend/.env` - Updated database connection variables
-  - `backend/app/schemas/jposee_schemas.py` - Fixed Pydantic validation schemas
-
-#### ✅ Payment Processing Integration - jPOS & jPOS EE
-- **Status**: Successfully deployed and operational
-- **Added** two jPOS services for ISO 8583 payment message processing:
-  - **jPOS (Open-source)**: Standard payment processor on port 5000
-  - **jPOS EE (Enterprise)**: Advanced routing and enterprise features on ports 5001/5002
-- **Dependencies**: 13 Maven Central JARs totaling 6.1 MB per container
-  - Core: jpos-2.1.8, commons-cli, jdom2
-  - Logging: log4j-api, log4j-core, log4j-slf4j-impl, slf4j-api
-  - OSGi: org.osgi.core, org.osgi.compendium, org.apache.felix.framework
-  - Utils: snakeyaml, commons-lang3, commons-codec
-- **Fixes Applied**:
-  - Created explicit entrypoint scripts for proper classpath configuration
-  - Resolved ClassDefNotFoundError issues with OSGi framework and SnakeYAML
-  - Q2 container initializes successfully with all dependencies loaded
-- **Files Added/Modified**:
-  - `/jpos/Dockerfile` - Multi-stage build with dependency auto-download
-  - `/jpos/entrypoint.sh` - Q2 startup with proper classpath
-  - `/jposee/Dockerfile` - Enterprise variant with fallback to OSS
-  - `/jposee/entrypoint.sh` - Enterprise Q2 startup
-  - `docker-compose.yml` - Updated with both jPOS services
-
-#### ✅ WSO2 Identity Server Removal (Previous)
-- **Removed** WSO2 Identity Server (IS) configuration
-- **Reason**: Simplification - APIM remains for API management
-- **Impact**: No breaking changes to existing services
-
-#### ✅ SAP Fiori Frontend UI Redesign & Pagination Implementation
-- **Status**: ✅ Complete - Production Ready
-- **Architecture**: Component-level CSS with preserved library files
-  - Original `openui5.css` (900+ lines) kept pristine - no modifications
-  - New `custom-spacing.css` (380+ lines) for component overrides only
-  - All customizations use `!important` for reliable precedence
-  - Separation allows easy library upgrades without conflicts
-- **Features Implemented**:
-  - ✅ **Pagination System**: 10 records per page, Previous/Next navigation
-  - ✅ **Optimized Table Layout**: `table-layout: fixed` with text-wrapping support
-  - ✅ **Responsive Design**: Eliminates horizontal & vertical scrollbars
-  - ✅ **Professional Styling**: SAP Horizon color palette (blue #0B5394, teal #107E8B, red #D32F2F)
-  - ✅ **Compact Density**: Industry-standard spacing (0.65rem cells, 0.8rem fonts)
-  - ✅ **Status Badges**: Color-coded Active/Inactive with dot indicators
-  - ✅ **Button Styling**: Primary (solid blue), Secondary (transparent teal), Danger (transparent red)
-  - ✅ **Form Validation**: Error messages for required fields with visual feedback
-  - ✅ **Modal Dialogs**: Proper flex layout with header/body/footer sections
-- **Test Data Generation**:
-  - ✅ 106 records created for Oracle Database (IDs 1-5, 100-199)
-  - ✅ 406+ records created for PostgreSQL
-  - ✅ Mixed Active/Inactive status distribution
-  - ✅ Supports testing with 11 pages of paginated data
-- **Files Created/Modified**:
-  - `frontend/src/styles/openui5.css` - SAP Horizon theme (pristine)
-  - `frontend/src/styles/custom-spacing.css` - Component overrides (NEW)
-  - `frontend/src/components/TestDatabase.jsx` - Pagination logic added
-  - `frontend/src/components/MainLayout.jsx` - Shell layout optimized
-  - `frontend/index.html` - Cleaned up, conflict-free CSS loading
-- **Performance**: Only 10 records rendered per page = efficient DOM rendering
-- **Accessibility**: Proper semantic HTML, ARIA attributes, keyboard navigation
 
 ---
 
@@ -494,39 +199,20 @@ The platform includes two jPOS implementations for handling ISO 8583 payment mes
   - Standard logging and monitoring
   - Plugin-based architecture
 
-### jPOS EE - Enterprise Edition (Ports 5001/5002)
-- **Advanced payment processor** with enterprise features
-- **Best for**: Production, complex routing, audit trails
-- **Features**:
-  - Advanced routing rules and decision logic
-  - Batch processing capabilities
-  - Comprehensive audit trails
-  - Enhanced performance and scaling
-  - Enterprise support and SLAs
-
 ### Architecture
 
 ```
 ISO 8583 Messages
        │
-       ├─► jPOS (Port 5000)
-       │   └─► Basic Routing ─► Backend Integration
-       │
-       └─► jPOS EE (Ports 5001/5002)
-           ├─► Advanced Routing ─► Complex Logic
-           ├─► Batch Processing ─► Scheduled Jobs
-           └─► Audit Logging ──► Compliance
+       └─► jPOS (Port 5000)
+           └─► Routing ─► Backend Integration
 ```
 
 ### Management
 
 #### View jPOS Logs
 ```bash
-# Open-source jPOS
 docker logs cms-jpos -f
-
-# Enterprise jPOS EE
-docker logs cms-jposee -f
 ```
 
 #### Verify Services Running
@@ -536,12 +222,7 @@ docker ps | grep jpos
 
 #### Restart Services
 ```bash
-# Single service
 docker compose restart cms-jpos
-docker compose restart cms-jposee
-
-# Both services
-docker compose restart cms-jpos cms-jposee
 ```
 
 #### Configuration Files
@@ -550,11 +231,6 @@ docker compose restart cms-jpos cms-jposee
 - `jpos/config/system.properties` - Runtime configuration
 - `jpos/deploy/00_logger.xml` - Logging setup
 - `jpos/deploy/*.xml` - Q2 deployment files
-
-**jPOS EE Configuration**:
-- `jposee/config/system.properties` - Runtime configuration
-- `jposee/deploy/00_logger.xml` - Logging setup
-- `jposee/deploy/*.xml` - Q2 deployment files
 
 ### Testing & Validation
 
@@ -580,117 +256,12 @@ python3 jpos-test/Python-test-improved.py
 ✓ Service is operational
 ```
 
-#### Comprehensive Test Profiles for jPOS EE
-
-Test realistic payment scenarios with multiple card brands:
-
-```bash
-# Interactive menu-driven test
-python3 jpos-test/jposee-test-profile.py
-```
-
-**Available Test Profiles:**
-
-1. **Visa Transactions** (4 scenarios)
-   - Auth $100 purchase
-   - Auth $50.99 purchase
-   - Refund $100 return
-   - Reversal
-
-2. **Mastercard Transactions** (4 scenarios)
-   - Auth $150 purchase
-   - Auth $75.50 purchase
-   - Refund $150 return
-   - Reversal
-
-3. **Mixed Card Brands** (8 scenarios)
-   - Visa, Mastercard, AMEX, Discover
-   - Purchase and refund for each
-
-4. **Stress Test** (10 transactions)
-   - Multiple rapid transactions
-   - Performance validation
-
-5. **Run All Tests** (Complete suite)
-   - All profiles sequentially
-   - Comprehensive validation
-
-**Example - Run Visa Profile:**
-```bash
-echo "1" | python3 jpos-test/jposee-test-profile.py
-```
-
-**Example Output:**
-```
-======================================================================
-VISA TRANSACTION TESTS
-======================================================================
-
-✓ Transaction: Visa Auth - $100 Purchase
-   Status: PROCESSED
-   Message: 01008220000000000000000100002026042018363000000100004111111111111111
-
-✓ Transaction: Visa Auth - $50.99 Purchase
-   Status: PROCESSED
-   Message: 01008220000000000000000050992026042018363000000100004111111111111111
-
-✓ Transaction: Visa Refund - $100 Return
-   Status: PROCESSED
-   Message: 02008220000000000000000100002026042018363000000100004111111111111111
-
-✓ Transaction: Visa Reversal
-   Status: PROCESSED
-   Message: 04008220000000000000000100002026042018363000000100004111111111111111
-
-======================================================================
-TEST SUMMARY
-======================================================================
-Total Transactions: 4
-Successful: 4 (100%)
-Failed: 0 (0%)
-======================================================================
-```
-
-#### Custom Test Runner
-
-For automated testing with configuration profiles:
-
-```bash
-# Run custom test scenarios
-python3 jpos-test/jposee-custom-runner.py
-
-# Test configuration file: jpos-test/test-profiles.json
-# Edit test-profiles.json to add custom transactions
-```
-
-**Test Profile Configuration:**
-```json
-{
-  "profiles": [
-    {
-      "name": "Quick Smoke Test",
-      "description": "Fast validation of jPOS connectivity",
-      "transactions": [
-        {
-          "card_brand": "visa",
-          "amount": 100,
-          "operation": "auth",
-          "description": "Basic Visa auth"
-        }
-      ]
-    }
-  ]
-}
-```
-
 #### Test Files
 
 | File | Purpose | Usage |
 |------|---------|-------|
 | `Python-test.py` | Basic connectivity test | `python3 jpos-test/Python-test.py` |
 | `Python-test-improved.py` | Detailed connectivity test | `python3 jpos-test/Python-test-improved.py` |
-| `jposee-test-profile.py` | Interactive profile suite | `python3 jpos-test/jposee-test-profile.py` |
-| `jposee-custom-runner.py` | Configuration-driven tests | `python3 jpos-test/jposee-custom-runner.py` |
 | `test-profiles.json` | Test configuration | Edit for custom scenarios |
 | `README.md` | Complete testing guide | Detailed documentation |
 
@@ -734,17 +305,11 @@ jpos-test/
 ├── README.md                      # Comprehensive testing guide
 ├── Python-test.py                 # Basic connectivity test
 ├── Python-test-improved.py        # Enhanced connectivity test with detailed output
-├── jposee-test-profile.py         # Interactive test profile suite
-├── jposee-custom-runner.py        # Configuration-driven test runner
 └── test-profiles.json             # Customizable test configuration
-
-Total: 6 files with 1,144+ lines of testing code
 ```
 
 **Quick Links:**
 - 📖 [Complete Testing Guide](jpos-test/README.md)
-- 🧪 Run all tests: `python3 jpos-test/jposee-test-profile.py`
-- 🔧 Custom tests: `python3 jpos-test/jposee-custom-runner.py`
 - ✅ Basic test: `python3 jpos-test/Python-test.py`
 
 ---
@@ -951,9 +516,7 @@ psql -h localhost -U postgres -d cms
 cms-postgresql ─┐
 cms-oracle-xe  ├─► cms-backend ──┬─► cms-frontend
                ├─► cms-airflow   │
-               └─► cms-apim      ├─► cms-jpos
-                               ├─► cms-jposee
-                               └─► (Airflow DAGs)
+               └─► cms-apim      └─► cms-jpos
 ```
 
 ### Network
@@ -1005,12 +568,6 @@ CMS-Platform/
 │   ├── entrypoint.sh
 │   ├── config/
 │   └── deploy/
-├── jposee/                  # jPOS Enterprise
-│   ├── Dockerfile
-│   ├── entrypoint.sh
-│   ├── config/
-│   ├── deploy/
-│   └── log/
 ├── oracle-db/               # Oracle utilities
 ├── postgresql-dwh/          # PostgreSQL utilities
 ├── superset/                # Data visualization (optional)
@@ -1046,7 +603,7 @@ docker compose logs -f cms-backend
 docker compose logs --tail 50 cms-backend
 
 # Follow jPOS in real-time
-docker compose logs -f cms-jpos cms-jposee
+docker compose logs -f cms-jpos
 ```
 
 ### Execute Commands in Container
@@ -1127,17 +684,16 @@ docker ps | grep jpos
 **View startup logs**:
 ```bash
 docker logs cms-jpos
-docker logs cms-jposee
 ```
 
 **Verify ports are open**:
 ```bash
-netstat -tlnp | grep -E "5000|5001|5002"
+netstat -tlnp | grep 5000
 ```
 
 **Restart services**:
 ```bash
-docker compose restart cms-jpos cms-jposee
+docker compose restart cms-jpos
 ```
 
 ### API Integration Issues
@@ -1206,13 +762,12 @@ After starting the platform, verify all services:
 - [ ] Airflow UI accessible at http://localhost:8080
 - [ ] WSO2 APIM console at https://localhost:9443/admin
 - [ ] jPOS running on port 5000
-- [ ] jPOS EE running on ports 5001/5002
 - [ ] Oracle database accessible on port 1521
 - [ ] PostgreSQL accessible on port 5432
 - [ ] All containers show "Up" status in `docker compose ps`
 
 ---
 
-**Last Updated**: April 21, 2026 23:38 UTC
+**Last Updated**: April 23, 2026
 **Platform Version**: 1.0.0
-**Status**: ✅ Production Ready - Phase 5 Complete
+**Status**: ✅ Production Ready
