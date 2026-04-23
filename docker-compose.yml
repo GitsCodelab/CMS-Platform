@@ -68,6 +68,10 @@ services:
         condition: service_started
     env_file:
       - ./backend/.env
+    environment:
+      # Override localhost with Docker service names for container networking
+      POSTGRES_HOST: cms-postgresql
+      ORACLE_HOST: cms-oracle-xe
     volumes:
       - ./backend:/app
     ports:
@@ -119,22 +123,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 120s
-
-  cms-jpos:
-    build:
-      context: ./jpos
-      dockerfile: Dockerfile
-    container_name: cms-jpos
-    depends_on:
-      cms-backend:
-        condition: service_started
-    ports:
-      - "5000:5000"   # ISO8583 port
-    volumes:
-      - ./jpos/deploy:/opt/jpos/deploy
-      - ./jpos/config:/opt/jpos/config
-    networks:
-      - cms-platform-net
 
 volumes:
   oracle-data:

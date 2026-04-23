@@ -1,4 +1,4 @@
 """API routers"""
-from . import oracle, postgres, jposee
+from . import oracle, postgres
 
-__all__ = ["oracle", "postgres", "jposee"]
+__all__ = ["oracle", "postgres"]

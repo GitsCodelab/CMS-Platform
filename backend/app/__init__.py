@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
-from app.routers import oracle, postgres, jposee
+from app.routers import oracle, postgres
 
 
 def create_app() -> FastAPI:
@@ -11,7 +11,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.API_TITLE,
         version=settings.API_VERSION,
-        description="Dual-database CRUD API for Oracle XE and PostgreSQL with jPOS EE integration",
+        description="Dual-database CRUD API for Oracle XE and PostgreSQL",
         debug=settings.DEBUG
     )
 
@@ -37,7 +37,6 @@ def create_app() -> FastAPI:
     # Include routers
     app.include_router(oracle.router)
     app.include_router(postgres.router)
-    app.include_router(jposee.router)
 
     return app
 

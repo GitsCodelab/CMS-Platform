@@ -1,12 +1,11 @@
 # CMS Platform
 
-A comprehensive, enterprise-grade content management and payment processing system featuring:
+A comprehensive, enterprise-grade content management system featuring:
 - **Dual-Database Support**: Oracle XE (transactional) and PostgreSQL (data warehouse)
 - **Modern Frontend**: React 18.2.0 with Vite, SAP Fiori Design System, OpenUI5 components, and pagination
 - **Robust Backend**: FastAPI with comprehensive REST API and database abstraction
 - **Workflow Orchestration**: Apache Airflow 3.0.0 for ETL pipelines and scheduling
 - **API Management**: WSO2 APIM 4.1.0 for API lifecycle management and gateway
-- **Payment Processing**: jPOS implementation for ISO 8583 message routing
 - **Complete Container Orchestration**: Docker Compose with fully integrated microservices
 - **Production-Ready**: Health checks, monitoring, logging, and error handling
 - **Enterprise UI**: SAP Horizon theme with 106+ test records, pagination, and professional styling
@@ -51,7 +50,6 @@ docker compose down
 | **WSO2 APIM Developer** | https://localhost:9443/devportal | - | 9443 |
 | **APIM Gateway (HTTP)** | http://localhost:8280 | - | 8280 |
 | **APIM Gateway (HTTPS)** | https://localhost:8243 | - | 8243 |
-| **jPOS** | localhost:5000 | ISO 8583 | 5000 |
 | **Oracle Database** | localhost:1521/xepdb1 | sys / oracle | 1521 |
 | **PostgreSQL (CMS)** | localhost:5432/cms | postgres / postgres | 5432 |
 
@@ -79,13 +77,13 @@ docker compose down
 │                      │    /8243            │                            │
 │                      └────┬───┬────┬───────┘                            │
 │           ┌────────────────┘   │    └──────────────┐                   │
-│           │                    │                   │                   │
-│    ┌──────▼──────┐    ┌──────▼──────┐             │
-│    │  Backend    │    │  jPOS       │             │
-│    │ (FastAPI)   │    │ (Port 5000) │             │
-│    │ Port 8000   │    │ ISO 8583    │             │
-│    └──────┬──────┘    │ Payment     │             │
-│           │           └─────────────┘             │
+│           │                    │                                          │
+│    ┌──────▼──────┐             │                                          │
+│    │  Backend    │             │                                          │
+│    │ (FastAPI)   │             │                                          │
+│    │ Port 8000   │             │                                          │
+│    └──────┬──────┘             │                                          │
+│           │                    │                                          │
 │    ┌──────▼─────────────────┐                                         │
 │    │   Supporting Services  │                                         │
 │    ├────────────────────────┤                                         │
@@ -106,7 +104,6 @@ docker compose down
 - User requests → Frontend (React, port 3000)
 - API calls → WSO2 APIM (port 9443/8280/8243) [API Gateway]
 - Data operations → Backend (FastAPI, port 8000)
-- Payment operations → jPOS (port 5000)
 - Data persistence → Oracle XE or PostgreSQL
 - Batch jobs → Apache Airflow (port 8080)
 
@@ -118,7 +115,6 @@ docker compose down
 | Backend | FastAPI + Python | 0.104.1 + 3.12 | 8000 | ✅ Running |
 | Airflow | Apache Airflow | 3.0.0 | 8080 | ✅ Running |
 | API Gateway | WSO2 APIM | 4.1.0 | 9443, 8280, 8243 | ✅ Running |
-| jPOS | jPOS OSS | 2.1.8 | 5000 | ✅ Running |
 | Oracle DB | Oracle XE | 21.3.0 | 1521 | ✅ Running |
 | PostgreSQL (CMS) | PostgreSQL | 15.3 | 5432 | ✅ Running |
 
@@ -181,136 +177,6 @@ Each database maintains independent backup strategies:
 - **PostgreSQL CMS**: Transaction logs, point-in-time recovery
 
 For complete backup procedures, see [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md#backup--disaster-recovery)
-
----
-
-## 💳 Payment Processing - jPOS Services
-
-### Overview
-
-The platform includes two jPOS implementations for handling ISO 8583 payment messages:
-
-### jPOS Open-Source (Port 5000)
-- **Standard payment processor** for basic message routing
-- **Best for**: Development, testing, standard transactions
-- **Features**:
-  - ISO 8583 message parsing and generation
-  - Basic transaction routing
-  - Standard logging and monitoring
-  - Plugin-based architecture
-
-### Architecture
-
-```
-ISO 8583 Messages
-       │
-       └─► jPOS (Port 5000)
-           └─► Routing ─► Backend Integration
-```
-
-### Management
-
-#### View jPOS Logs
-```bash
-docker logs cms-jpos -f
-```
-
-#### Verify Services Running
-```bash
-docker ps | grep jpos
-```
-
-#### Restart Services
-```bash
-docker compose restart cms-jpos
-```
-
-#### Configuration Files
-
-**jPOS Configuration**:
-- `jpos/config/system.properties` - Runtime configuration
-- `jpos/deploy/00_logger.xml` - Logging setup
-- `jpos/deploy/*.xml` - Q2 deployment files
-
-### Testing & Validation
-
-#### Quick Connectivity Test
-
-Test jPOS connectivity with ISO 8583 messages:
-
-```bash
-cd /home/samehabib/CMS-Platform
-
-# Test jPOS open-source (port 5000)
-python3 jpos-test/Python-test.py
-
-# Test with detailed output
-python3 jpos-test/Python-test-improved.py
-```
-
-**Expected Output:**
-```
-✓ Connected successfully
-✓ Message sent (52 bytes)
-✓ jPOS processing acknowledged
-✓ Service is operational
-```
-
-#### Test Files
-
-| File | Purpose | Usage |
-|------|---------|-------|
-| `Python-test.py` | Basic connectivity test | `python3 jpos-test/Python-test.py` |
-| `Python-test-improved.py` | Detailed connectivity test | `python3 jpos-test/Python-test-improved.py` |
-| `test-profiles.json` | Test configuration | Edit for custom scenarios |
-| `README.md` | Complete testing guide | Detailed documentation |
-
-#### Transaction Operations Supported
-
-| Operation | Type | Description |
-|-----------|------|-------------|
-| **Auth** | Purchase | Authorize transaction amount |
-| **Capture** | Purchase | Capture previously authorized amount |
-| **Refund** | Return | Full refund of transaction |
-| **Reversal** | Reversal | Reverse transaction (void) |
-| **Echo** | Network | Network connectivity check |
-
-#### Supported Card Brands
-
-- 🔵 **Visa** (BIN: 4111111111111111)
-- 🔴 **Mastercard** (BIN: 5105105105105100)
-- 🟢 **American Express** (BIN: 378282246310005)
-- 🟡 **Discover** (BIN: 6011111111111117)
-
-#### Test Data Details
-
-**Visa Test Card:**
-- Card Number: `4111 1111 1111 1111`
-- Expiry: `12/25`
-- CVV: `123`
-- Status: Valid for all test operations
-
-**Mastercard Test Card:**
-- Card Number: `5105 1051 0510 5100`
-- Expiry: `12/25`
-- CVV: `123`
-- Status: Valid for all test operations
-
-#### Complete Testing Suite Directory
-
-The complete jPOS testing suite is located in [jpos-test/](jpos-test/) directory:
-
-```
-jpos-test/
-├── README.md                      # Comprehensive testing guide
-├── Python-test.py                 # Basic connectivity test
-├── Python-test-improved.py        # Enhanced connectivity test with detailed output
-└── test-profiles.json             # Customizable test configuration
-```
-
-**Quick Links:**
-- 📖 [Complete Testing Guide](jpos-test/README.md)
-- ✅ Basic test: `python3 jpos-test/Python-test.py`
 
 ---
 
@@ -516,7 +382,7 @@ psql -h localhost -U postgres -d cms
 cms-postgresql ─┐
 cms-oracle-xe  ├─► cms-backend ──┬─► cms-frontend
                ├─► cms-airflow   │
-               └─► cms-apim      └─► cms-jpos
+               └─► cms-apim      ────┘
 ```
 
 ### Network
@@ -563,11 +429,6 @@ CMS-Platform/
 │       ├── Dockerfile
 │       ├── deployment.toml
 │       └── docker-compose.yml
-├── jpos/                    # jPOS Open-source
-│   ├── Dockerfile
-│   ├── entrypoint.sh
-│   ├── config/
-│   └── deploy/
 ├── oracle-db/               # Oracle utilities
 ├── postgresql-dwh/          # PostgreSQL utilities
 ├── superset/                # Data visualization (optional)
@@ -601,9 +462,6 @@ docker compose logs -f cms-backend
 
 # Last 50 lines
 docker compose logs --tail 50 cms-backend
-
-# Follow jPOS in real-time
-docker compose logs -f cms-jpos
 ```
 
 ### Execute Commands in Container
@@ -674,28 +532,6 @@ docker compose exec cms-oracle-xe sqlplus -version
 docker compose exec cms-postgresql psql -V
 ```
 
-### jPOS Services Not Responding
-
-**Check container status**:
-```bash
-docker ps | grep jpos
-```
-
-**View startup logs**:
-```bash
-docker logs cms-jpos
-```
-
-**Verify ports are open**:
-```bash
-netstat -tlnp | grep 5000
-```
-
-**Restart services**:
-```bash
-docker compose restart cms-jpos
-```
-
 ### API Integration Issues
 
 **Test backend health**:
@@ -742,7 +578,6 @@ curl http://localhost:8000/oracle/test
 - [FastAPI Documentation](https://fastapi.tiangolo.com)
 - [Apache Airflow Documentation](https://airflow.apache.org)
 - [WSO2 APIM Documentation](https://apim.docs.wso2.com)
-- [jPOS Documentation](https://jpos.org)
 - [Docker Documentation](https://docs.docker.com)
 
 ---
@@ -761,7 +596,6 @@ After starting the platform, verify all services:
 - [ ] Backend API responds at http://localhost:8000/health
 - [ ] Airflow UI accessible at http://localhost:8080
 - [ ] WSO2 APIM console at https://localhost:9443/admin
-- [ ] jPOS running on port 5000
 - [ ] Oracle database accessible on port 1521
 - [ ] PostgreSQL accessible on port 5432
 - [ ] All containers show "Up" status in `docker compose ps`
