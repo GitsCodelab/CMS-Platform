@@ -1,0 +1,59 @@
+{
+  "frequent_operations": {
+    "read_file": {
+      "avg_tokens": 500,
+      "avg_cost": 0.004,
+      "frequency": "very_high",
+      "notes": "Highly variable - large files cost more"
+    },
+    "semantic_search": {
+      "avg_tokens": 2000,
+      "avg_cost": 0.016,
+      "frequency": "high",
+      "notes": "Effective for navigation but token-expensive"
+    },
+    "grep_search": {
+      "avg_tokens": 800,
+      "avg_cost": 0.006,
+      "frequency": "high",
+      "notes": "More efficient than semantic search for exact matches"
+    },
+    "file_creation": {
+      "avg_tokens": 1200,
+      "avg_cost": 0.010,
+      "frequency": "medium",
+      "notes": "Cost includes code generation"
+    },
+    "file_edit": {
+      "avg_tokens": 1500,
+      "avg_cost": 0.012,
+      "frequency": "high",
+      "notes": "Must include surrounding context for accuracy"
+    },
+    "git_operations": {
+      "avg_tokens": 400,
+      "avg_cost": 0.003,
+      "frequency": "medium",
+      "notes": "Typically lightweight operations"
+    },
+    "docker_commands": {
+      "avg_tokens": 600,
+      "avg_cost": 0.005,
+      "frequency": "medium",
+      "notes": "Container inspection and management"
+    },
+    "database_query": {
+      "avg_tokens": 800,
+      "avg_cost": 0.006,
+      "frequency": "low",
+      "notes": "SQL query execution and result analysis"
+    }
+  },
+  "cost_optimization_tips": {
+    "1_use_grep_not_semantic": "grep_search costs 75% less than semantic_search",
+    "2_batch_file_reads": "Read multiple related files in one context",
+    "3_specific_line_ranges": "Use startLine/endLine to read only needed portions",
+    "4_parallel_operations": "Do independent read/search operations simultaneously",
+    "5_avoid_tool_chains": "Group tools into single calls when possible"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "agents": [
+    {
+      "name": "default",
+      "description": "Default coding agent for general development tasks",
+      "avg_tokens_per_interaction": 3000,
+      "primary_use": "Code generation, debugging, implementation",
+      "cost_estimate_per_interaction": 0.025
+    },
+    {
+      "name": "explorer",
+      "description": "Fast read-only codebase exploration subagent",
+      "avg_tokens_per_interaction": 2000,
+      "primary_use": "Codebase search, file reading, Q&A",
+      "cost_estimate_per_interaction": 0.015
+    },
+    {
+      "name": "architect",
+      "description": "System design and architecture planning",
+      "avg_tokens_per_interaction": 4500,
+      "primary_use": "Project planning, architecture decisions, documentation",
+      "cost_estimate_per_interaction": 0.040
+    }
+  ],
+  "recommendations": {
+    "use_explorer": "For searching codebases - more efficient than default agent",
+    "batch_tasks": "Group related tasks to reduce context switching",
+    "reuse_context": "Keep relevant context in memory across related operations"
+  }
+}

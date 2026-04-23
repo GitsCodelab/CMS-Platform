@@ -1,0 +1,303 @@
+{
+  "project": "CMS Platform",
+  "description": "Enterprise content management system with dual-database support and microservices architecture",
+  "languages": [
+    {
+      "name": "Python",
+      "version": "3.12",
+      "purpose": "Backend API and data processing",
+      "tools": ["pip", "virtualenv", "pytest"]
+    },
+    {
+      "name": "JavaScript",
+      "version": "ES6+",
+      "purpose": "Frontend development",
+      "environment": "Node.js 18"
+    },
+    {
+      "name": "SQL",
+      "variants": ["PostgreSQL SQL", "Oracle SQL"],
+      "purpose": "Database queries and DDL"
+    },
+    {
+      "name": "YAML",
+      "purpose": "Configuration files (deployment.toml, docker-compose.yml)"
+    },
+    {
+      "name": "JSON",
+      "purpose": "API specifications and data interchange"
+    }
+  ],
+  "backend_stack": {
+    "framework": {
+      "name": "FastAPI",
+      "version": "0.104.1",
+      "python_version": "3.12",
+      "purpose": "REST API framework",
+      "features": ["Async/await", "Auto-generated docs", "Type validation"]
+    },
+    "web_server": {
+      "name": "Uvicorn",
+      "version": "0.24.0",
+      "purpose": "ASGI web server"
+    },
+    "configuration": {
+      "name": "Pydantic",
+      "version": "2.5.0",
+      "components": ["pydantic-settings==2.1.0"],
+      "purpose": "Settings management and validation"
+    },
+    "environment": {
+      "name": "python-dotenv",
+      "version": "1.0.0",
+      "purpose": "Load .env files"
+    },
+    "orm": {
+      "name": "SQLAlchemy",
+      "version": "2.0.23",
+      "purpose": "Database abstraction and ORM"
+    },
+    "migrations": {
+      "name": "Alembic",
+      "version": "1.13.1",
+      "purpose": "Database schema migrations"
+    },
+    "database_drivers": {
+      "postgresql": {
+        "name": "psycopg2-binary",
+        "version": "2.9.9",
+        "purpose": "PostgreSQL connection driver"
+      },
+      "oracle": {
+        "name": "oracledb",
+        "version": "3.4.2",
+        "purpose": "Oracle database connection driver"
+      }
+    },
+    "directory_structure": {
+      "backend/": "Root backend directory",
+      "backend/app/": "FastAPI application",
+      "backend/app/__init__.py": "FastAPI app factory",
+      "backend/app/config.py": "Configuration settings",
+      "backend/app/database/": "Database initialization",
+      "backend/app/routers/": "API endpoint handlers",
+      "backend/app/schemas/": "Pydantic models (request/response)",
+      "backend/app/services/": "Business logic",
+      "backend/requirements.txt": "Python dependencies",
+      "backend/.env": "Environment variables (docker-compose overrides)"
+    }
+  },
+  "frontend_stack": {
+    "framework": {
+      "name": "React",
+      "version": "18.2.0",
+      "purpose": "UI component library",
+      "features": ["Hooks", "Context API", "JSX"]
+    },
+    "build_tool": {
+      "name": "Vite",
+      "version": "5.x",
+      "purpose": "Build tool and dev server",
+      "features": ["HMR (Hot Module Replacement)", "Fast builds", "Native ES modules"]
+    },
+    "styling": {
+      "name": "Tailwind CSS",
+      "purpose": "Utility-first CSS framework",
+      "config": "frontend/tailwind.config.js"
+    },
+    "ui_framework": {
+      "name": "SAP UI5 / OpenUI5",
+      "purpose": "Enterprise UI components",
+      "theme": "SAP Horizon"
+    },
+    "build_system": {
+      "bundler": "Vite",
+      "config": "frontend/vite.config.js",
+      "postcss_config": "frontend/postcss.config.cjs"
+    },
+    "directory_structure": {
+      "frontend/": "React application root",
+      "frontend/src/": "Source code",
+      "frontend/src/App.jsx": "Main App component",
+      "frontend/src/main.jsx": "Entry point",
+      "frontend/src/api/": "API client code",
+      "frontend/src/components/": "React components",
+      "frontend/src/hooks/": "Custom React hooks",
+      "frontend/src/styles/": "CSS/styling",
+      "frontend/public/": "Static assets",
+      "frontend/index.html": "HTML template",
+      "frontend/package.json": "NPM dependencies"
+    },
+    "dependencies": {
+      "runtime": [
+        "react (18.2.0)",
+        "react-dom (18.2.0)"
+      ],
+      "dev_tools": [
+        "@vitejs/plugin-react",
+        "tailwindcss",
+        "postcss",
+        "autoprefixer",
+        "openui5 (embedded in public/libs/)"
+      ]
+    }
+  },
+  "databases": {
+    "postgresql": {
+      "version": "15.3",
+      "port": 5432,
+      "primary_purpose": "Data warehouse and application database",
+      "data": "407+ test records in 'test' table",
+      "docker_image": "postgres:15.3",
+      "persistence": "Named volume (postgres-data:/var/lib/postgresql/data)"
+    },
+    "oracle": {
+      "version": "21.3.0 (XE - Express Edition)",
+      "port": 1521,
+      "service": "xepdb1",
+      "primary_purpose": "Transactional database and legacy integration",
+      "data": "1 test record in 'test' table",
+      "docker_image": "gvenzl/oracle-xe:21.3.0",
+      "persistence": "Named volume (oracle-data:/opt/oracle/oradata)"
+    }
+  },
+  "orchestration_and_workflow": {
+    "airflow": {
+      "name": "Apache Airflow",
+      "version": "3.0.0",
+      "docker_image": "apache/airflow:3.0.0",
+      "mode": "Standalone (all-in-one)",
+      "port": 8080,
+      "purpose": "Workflow orchestration and ETL",
+      "components": [
+        "Webserver (UI)",
+        "Scheduler (task scheduling)",
+        "Executor (task execution - LocalExecutor)",
+        "Metadata database (PostgreSQL)"
+      ],
+      "dag_directory": "./airflow/dags/",
+      "example_dags": [
+        "hello_bash.py",
+        "hello_test.py",
+        "test_oracle.py"
+      ]
+    }
+  },
+  "api_management": {
+    "wso2_apim": {
+      "name": "WSO2 API Manager",
+      "version": "4.1.0",
+      "docker_image": "wso2/wso2apim:4.1.0",
+      "ports": {
+        "admin": 9443,
+        "gateway_http": 8280,
+        "gateway_https": 8243
+      },
+      "purpose": "API lifecycle management and gateway",
+      "components": [
+        "Publisher (API creation/versioning)",
+        "Developer Portal (API discovery)",
+        "Gateway (request routing/policy enforcement)",
+        "Admin Console (configuration)"
+      ],
+      "config_file": "./wso2-stack/apim/deployment.toml"
+    }
+  },
+  "containerization": {
+    "docker": {
+      "version": "Latest",
+      "purpose": "Container runtime"
+    },
+    "docker_compose": {
+      "version": "3.8+",
+      "file": "docker-compose.yml",
+      "purpose": "Orchestrate microservices",
+      "services_count": 6,
+      "network": "cms-platform-net (bridge network)"
+    }
+  },
+  "development_tools": {
+    "version_control": {
+      "system": "Git",
+      "repository_hosting": "GitHub"
+    },
+    "package_managers": {
+      "python": "pip",
+      "node": "npm"
+    },
+    "testing_frameworks": {
+      "python": "pytest",
+      "javascript": "Jest, Vitest (via Vite)"
+    },
+    "code_quality": [
+      "Pylint / Flake8 (Python)",
+      "ESLint (JavaScript)"
+    ]
+  },
+  "dependencies_summary": {
+    "backend_packages": [
+      "fastapi==0.104.1",
+      "uvicorn==0.24.0",
+      "pydantic==2.5.0",
+      "pydantic-settings==2.1.0",
+      "python-dotenv==1.0.0",
+      "oracledb==3.4.2",
+      "psycopg2-binary==2.9.9",
+      "sqlalchemy==2.0.23",
+      "alembic==1.13.1"
+    ],
+    "frontend_packages": [
+      "react@18.2.0",
+      "react-dom@18.2.0",
+      "tailwindcss",
+      "postcss",
+      "autoprefixer"
+    ]
+  },
+  "environment_variables": {
+    "backend": {
+      "POSTGRES_HOST": "cms-postgresql",
+      "POSTGRES_PORT": 5432,
+      "POSTGRES_DB": "cms",
+      "POSTGRES_USER": "postgres",
+      "POSTGRES_PASSWORD": "postgres",
+      "ORACLE_HOST": "cms-oracle-xe",
+      "ORACLE_PORT": 1521,
+      "ORACLE_USER": "sys",
+      "ORACLE_PASSWORD": "oracle",
+      "ORACLE_SERVICE": "xepdb1",
+      "API_TITLE": "CMS Platform API",
+      "API_VERSION": "1.0.0"
+    },
+    "frontend": {
+      "VITE_API_URL": "http://cms-backend:8000"
+    }
+  },
+  "standards_and_protocols": {
+    "api_communication": "REST with JSON",
+    "database_protocols": {
+      "postgresql": "TCP/IP (port 5432)",
+      "oracle": "Oracle protocol (port 1521)"
+    },
+    "authentication": [
+      "OAuth2 (via WSO2 APIM)",
+      "API Keys",
+      "Basic Auth"
+    ],
+    "documentation": "OpenAPI 3.0 / Swagger",
+    "container_protocols": "Docker bridge network with DNS"
+  },
+  "performance_characteristics": {
+    "startup_time": "60-90 seconds for full stack",
+    "database_connections": "Connection pooling via SQLAlchemy",
+    "api_response_time": "100-500ms typical",
+    "frontend_hmr": "< 1 second (hot module replacement)"
+  },
+  "production_considerations": {
+    "database_size": "Small scale (< 500 records)",
+    "concurrent_users": "Development/testing scale",
+    "scaling_strategy": "Horizontal scaling of API layer + managed databases",
+    "monitoring": "Docker logs, Airflow UI, API health checks",
+    "backup": "Volume snapshots, database backups"
+  }
+}

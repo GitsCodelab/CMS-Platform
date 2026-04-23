@@ -1,0 +1,15 @@
+[
+  {
+    "date": "2024-12-19",
+    "session_tokens": 24500,
+    "session_budget": 25000,
+    "efficiency_percent": 98,
+    "token_breakdown": {
+      "context": 15000,
+      "tool_operations": 7500,
+      "response": 2000
+    },
+    "most_expensive_tool": "semantic_search",
+    "optimization_next_time": "Use grep_search for exact pattern matching"
+  }
+]

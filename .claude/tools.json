@@ -1,0 +1,220 @@
+{
+  "available_tools": [
+    {
+      "name": "Apache Airflow",
+      "version": "3.0.0",
+      "container": "cms-airflow",
+      "port": 8080,
+      "purpose": "Workflow orchestration, ETL pipelines, scheduled task automation",
+      "access": "http://localhost:8080",
+      "credentials": {
+        "default": "airflow / airflow"
+      },
+      "key_features": [
+        "DAG-based workflow definition",
+        "Scheduling and triggering",
+        "Backfilling historical data",
+        "Monitoring and alerting",
+        "Integration with Oracle and PostgreSQL"
+      ],
+      "dag_directory": "./airflow/dags/",
+      "example_dags": [
+        "hello_bash.py - Simple bash task",
+        "hello_test.py - Test DAG",
+        "test_oracle.py - Oracle connectivity test"
+      ],
+      "logs_directory": "./airflow/logs/",
+      "config_file": "./airflow/.env",
+      "setup_script": "./airflow/scripts/airflow-init.sh",
+      "documentation": "Airflow 3.0 supports TaskFlow API and Python operators",
+      "use_cases": [
+        "Automated data extraction from databases",
+        "ETL job scheduling and monitoring",
+        "Data warehouse refresh cycles",
+        "Batch processing tasks"
+      ],
+      "quick_start": "1. Access http://localhost:8080, 2. Create DAG in ./airflow/dags/, 3. Wait 1-2 min for DAG discovery"
+    },
+    {
+      "name": "WSO2 API Manager",
+      "version": "4.1.0",
+      "container": "cms-apim",
+      "ports": {
+        "admin": 9443,
+        "gateway_http": 8280,
+        "gateway_https": 8243
+      },
+      "purpose": "API lifecycle management, API gateway, rate limiting, authentication, monetization",
+      "access_points": {
+        "admin_console": "https://localhost:9443/admin",
+        "publisher": "https://localhost:9443/publisher",
+        "developer_portal": "https://localhost:9443/devportal",
+        "gateway_http": "http://localhost:8280",
+        "gateway_https": "https://localhost:8243"
+      },
+      "credentials": {
+        "admin": "admin / admin"
+      },
+      "key_features": [
+        "API versioning and lifecycle",
+        "API rate limiting and throttling",
+        "OAuth2 and API Key authentication",
+        "API monetization",
+        "Developer self-service portal",
+        "API analytics and monitoring"
+      ],
+      "config_file": "./wso2-stack/apim/deployment.toml",
+      "documentation": [
+        "./wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md",
+        "./wso2-stack/apim/API_REGISTRATION.md",
+        "./wso2-stack/apim/POLICIES.md",
+        "./wso2-stack/apim/PRODUCTION.md"
+      ],
+      "api_definition": "./wso2-stack/apim/cms-api-definition.json",
+      "use_cases": [
+        "Expose backend APIs through managed gateway",
+        "Apply rate limiting and throttling policies",
+        "Track API usage and analytics",
+        "Provide versioning for API consumers",
+        "Production API management"
+      ],
+      "quick_start": "1. Access https://localhost:9443/publisher, 2. Create or upload API, 3. Publish to gateway, 4. Test via gateway endpoint",
+      "notes": "Self-signed HTTPS certificates - ignore browser warnings"
+    },
+    {
+      "name": "Apache Superset",
+      "version": "Not deployed",
+      "container": "Available in superset/ directory",
+      "purpose": "Business intelligence and data visualization",
+      "status": "Ready for deployment if needed",
+      "key_features": [
+        "Interactive dashboards",
+        "SQL lab for ad-hoc queries",
+        "Pre-built charts and visualizations",
+        "Data exploration and drill-down",
+        "Multi-database support"
+      ],
+      "data_sources": [
+        "PostgreSQL (cms database)",
+        "Oracle (xepdb1 service)"
+      ],
+      "deployment": "Uncomment superset service in docker-compose.yml or use ./superset/docker-compose.yml",
+      "use_cases": [
+        "Analytics dashboards",
+        "Executive reporting",
+        "Data discovery",
+        "KPI monitoring"
+      ],
+      "notes": "Not currently running - deploy if BI/analytics needed"
+    }
+  ],
+  "database_tools": [
+    {
+      "name": "PostgreSQL",
+      "version": "15.3",
+      "container": "cms-postgresql",
+      "port": 5432,
+      "purpose": "Primary data warehouse and application database",
+      "connection_string": "postgresql://postgres:postgres@localhost:5432/cms",
+      "connection_docker": "postgresql://postgres:postgres@cms-postgresql:5432/cms",
+      "credentials": {
+        "user": "postgres",
+        "password": "postgres",
+        "database": "cms"
+      },
+      "data": {
+        "test_table": "test (407+ records)",
+        "other_tables": "As created"
+      },
+      "tools_to_query": [
+        "psql (command line)",
+        "pgAdmin (if deployed)",
+        "DBeaver (GUI client)"
+      ]
+    },
+    {
+      "name": "Oracle Database",
+      "version": "21.3.0",
+      "container": "cms-oracle-xe",
+      "ports": {
+        "database": 1521,
+        "em_express": 5500
+      },
+      "purpose": "Transactional database, legacy system support",
+      "connection_string": "oracle://sys:oracle@localhost:1521/xepdb1",
+      "connection_docker": "oracle://sys:oracle@cms-oracle-xe:1521/xepdb1",
+      "credentials": {
+        "user": "sys",
+        "password": "oracle",
+        "service": "xepdb1"
+      },
+      "data": {
+        "test_table": "test (1 record)"
+      },
+      "web_interfaces": {
+        "EM Express": "http://localhost:5500 (enterprise manager)"
+      },
+      "tools_to_query": [
+        "sqlplus (command line)",
+        "SQL Developer (GUI client)",
+        "DBeaver (GUI client)"
+      ]
+    }
+  ],
+  "development_tools": [
+    {
+      "name": "Vite Dev Server",
+      "purpose": "Frontend development with HMR (hot module replacement)",
+      "location": "Frontend runs on http://localhost:3000",
+      "features": ["Hot reload on file changes", "Fast startup", "Optimized builds"],
+      "config": "./frontend/vite.config.js"
+    },
+    {
+      "name": "FastAPI Docs",
+      "purpose": "Interactive API documentation and testing",
+      "location": "http://localhost:8000/docs (Swagger UI)",
+      "features": ["Try endpoints", "View schemas", "Test parameters"]
+    },
+    {
+      "name": "Docker Compose",
+      "purpose": "Orchestrate all microservices",
+      "commands": {
+        "up": "docker compose up -d",
+        "down": "docker compose down",
+        "ps": "docker compose ps",
+        "logs": "docker compose logs -f [service]",
+        "build": "docker compose build",
+        "restart": "docker compose restart [service]"
+      }
+    }
+  ],
+  "monitoring_and_logging": [
+    {
+      "name": "Docker Logs",
+      "command": "docker compose logs -f [service_name]",
+      "services": ["cms-postgresql", "cms-oracle-xe", "cms-backend", "cms-frontend", "cms-airflow", "cms-apim"],
+      "notes": "Use 'docker compose logs cms-backend' to see API logs in real-time"
+    },
+    {
+      "name": "Airflow Logs",
+      "location": "./airflow/logs/",
+      "format": "dag_id/run_id/task.log",
+      "access": "View in Airflow UI or via filesystem"
+    },
+    {
+      "name": "Backend API Health",
+      "endpoint": "GET http://localhost:8000/health",
+      "response": "JSON with status information"
+    }
+  ],
+  "quick_reference": {
+    "check_status": "docker compose ps",
+    "start_all": "docker compose up -d",
+    "stop_all": "docker compose down",
+    "view_logs": "docker compose logs -f",
+    "restart_service": "docker compose restart [service]",
+    "access_api": "http://localhost:8000/docs",
+    "access_airflow": "http://localhost:8080",
+    "access_wso2": "https://localhost:9443/admin"
+  }
+}

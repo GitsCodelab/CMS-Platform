@@ -1,0 +1,60 @@
+{
+  "optimization_rules": {
+    "token_budget_rules": [
+      {
+        "rule": "PARALLEL_OPERATIONS",
+        "description": "Execute independent read/search operations in parallel",
+        "savings": "30-40% token reduction",
+        "example": "Read 5 files simultaneously vs sequentially"
+      },
+      {
+        "rule": "BATCH_EDITS",
+        "description": "Use multi_replace_string_in_file instead of sequential edits",
+        "savings": "25-35% token reduction",
+        "example": "10 file edits in 1 call vs 10 sequential calls"
+      },
+      {
+        "rule": "GREP_OVER_SEMANTIC",
+        "description": "Use grep_search for exact matches instead of semantic_search",
+        "savings": "50-75% token reduction",
+        "example": "Finding 'class MyClass' vs semantic search for class definition"
+      },
+      {
+        "rule": "SPECIFIC_LINE_RANGES",
+        "description": "Read only needed lines, not entire files",
+        "savings": "40-60% token reduction",
+        "example": "read_file lines 10-50 instead of lines 1-500"
+      },
+      {
+        "rule": "CONTEXT_REUSE",
+        "description": "Keep relevant context in memory for related operations",
+        "savings": "20-30% token reduction",
+        "example": "Multiple edits in same file context"
+      }
+    ],
+    "cost_reduction_strategies": [
+      {
+        "strategy": "QUESTION_BATCHING",
+        "description": "Answer multiple related questions in one conversation",
+        "when_to_use": "Multiple quick queries about same codebase"
+      },
+      {
+        "strategy": "PLAN_FIRST",
+        "description": "Create detailed plan before starting work",
+        "when_to_use": "Complex multi-step tasks",
+        "benefit": "Reduces back-and-forth clarifications"
+      },
+      {
+        "strategy": "CACHE_RESULTS",
+        "description": "Store search results for repeated queries",
+        "when_to_use": "Frequently accessed files or patterns"
+      },
+      {
+        "strategy": "SEMANTIC_SEARCH_SPARINGLY",
+        "description": "Use semantic search only for complex discovery",
+        "when_to_use": "Cannot find with grep/file_search",
+        "cost_vs_benefit": "Worth the cost for navigation"
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "command_usage_log": "Track which commands are used most frequently for cost analysis",
+  "most_expensive_commands": [
+    {
+      "rank": 1,
+      "command": "semantic_search",
+      "reason": "Large context window and natural language processing",
+      "cost_per_call": 0.016,
+      "optimization": "Use grep_search for exact matches instead"
+    },
+    {
+      "rank": 2,
+      "command": "file_creation_with_dependencies",
+      "reason": "Must create directory structure and dependencies",
+      "cost_per_call": 0.025,
+      "optimization": "Batch multiple file creations together"
+    },
+    {
+      "rank": 3,
+      "command": "multi_replace_in_file",
+      "reason": "Complex context for multiple replacements",
+      "cost_per_call": 0.020,
+      "optimization": "Use for multiple operations rather than sequential replacements"
+    },
+    {
+      "rank": 4,
+      "command": "runSubagent",
+      "reason": "Spawns separate agent session",
+      "cost_per_call": 0.030,
+      "optimization": "Use for complex tasks only - worth the cost"
+    }
+  ],
+  "most_efficient_commands": [
+    {
+      "rank": 1,
+      "command": "grep_search",
+      "reason": "Fast pattern matching without NLP",
+      "cost_per_call": 0.006,
+      "when_to_use": "Exact string or simple regex searches"
+    },
+    {
+      "rank": 2,
+      "command": "run_in_terminal",
+      "reason": "Direct shell execution",
+      "cost_per_call": 0.005,
+      "when_to_use": "Running build/test scripts"
+    },
+    {
+      "rank": 3,
+      "command": "git operations",
+      "reason": "Version control is typically simple",
+      "cost_per_call": 0.003,
+      "when_to_use": "Commits, pushes, status checks"
+    }
+  ]
+}

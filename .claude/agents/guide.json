@@ -1,0 +1,87 @@
+{
+  "agents_guide": {
+    "description": "Which subagent to use for different task types and their typical costs",
+    "usage_cost_override": "Each subagent invocation incurs the tool cost PLUS the internal agent's token consumption"
+  },
+  "available_agents": [
+    {
+      "name": "Explore",
+      "purpose": "Fast read-only codebase exploration and Q&A",
+      "cost_per_call": 0.10,
+      "best_for": [
+        "Complex codebase navigation",
+        "Finding related code across multiple files",
+        "Understanding architecture without modifying"
+      ],
+      "avoid_for": [
+        "Simple file reads (too expensive)",
+        "Exact string searches (use grep instead)",
+        "Single-file modifications"
+      ],
+      "throughness_options": {
+        "quick": {
+          "depth": "Basic overview only",
+          "tokens": 3000,
+          "cost": 0.05,
+          "examples": "Find main entry point, list API endpoints"
+        },
+        "medium": {
+          "depth": "Detailed exploration",
+          "tokens": 5000,
+          "cost": 0.08,
+          "examples": "Trace function flow, understand dependencies"
+        },
+        "thorough": {
+          "depth": "Complete analysis",
+          "tokens": 8000,
+          "cost": 0.12,
+          "examples": "Full architecture review, complex refactoring plan"
+        }
+      },
+      "success_metrics": [
+        "Answers complex questions accurately",
+        "Saves time vs manual navigation",
+        "Cost justified by time saved"
+      ]
+    },
+    {
+      "name": "Future: Implementation",
+      "status": "Not yet available",
+      "estimated_cost": 0.30,
+      "expected_use": "Large-scale code generation and refactoring"
+    },
+    {
+      "name": "Future: Debugging",
+      "status": "Not yet available",
+      "estimated_cost": 0.20,
+      "expected_use": "Complex error analysis and issue diagnosis"
+    }
+  ],
+  "agent_selection_matrix": {
+    "task": "Find all database connection code",
+    "manual_approach": {
+      "tools": ["semantic_search", "grep_search", "read_file"],
+      "tokens": 5000,
+      "cost": 0.04,
+      "time": 10
+    },
+    "explore_agent_quick": {
+      "tokens": 3000,
+      "cost": 0.05,
+      "time": 2,
+      "verdict": "Agent is slower but gets it in one query"
+    },
+    "recommendation": "Use Explore for complex discoveries, manual search for simple patterns"
+  },
+  "cost_recovery": [
+    {
+      "scenario": "Using Explore to understand complex architecture saves 30 minutes of manual work",
+      "time_saved": 30,
+      "hourly_rate": 50,
+      "value_saved": 25,
+      "agent_cost": 0.10,
+      "net_benefit": 24.90,
+      "roi": "24900%"
+    }
+  ]
+}

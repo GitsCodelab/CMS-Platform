@@ -1,0 +1,28 @@
+{
+  "session": {
+    "id": "session_2026_04_23",
+    "start_time": "2026-04-23T00:00:00Z",
+    "model": "claude-haiku",
+    "description": "Local session tracking file - updated per session"
+  },
+  "current_session_stats": {
+    "total_input_tokens": 0,
+    "total_output_tokens": 0,
+    "total_tokens": 0,
+    "estimated_cost": 0.00,
+    "num_messages": 0,
+    "num_tool_calls": 0
+  },
+  "daily_stats": {
+    "date": "2026-04-23",
+    "total_input_tokens": 0,
+    "total_output_tokens": 0,
+    "total_tokens": 0,
+    "estimated_cost": 0.00,
+    "num_sessions": 0
+  },
+  "local_overrides": {
+    "daily_limit": null,
+    "optimization_level": "balanced"
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "system_architecture": {
+    "name": "CMS Platform",
+    "description": "Enterprise-grade content management system with dual-database support, workflow orchestration, and API management",
+    "deployment_model": "Docker Compose (containerized microservices)",
+    "network": "Docker bridge network (cms-platform-net) for service discovery"
+  },
+  "layers": {
+    "presentation_layer": {
+      "services": ["cms-frontend"],
+      "technology": "React 18.2.0 + Vite",
+      "port": 3000,
+      "responsibilities": [
+        "User interface rendering",
+        "Form handling and validation",
+        "Data visualization",
+        "Client-side routing"
+      ],
+      "communicates_with": ["cms-backend API", "cms-apim gateway"],
+      "environment": {
+        "VITE_API_URL": "http://cms-backend:8000"
+      }
+    },
+    "api_gateway_layer": {
+      "services": ["cms-apim"],
+      "technology": "WSO2 API Manager 4.1.0",
+      "ports": {
+        "admin": 9443,
+        "gateway": "8280 (HTTP), 8243 (HTTPS)"
+      },
+      "responsibilities": [
+        "API versioning and lifecycle",
+        "Rate limiting and throttling",
+        "Authentication (OAuth2, API Keys)",
+        "API monitoring and analytics",
+        "Request/response transformation"
+      ],
+      "communicates_with": ["cms-backend", "cms-frontend"],
+      "deployment": "Production-ready gateway for external consumers",
+      "optional": true
+    },
+    "application_layer": {
+      "services": ["cms-backend"],
+      "technology": "FastAPI (Python 3.12)",
+      "port": 8000,
+      "framework_version": "fastapi==0.104.1",
+      "server": "uvicorn==0.24.0",
+      "responsibilities": [
+        "REST API endpoints",
+        "Business logic",
+        "Database abstraction",
+        "Request validation and transformation",
+        "Error handling and logging",
+        "CORS and security headers"
+      ],
+      "endpoints": {
+        "health": "GET /health",
+        "postgres_operations": "GET/POST/PUT/DELETE /postgres/test",
+        "oracle_operations": "GET/POST/PUT/DELETE /oracle/test",
+        "api_docs": "GET /docs (Swagger UI)"
+      },
+      "communicates_with": ["cms-postgresql", "cms-oracle-xe", "cms-airflow"],
+      "connection_pool": "SQLAlchemy 2.0.23 with connection pooling"
+    },
+    "data_layer": {
+      "services": ["cms-postgresql", "cms-oracle-xe"],
+      "description": "Dual-database architecture for maximum flexibility",
+      "postgresql": {
+        "role": "Primary data warehouse and application data store",
+        "version": "15.3",
+        "port": 5432,
+        "database": "cms",
+        "data_volume": "407+ test records",
+        "use_cases": [
+          "Main application data",
+          "Test data storage",
+          "Airflow metadata storage",
+          "Analytics data warehouse"
+        ],
+        "driver": "psycopg2-binary==2.9.9"
+      },
+      "oracle": {
+        "role": "Transactional database and legacy system support",
+        "version": "21.3.0",
+        "port": 1521,
+        "service": "xepdb1",
+        "data_volume": "1 test record",
+        "use_cases": [
+          "Legacy application integration",
+          "Transaction processing",
+          "High-frequency updates"
+        ],
+        "driver": "oracledb==3.4.2"
+      },
+      "isolation": "Each database isolated in own container with persistent volumes",
+      "communication": "Both accessed via same backend API"
+    },
+    "orchestration_layer": {
+      "services": ["cms-airflow"],
+      "technology": "Apache Airflow 3.0.0 (Standalone mode)",
+      "port": 8080,
+      "responsibilities": [
+        "Workflow definition (DAGs)",
+        "Task scheduling and execution",
+        "Dependency management",
+        "Monitoring and alerting",
+        "Historical data tracking",
+        "Error handling and retries"
+      ],
+      "dag_location": "./airflow/dags/",
+      "scheduler": "Built-in scheduler (standalone mode)",
+      "executor": "LocalExecutor (single machine)",
+      "metadata_database": "PostgreSQL (cms database)",
+      "capabilities": [
+        "Extract data from PostgreSQL",
+        "Extract data from Oracle",
+        "Transform and load to data warehouse",
+        "Run scheduled reports",
+        "Automated data quality checks"
+      ],
+      "communicates_with": ["cms-postgresql", "cms-oracle-xe"]
+    }
+  },
+  "data_flows": {
+    "user_request_to_database": {
+      "flow": "User → Frontend → Backend API → Database",
+      "example": "GET /postgres/test returns 407 records from PostgreSQL",
+      "latency": "~100-500ms depending on query complexity"
+    },
+    "api_request_via_gateway": {
+      "flow": "External Client → WSO2 Gateway → Backend API → Database",
+      "example": "GET http://localhost:8280/cms-api/test → Backend → PostgreSQL",
+      "use_case": "Production API consumption with rate limiting"
+    },
+    "data_pipeline": {
+      "flow": "Source Database → Airflow DAG → Transform → Target Database",
+      "example": "Extract from Oracle → Python transformation → Load to PostgreSQL",
+      "scheduling": "Via Airflow scheduler (configurable intervals)",
+      "monitoring": "Via Airflow UI"
+    },
+    "database_replication": {
+      "flow": "PostgreSQL → Airflow ETL → Oracle (or vice versa)",
+      "purpose": "Keep both databases synchronized",
+      "trigger": "Scheduled DAG execution"
+    }
+  },
+  "service_dependencies": {
+    "cms-frontend": {
+      "depends_on": ["cms-backend"],
+      "why": "Frontend needs API endpoints to fetch/display data",
+      "alternative": "Can run standalone with mock data"
+    },
+    "cms-backend": {
+      "depends_on": ["cms-postgresql", "cms-oracle-xe"],
+      "why": "Backend requires database connections for all operations",
+      "startup_order": "Start databases FIRST"
+    },
+    "cms-airflow": {
+      "depends_on": ["cms-postgresql", "cms-oracle-xe"],
+      "why": "Needs databases for task execution and metadata storage",
+      "startup_order": "Start databases FIRST"
+    },
+    "cms-apim": {
+      "depends_on": "None (independent)",
+      "optional": true,
+      "why": "Can run standalone or connect to backend"
+    }
+  },
+  "startup_sequence": {
+    "order": [
+      "1. cms-postgresql (provides storage for all)",
+      "2. cms-oracle-xe (provides fallback storage)",
+      "3. cms-backend (API layer)",
+      "4. cms-frontend (UI layer, waits for backend)",
+      "5. cms-airflow (orchestration, accesses databases)",
+      "6. cms-apim (optional gateway layer)"
+    ],
+    "docker_compose_handles": "All dependencies automatically with 'depends_on' and health checks",
+    "estimated_total_startup": "60-90 seconds"
+  },
+  "network_communication": {
+    "docker_network": "cms-platform-net (bridge)",
+    "dns_resolution": "Service names resolve to container IPs automatically",
+    "container_hostnames": {
+      "cms-postgresql": "Accessible at 'cms-postgresql' or '172.x.x.x (internal IP)",
+      "cms-oracle-xe": "Accessible at 'cms-oracle-xe' or '172.x.x.x (internal IP)",
+      "cms-backend": "Accessible at 'cms-backend' or '172.x.x.x (internal IP)"
+    },
+    "localhost_vs_service_name": {
+      "from_host": "Use 'localhost' (e.g., localhost:5432 for PostgreSQL)",
+      "from_container": "Use service name (e.g., 'cms-postgresql:5432')",
+      "important": "Backend uses service names because it runs in container"
+    }
+  },
+  "configuration_management": {
+    "backend_config": {
+      "source": "backend/.env",
+      "override_mechanism": "docker-compose.yml 'environment:' section overrides .env",
+      "variables": {
+        "POSTGRES_HOST": "cms-postgresql (for Docker)",
+        "ORACLE_HOST": "cms-oracle-xe (for Docker)",
+        "API_TITLE": "CMS Platform API",
+        "API_VERSION": "1.0.0"
+      }
+    },
+    "frontend_config": {
+      "source": "frontend/.env",
+      "vite_config": "frontend/vite.config.js",
+      "environment": "VITE_API_URL=http://cms-backend:8000"
+    },
+    "airflow_config": {
+      "source": "airflow/.env",
+      "database_connection": "Automatically set to PostgreSQL"
+    }
+  },
+  "scaling_considerations": {
+    "single_machine": "Current setup suitable for development/testing",
+    "production_scaling": [
+      "Separate database servers from Docker host",
+      "Use managed databases (AWS RDS, Azure Database)",
+      "Load balance API backend (multiple instances)",
+      "Kubernetes orchestration for container management",
+      "Use WSO2 API Manager in cluster mode"
+    ],
+    "performance_monitoring": "Airflow logs, Docker container metrics, API response times"
+  },
+  "disaster_recovery": {
+    "persistent_storage": "Volumes preserve data: postgres-data, oracle-data",
+    "backup_strategy": "Volumes can be backed up to external storage",
+    "recovery_steps": "Restore volumes, restart containers"
+  }
+}

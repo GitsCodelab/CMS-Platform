@@ -1,0 +1,178 @@
+{
+  "network": {
+    "name": "cms-platform-net",
+    "type": "bridge",
+    "description": "All services communicate via Docker container DNS resolution using service names (not localhost)"
+  },
+  "services": [
+    {
+      "name": "cms-postgresql",
+      "image": "postgres:15.3",
+      "container_name": "cms-postgresql",
+      "purpose": "Primary data warehouse, stores all test records and application data",
+      "ports": {
+        "internal": 5432,
+        "external": 5432,
+        "protocol": "TCP"
+      },
+      "credentials": {
+        "user": "postgres",
+        "password": "postgres",
+        "database": "cms"
+      },
+      "volumes": ["postgres-data:/var/lib/postgresql/data"],
+      "dependencies": "None (primary service)",
+      "connection_from_container": "postgresql://postgres:postgres@cms-postgresql:5432/cms",
+      "connection_localhost": "postgresql://postgres:postgres@localhost:5432/cms",
+      "notes": "407+ test records available, used by backend and airflow",
+      "health_check": "psql -U postgres -c 'SELECT 1'"
+    },
+    {
+      "name": "cms-oracle-xe",
+      "image": "gvenzl/oracle-xe:21.3.0",
+      "container_name": "cms-oracle-xe",
+      "purpose": "Transactional database, legacy system support",
+      "ports": {
+        "database": 1521,
+        "em_express": 5500,
+        "protocol": "TCP"
+      },
+      "credentials": {
+        "user": "sys",
+        "password": "oracle",
+        "service": "xepdb1"
+      },
+      "volumes": ["oracle-data:/opt/oracle/oradata"],
+      "dependencies": "None (primary service)",
+      "connection_from_container": "oracle://sys:oracle@cms-oracle-xe:1521/xepdb1",
+      "connection_localhost": "oracle://sys:oracle@localhost:1521/xepdb1",
+      "notes": "Limited use currently, 1 test record, supports legacy integrations",
+      "web_interfaces": {
+        "EM Express": "http://localhost:5500"
+      }
+    },
+    {
+      "name": "cms-backend",
+      "image": "python:3.12-slim",
+      "container_name": "cms-backend",
+      "purpose": "FastAPI REST API, database abstraction layer, core business logic",
+      "ports": {
+        "api": 8000,
+        "protocol": "HTTP"
+      },
+      "working_dir": "/app",
+      "command": "pip install -r requirements.txt && python run.py",
+      "environment": {
+        "POSTGRES_HOST": "cms-postgresql (overridden in docker-compose)",
+        "POSTGRES_PORT": 5432,
+        "POSTGRES_DB": "cms",
+        "POSTGRES_USER": "postgres",
+        "ORACLE_HOST": "cms-oracle-xe (overridden in docker-compose)",
+        "ORACLE_PORT": 1521,
+        "ORACLE_SERVICE": "xepdb1"
+      },
+      "volumes": ["./backend:/app"],
+      "dependencies": ["cms-postgresql", "cms-oracle-xe"],
+      "startup_time": "15-30 seconds",
+      "endpoints": {
+        "health": "GET /health",
+        "docs": "GET /docs (Swagger UI)",
+        "postgres_test": "GET /postgres/test",
+        "oracle_test": "GET /oracle/test"
+      },
+      "notes": "Auto-starts with docker compose, includes hot-reload via volume mount"
+    },
+    {
+      "name": "cms-frontend",
+      "image": "node:18-alpine",
+      "container_name": "cms-frontend",
+      "purpose": "React SPA with Vite build tool, SAP Fiori UI components",
+      "ports": {
+        "dev_server": 3000,
+        "vite": 5173,
+        "protocol": "HTTP"
+      },
+      "working_dir": "/app",
+      "command": "npm install && npm run dev",
+      "volumes": ["./frontend:/app", "/app/node_modules"],
+      "dependencies": ["cms-backend"],
+      "startup_time": "30-60 seconds",
+      "environment": {
+        "VITE_API_URL": "http://cms-backend:8000"
+      },
+      "notes": "Hot module replacement (HMR) enabled, connects to backend API via service name",
+      "technologies": "React 18.2.0, Vite, Tailwind CSS, OpenUI5"
+    },
+    {
+      "name": "cms-airflow",
+      "image": "apache/airflow:3.0.0",
+      "container_name": "cms-airflow",
+      "purpose": "Workflow orchestration, ETL pipelines, scheduled tasks",
+      "ports": {
+        "ui": 8080,
+        "protocol": "HTTP"
+      },
+      "command": "standalone",
+      "mode": "Standalone mode (all-in-one webserver + scheduler + executor)",
+      "volumes": [
+        "./airflow/dags:/opt/airflow/dags",
+        "./airflow/logs:/opt/airflow/logs",
+        "./airflow/plugins:/opt/airflow/plugins",
+        "./airflow/simple_auth_manager_passwords.json:/opt/airflow/simple_auth_manager_passwords.json",
+        "./airflow/scripts:/opt/airflow/scripts"
+      ],
+      "dependencies": ["cms-postgresql", "cms-oracle-xe"],
+      "environment": {
+        "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN": "postgresql+psycopg2://postgres:postgres@cms-postgresql:5432/cms"
+      },
+      "startup_time": "60+ seconds",
+      "startup_file": "./airflow/.env",
+      "credentials": {
+        "default": "airflow / airflow"
+      },
+      "health_check": "curl http://localhost:8080/ui/",
+      "web_interface": "http://localhost:8080",
+      "dag_location": "./airflow/dags/",
+      "notes": "Headless mode - includes DAG execution history, no UI needed for scheduling"
+    },
+    {
+      "name": "cms-apim",
+      "image": "wso2/wso2apim:4.1.0",
+      "container_name": "cms-apim",
+      "purpose": "API lifecycle management, API gateway, traffic control, monetization",
+      "ports": {
+        "admin": 9443,
+        "gateway_http": 8280,
+        "gateway_https": 8243,
+        "protocol": "HTTP/HTTPS"
+      },
+      "volumes": ["./wso2-stack/apim/deployment.toml:/opt/wso2/wso2am-4.1.0/repository/conf/deployment.toml"],
+      "dependencies": "None (but can depend on cms-postgresql for analytics)",
+      "credentials": {
+        "admin_console": "admin / admin"
+      },
+      "web_interfaces": {
+        "admin_console": "https://localhost:9443/admin",
+        "publisher": "https://localhost:9443/publisher",
+        "developer_portal": "https://localhost:9443/devportal"
+      },
+      "gateway_endpoints": {
+        "http": "http://localhost:8280",
+        "https": "https://localhost:8243"
+      },
+      "config_file": "./wso2-stack/apim/deployment.toml",
+      "notes": "Self-signed HTTPS certificates (browser warnings expected), used for API registration and proxying",
+      "api_registration_guide": "See wso2-stack/apim/COMPLETE_API_REGISTRATION_GUIDE.md"
+    }
+  ],
+  "startup_order": [
+    "1. cms-postgresql (required by most services)",
+    "2. cms-oracle-xe (required by backend and airflow)",
+    "3. cms-backend (required by frontend and apim)",
+    "4. cms-frontend (depends on backend)",
+    "5. cms-airflow (depends on databases)",
+    "6. cms-apim (optional, independent)"
+  ],
+  "docker_compose_command": "docker compose up -d",
+  "verify_status": "docker compose ps"
+}

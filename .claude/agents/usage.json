@@ -1,0 +1,23 @@
+{
+  "usage_tracking": {
+    "default_agent": {
+      "total_calls": 0,
+      "total_tokens": 0,
+      "total_cost": 0.00,
+      "last_used": null
+    },
+    "explorer_agent": {
+      "total_calls": 0,
+      "total_tokens": 0,
+      "total_cost": 0.00,
+      "last_used": null
+    },
+    "architect_agent": {
+      "total_calls": 0,
+      "total_tokens": 0,
+      "total_cost": 0.00,
+      "last_used": null
+    }
+  },
+  "notes": "Update this file after each agent invocation to track costs and token usage across all sessions"
+}

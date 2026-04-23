@@ -1,0 +1,72 @@
+{
+  "project": {
+    "name": "CMS Platform",
+    "description": "Enterprise Content Management System",
+    "repository": "https://github.com/GitsCodelab/CMS-Platform",
+    "created": "2026-04-23"
+  },
+  "pricing": {
+    "provider": "Claude",
+    "models": {
+      "claude-haiku": {
+        "input_tokens": {
+          "cost_per_1m_tokens": 0.80,
+          "description": "Input tokens for Claude Haiku model"
+        },
+        "output_tokens": {
+          "cost_per_1m_tokens": 4.00,
+          "description": "Output tokens for Claude Haiku model"
+        }
+      },
+      "claude-opus": {
+        "input_tokens": {
+          "cost_per_1m_tokens": 15.00,
+          "description": "Input tokens for Claude Opus model"
+        },
+        "output_tokens": {
+          "cost_per_1m_tokens": 75.00,
+          "description": "Output tokens for Claude Opus model"
+        }
+      },
+      "claude-sonnet": {
+        "input_tokens": {
+          "cost_per_1m_tokens": 3.00,
+          "description": "Input tokens for Claude Sonnet model"
+        },
+        "output_tokens": {
+          "cost_per_1m_tokens": 15.00,
+          "description": "Output tokens for Claude Sonnet model"
+        }
+      }
+    }
+  },
+  "token_limits": {
+    "context_window": 200000,
+    "max_tokens_per_message": 4096,
+    "recommended_buffer": 0.1,
+    "description": "Token usage guidelines and limits"
+  },
+  "optimization": {
+    "file_compression": true,
+    "cache_search_results": true,
+    "reuse_function_calls": true,
+    "batch_operations": true,
+    "enable_semantic_search": false,
+    "description": "Token optimization strategies"
+  },
+  "tracking": {
+    "enabled": true,
+    "session_tracking": true,
+    "session_log": ".claude/logs/sessions.jsonl",
+    "cost_log": ".claude/logs/costs.jsonl",
+    "token_log": ".claude/logs/tokens.jsonl",
+    "description": "Enable tracking of tokens and costs across sessions"
+  },
+  "alerts": {
+    "daily_cost_limit": 50.00,
+    "weekly_cost_limit": 300.00,
+    "monthly_cost_limit": 1000.00,
+    "alert_at_percentage": 80,
+    "description": "Cost alerts and budget limits"
+  }
+}

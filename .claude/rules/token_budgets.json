@@ -1,0 +1,46 @@
+{
+  "token_usage_guidelines": {
+    "context_window_budget": {
+      "total": 200000,
+      "reserved_for_response": 20000,
+      "reserved_for_buffer": 10000,
+      "available_for_input": 170000,
+      "recommended_usage": 150000
+    },
+    "conversation_patterns": {
+      "quick_fix": {
+        "budget": 5000,
+        "duration": "1-2 messages",
+        "typical_operations": ["read_file", "grep_search", "single_edit", "commit"]
+      },
+      "feature_implementation": {
+        "budget": 25000,
+        "duration": "5-10 messages",
+        "typical_operations": ["semantic_search", "multiple_edits", "testing", "documentation"]
+      },
+      "major_refactoring": {
+        "budget": 50000,
+        "duration": "10-20 messages",
+        "typical_operations": ["full_codebase_analysis", "planning", "implementation", "verification"]
+      },
+      "investigation_debugging": {
+        "budget": 15000,
+        "duration": "3-8 messages",
+        "typical_operations": ["error_analysis", "log_review", "targeted_searches", "fixes"]
+      }
+    },
+    "message_composition": {
+      "include_context": true,
+      "context_size_target": "2-5KB per message",
+      "avoid_repetition": "Reference previous context instead of repeating",
+      "use_attachments": "Attach active files for efficiency"
+    }
+  },
+  "cost_estimation": {
+    "quick_fix": 0.05,
+    "feature_implementation": 0.50,
+    "major_refactoring": 1.00,
+    "investigation_debugging": 0.30,
+    "notes": "Estimates based on Claude Haiku pricing"
+  }
+}

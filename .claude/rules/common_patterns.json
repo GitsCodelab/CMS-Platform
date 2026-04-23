@@ -1,0 +1,52 @@
+{
+  "patterns": [
+    {
+      "name": "file_reading_pattern",
+      "description": "Reading files to understand code structure",
+      "typical_workflow": ["read_file", "grep_search", "analyze"],
+      "estimated_tokens": 1500,
+      "estimated_cost": 0.012,
+      "optimization": "Use startLine/endLine parameters to reduce file size"
+    },
+    {
+      "name": "search_and_edit_pattern",
+      "description": "Finding occurrences and making targeted edits",
+      "typical_workflow": ["grep_search", "read_file", "multi_replace_string_in_file"],
+      "estimated_tokens": 3000,
+      "estimated_cost": 0.024,
+      "optimization": "Combine related edits in single multi_replace call"
+    },
+    {
+      "name": "implementation_pattern",
+      "description": "Creating new features or components",
+      "typical_workflow": ["semantic_search", "read_file", "create_file", "test"],
+      "estimated_tokens": 5000,
+      "estimated_cost": 0.040,
+      "optimization": "Plan structure first, then execute in batches"
+    },
+    {
+      "name": "debugging_pattern",
+      "description": "Investigating and fixing issues",
+      "typical_workflow": ["grep_search", "run_in_terminal", "read_file", "edit"],
+      "estimated_tokens": 2500,
+      "estimated_cost": 0.020,
+      "optimization": "Use terminal logs to narrow down issues before code review"
+    },
+    {
+      "name": "documentation_pattern",
+      "description": "Creating or updating documentation",
+      "typical_workflow": ["semantic_search", "read_file", "create_file"],
+      "estimated_tokens": 3500,
+      "estimated_cost": 0.028,
+      "optimization": "Use grep_search to find examples instead of semantic search"
+    },
+    {
+      "name": "refactoring_pattern",
+      "description": "Large-scale code reorganization",
+      "typical_workflow": ["semantic_search", "multiple_edits", "testing", "verification"],
+      "estimated_tokens": 8000,
+      "estimated_cost": 0.064,
+      "optimization": "Break into smaller chunks, parallel operations where possible"
+    }
+  ]
+}

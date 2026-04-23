@@ -1,0 +1,43 @@
+{
+  "budget_tracking": {
+    "month": "December 2024",
+    "currency": "USD",
+    "model_used": "Claude Haiku 4.5",
+    "pricing": {
+      "input": 0.00008,
+      "output": 0.0004
+    }
+  },
+  "daily_budget": {
+    "limit": 50.00,
+    "purpose": "Prevent uncontrolled daily spending"
+  },
+  "weekly_budget": {
+    "limit": 300.00,
+    "purpose": "Track weekly trends and plan ahead"
+  },
+  "monthly_budget": {
+    "limit": 1000.00,
+    "purpose": "Annual planning and cost management"
+  },
+  "current_month_tracking": [
+    {
+      "date": "2024-12-19",
+      "daily_spend": 0.00,
+      "weekly_total": 0.00,
+      "monthly_total": 0.00,
+      "note": "Tracking infrastructure created"
+    }
+  ],
+  "alerts": {
+    "daily_warning": "Alert if daily spend exceeds $40 (80% of daily limit)",
+    "daily_stop": "Stop work if daily spend exceeds $50 (hard limit)",
+    "weekly_warning": "Alert if weekly total exceeds $250 (83% of weekly limit)",
+    "monthly_warning": "Alert if monthly total exceeds $800 (80% of monthly limit)"
+  },
+  "optimization_targets": {
+    "current_efficiency": "unknown",
+    "target_efficiency": 0.90,
+    "meaning": "Use 90% or less of allocated tokens"
+  }
+}

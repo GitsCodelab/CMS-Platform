@@ -1,0 +1,16 @@
+[
+  {
+    "session_id": "example_session_001",
+    "date": "2024-12-19",
+    "duration_minutes": 45,
+    "task_type": "feature_implementation",
+    "estimated_tokens": 25000,
+    "actual_tokens": 24500,
+    "efficiency": "98%",
+    "cost": 0.50,
+    "patterns_used": ["search_and_edit_pattern", "implementation_pattern"],
+    "optimization_tips": "Used grep_search over semantic_search successfully",
+    "status": "completed",
+    "notes": ""
+  }
+]

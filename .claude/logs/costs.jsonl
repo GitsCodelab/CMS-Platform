@@ -1,0 +1,10 @@
+[
+  {
+    "date": "2024-12-19",
+    "cost": 0.50,
+    "budget_category": "feature_implementation",
+    "tools_used": ["read_file", "grep_search", "multi_replace_string_in_file", "run_in_terminal"],
+    "expensive_operations": ["semantic_search (0.016 per call)"],
+    "cost_savings": "Avoided 3x semantic_search by using grep_search instead"
+  }
+]
