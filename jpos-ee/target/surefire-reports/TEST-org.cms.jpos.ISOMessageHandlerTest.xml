@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.cms.jpos.ISOMessageHandlerTest" time="0.143" tests="10" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="org.cms.jpos.ISOMessageHandlerTest" time="0.044" tests="10" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -11,7 +11,7 @@
     <property name="java.vm.specification.version" value="21"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter8986116405811610511.jar /home/samehabib/CMS-Platform/jpos-ee/target/surefire 2026-04-24T23-05-03_580-jvmRun1 surefire10776136915232447653tmp surefire_02992283264984431968tmp"/>
+    <property name="sun.java.command" value="/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter13669631171978005604.jar /home/samehabib/CMS-Platform/jpos-ee/target/surefire 2026-04-24T23-48-50_897-jvmRun1 surefire5008436336549314025tmp surefire_05234258043236654645tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/samehabib/CMS-Platform/jpos-ee/target/test-classes:/home/samehabib/CMS-Platform/jpos-ee/target/classes:/home/samehabib/.m2/repository/org/jpos/jpos/2.1.5/jpos-2.1.5.jar:/home/samehabib/.m2/repository/org/jdom/jdom2/2.0.6/jdom2-2.0.6.jar:/home/samehabib/.m2/repository/org/javatuples/javatuples/1.2/javatuples-1.2.jar:/home/samehabib/.m2/repository/org/jline/jline/3.17.1/jline-3.17.1.jar:/home/samehabib/.m2/repository/org/apache-extras/beanshell/bsh/2.0b6/bsh-2.0b6.jar:/home/samehabib/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcprov-jdk15on/1.67/bcprov-jdk15on-1.67.jar:/home/samehabib/.m2/repository/org/bouncycastle/bcpg-jdk15on/1.67/bcpg-jdk15on-1.67.jar:/home/samehabib/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/samehabib/.m2/repository/org/osgi/org.osgi.core/6.0.0/org.osgi.core-6.0.0.jar:/home/samehabib/.m2/repository/org/javassist/javassist/3.27.0-GA/javassist-3.27.0-GA.jar:/home/samehabib/.m2/repository/org/yaml/snakeyaml/1.26/snakeyaml-1.26.jar:/home/samehabib/.m2/repository/jdbm/jdbm/1.0/jdbm-1.0.jar:/home/samehabib/.m2/repository/com/sleepycat/je/18.3.12/je-18.3.12.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-core/2.4.0/sshd-core-2.4.0.jar:/home/samehabib/.m2/repository/org/apache/sshd/sshd-common/2.4.0/sshd-common-2.4.0.jar:/home/samehabib/.m2/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:/home/samehabib/.m2/repository/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar:/home/samehabib/.m2/repository/org/slf4j/slf4j-jdk14/1.7.30/slf4j-jdk14-1.7.30.jar:/home/samehabib/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/home/samehabib/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/samehabib/.m2/repository/com/google/code/gson/gson/2.8.8/gson-2.8.8.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -26,7 +26,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter8986116405811610511.jar"/>
+    <property name="surefire.real.class.path" value="/home/samehabib/CMS-Platform/jpos-ee/target/surefire/surefirebooter13669631171978005604.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.10+7-Ubuntu-124.04"/>
     <property name="user.name" value="samehabib"/>
@@ -52,14 +52,14 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testFinancialTransaction_SuccessfulWithdrawal" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.064"/>
-  <testcase name="testMultipleTransactions_StressTest" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.009"/>
-  <testcase name="testBalanceInquiry_CheckBalance" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
-  <testcase name="testInvalidMessageType_ErrorHandling" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.002"/>
-  <testcase name="testProcessMessage_GenericHandler" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.003"/>
-  <testcase name="testEchoTest_ConnectivityCheck" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.001"/>
-  <testcase name="testPINChange_UpdatePIN" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.002"/>
-  <testcase name="testLogoff_CloseSession" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.001"/>
-  <testcase name="testTransactionReversal_ReverseFailedTransaction" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.001"/>
-  <testcase name="testAuthorizationRequest_ValidPayment" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.002"/>
+  <testcase name="testFinancialTransaction_SuccessfulWithdrawal" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.009"/>
+  <testcase name="testMultipleTransactions_StressTest" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testBalanceInquiry_CheckBalance" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.001"/>
+  <testcase name="testInvalidMessageType_ErrorHandling" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testProcessMessage_GenericHandler" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testEchoTest_ConnectivityCheck" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testPINChange_UpdatePIN" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testLogoff_CloseSession" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testTransactionReversal_ReverseFailedTransaction" classname="org.cms.jpos.ISOMessageHandlerTest" time="0"/>
+  <testcase name="testAuthorizationRequest_ValidPayment" classname="org.cms.jpos.ISOMessageHandlerTest" time="0.001"/>
 </testsuite>
