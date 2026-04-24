@@ -288,6 +288,328 @@ public class ISOMessageHandler {
     }
 
     /**
+     * Process raw ISO 8583 message bytes
+     * Parses, processes, and returns serialized response
+     */
+    public static byte[] processRawMessage(byte[] rawMessage, int length) {
+        try {
+            if (length < 17) {
+                logger.warning("Message too short: " + length + " bytes");
+                return null;
+            }
+
+            // Parse message length (first 2 bytes, big-endian)
+            int msgLen = ((rawMessage[0] & 0xFF) << 8) | (rawMessage[1] & 0xFF);
+            if (msgLen > length - 2) {
+                logger.warning("Invalid message length: " + msgLen);
+                return null;
+            }
+
+            // Extract message (skip length prefix)
+            byte[] message = new byte[msgLen];
+            System.arraycopy(rawMessage, 2, message, 0, msgLen);
+
+            // Skip TPDU (5 bytes)
+            int pos = 5;
+
+            // Parse MTI (4 bytes)
+            String mti = new String(message, pos, 4);
+            pos += 4;
+
+            // Parse bitmap (8 bytes = 64 fields)
+            long bitmap = 0;
+            for (int i = 0; i < 8; i++) {
+                bitmap = (bitmap << 8) | (message[pos + i] & 0xFF);
+            }
+            pos += 8;
+
+            logger.info("Parsing message MTI=" + mti + " bitmap=" + Long.toHexString(bitmap));
+
+            // Create message object
+            SimpleISOMessage requestMsg = new SimpleISOMessage();
+            requestMsg.setMTI(mti);
+
+            // Parse fields based on bitmap
+            for (int fieldNum = 2; fieldNum <= 64; fieldNum++) {
+                if ((bitmap & (1L << (64 - fieldNum))) != 0) {
+                    String fieldValue = parseField(message, pos, fieldNum);
+                    if (fieldValue != null) {
+                        requestMsg.set(fieldNum, fieldValue);
+                        // Update position for variable-length fields
+                        pos = updateFieldPosition(message, pos, fieldNum);
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            // Process the message
+            SimpleISOMessage responseMsg = processMessage(requestMsg);
+
+            // Serialize response
+            return serializeMessage(responseMsg);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error processing raw message", e);
+            return null;
+        }
+    }
+
+    /**
+     * Parse a single field from message bytes
+     */
+    private static String parseField(byte[] message, int startPos, int fieldNum) {
+        try {
+            // Simplified field parsing - handles basic fixed-length fields
+            switch (fieldNum) {
+                case 2:  // PAN (LLVAR, up to 19 digits)
+                    int panLen = Integer.parseInt(new String(message, startPos, 2));
+                    return new String(message, startPos + 2, panLen);
+
+                case 3:  // Processing Code (6 chars)
+                    return new String(message, startPos, 6);
+                case 4:  // Amount (12 chars)
+                    return new String(message, startPos, 12);
+                case 7:  // MMDDHHMMSS (10 chars)
+                    return new String(message, startPos, 10);
+                case 11: // STAN (6 chars)
+                    return new String(message, startPos, 6);
+                case 12: // HHMMSS (6 chars)
+                    return new String(message, startPos, 6);
+                case 13: // MMDD (4 chars)
+                    return new String(message, startPos, 4);
+                case 22: // POS Entry Mode (3 chars)
+                    return new String(message, startPos, 3);
+                case 25: // Function Code (2 chars)
+                    return new String(message, startPos, 2);
+                case 35: // Track 2 (LLVAR)
+                    int t2Len = Integer.parseInt(new String(message, startPos, 2));
+                    return new String(message, startPos + 2, t2Len);
+                case 37: // RRN (12 chars)
+                    return new String(message, startPos, 12);
+                case 39: // Response Code (2 chars)
+                    return new String(message, startPos, 2);
+                case 41: // Terminal ID (8 chars)
+                    return new String(message, startPos, 8);
+                case 42: // Merchant ID (15 chars)
+                    return new String(message, startPos, 15);
+                case 49: // Currency Code (3 chars)
+                    return new String(message, startPos, 3);
+                case 52: // PIN Block (8 bytes)
+                    return toHex(message, startPos, 8);
+                case 55: // EMV Data (LLLVAR)
+                    int emvLen = Integer.parseInt(new String(message, startPos, 3));
+                    return toHex(message, startPos + 3, emvLen);
+                default:
+                    logger.fine("Skipping field " + fieldNum);
+                    return null;
+            }
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error parsing field " + fieldNum, e);
+            return null;
+        }
+    }
+
+    /**
+     * Update position after parsing field
+     */
+    private static int updateFieldPosition(byte[] message, int startPos, int fieldNum) {
+        try {
+            switch (fieldNum) {
+                case 2:  // LLVAR
+                    int panLen = Integer.parseInt(new String(message, startPos, 2));
+                    return startPos + 2 + panLen;
+                case 35: // LLVAR
+                    int t2Len = Integer.parseInt(new String(message, startPos, 2));
+                    return startPos + 2 + t2Len;
+                case 55: // LLLVAR
+                    int emvLen = Integer.parseInt(new String(message, startPos, 3));
+                    return startPos + 3 + emvLen;
+                default:
+                    // Fixed-length fields
+                    return getFieldLength(fieldNum) + startPos;
+            }
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error updating field position for field " + fieldNum, e);
+            return startPos;
+        }
+    }
+
+    /**
+     * Get field length
+     */
+    private static int getFieldLength(int fieldNum) {
+        switch (fieldNum) {
+            case 3:  return 6;
+            case 4:  return 12;
+            case 7:  return 10;
+            case 11: return 6;
+            case 12: return 6;
+            case 13: return 4;
+            case 22: return 3;
+            case 25: return 2;
+            case 37: return 12;
+            case 39: return 2;
+            case 41: return 8;
+            case 42: return 15;
+            case 49: return 3;
+            case 52: return 8;
+            default: return 0;
+        }
+    }
+
+    /**
+     * Convert bytes to hex string
+     */
+    private static String toHex(byte[] data, int offset, int length) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length && offset + i < data.length; i++) {
+            sb.append(String.format("%02X", data[offset + i]));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Serialize SimpleISOMessage to bytes
+     */
+    private static byte[] serializeMessage(SimpleISOMessage msg) {
+        try {
+            byte[] mtiBytes = msg.getMTI().getBytes();
+            
+            // Build bitmap
+            long bitmap = 0;
+            for (int i = 2; i <= 64; i++) {
+                if (msg.hasField(i)) {
+                    bitmap |= (1L << (64 - i));
+                }
+            }
+            
+            // Start building message
+            java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
+            
+            // Write TPDU
+            baos.write(new byte[]{0x60, 0x00, 0x00, 0x00, 0x00});
+            
+            // Write MTI
+            baos.write(mtiBytes);
+            
+            // Write bitmap (8 bytes, big-endian)
+            baos.write((byte)((bitmap >> 56) & 0xFF));
+            baos.write((byte)((bitmap >> 48) & 0xFF));
+            baos.write((byte)((bitmap >> 40) & 0xFF));
+            baos.write((byte)((bitmap >> 32) & 0xFF));
+            baos.write((byte)((bitmap >> 24) & 0xFF));
+            baos.write((byte)((bitmap >> 16) & 0xFF));
+            baos.write((byte)((bitmap >> 8) & 0xFF));
+            baos.write((byte)(bitmap & 0xFF));
+            
+            // Write fields
+            for (int fieldNum = 2; fieldNum <= 64; fieldNum++) {
+                if (msg.hasField(fieldNum)) {
+                    String value = msg.getString(fieldNum);
+                    serializeField(baos, fieldNum, value);
+                }
+            }
+            
+            byte[] messageBytes = baos.toByteArray();
+            
+            // Prepend message length (2 bytes, big-endian)
+            byte[] result = new byte[messageBytes.length + 2];
+            result[0] = (byte)((messageBytes.length >> 8) & 0xFF);
+            result[1] = (byte)(messageBytes.length & 0xFF);
+            System.arraycopy(messageBytes, 0, result, 2, messageBytes.length);
+            
+            return result;
+            
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error serializing message", e);
+            return null;
+        }
+    }
+
+    /**
+     * Serialize a single field
+     */
+    private static void serializeField(java.io.ByteArrayOutputStream baos, int fieldNum, String value) throws Exception {
+        switch (fieldNum) {
+            case 2:  // PAN (LLVAR)
+                baos.write(String.format("%02d", value.length()).getBytes());
+                baos.write(value.getBytes());
+                break;
+            case 3:  // Processing Code (FIXED 6)
+                baos.write(String.format("%-6s", value).replace(' ', '0').getBytes());
+                break;
+            case 4:  // Amount (FIXED 12)
+                baos.write(String.format("%012d", Long.parseLong(value)).getBytes());
+                break;
+            case 7:  // MMDDHHMMSS (FIXED 10)
+                baos.write(String.format("%-10s", value).getBytes());
+                break;
+            case 11: // STAN (FIXED 6)
+                baos.write(String.format("%06d", Integer.parseInt(value)).getBytes());
+                break;
+            case 12: // HHMMSS (FIXED 6)
+                baos.write(String.format("%-6s", value).getBytes());
+                break;
+            case 13: // MMDD (FIXED 4)
+                baos.write(String.format("%-4s", value).getBytes());
+                break;
+            case 22: // POS Entry Mode (FIXED 3)
+                baos.write(String.format("%-3s", value).getBytes());
+                break;
+            case 25: // Function Code (FIXED 2)
+                baos.write(String.format("%-2s", value).getBytes());
+                break;
+            case 35: // Track 2 (LLVAR)
+                baos.write(String.format("%02d", value.length()).getBytes());
+                baos.write(value.getBytes());
+                break;
+            case 37: // RRN (FIXED 12)
+                baos.write(String.format("%012d", Long.parseLong(value)).getBytes());
+                break;
+            case 38: // Auth Code (FIXED 6)
+                baos.write(String.format("%-6s", value).getBytes());
+                break;
+            case 39: // Response Code (FIXED 2)
+                baos.write(String.format("%02d", Integer.parseInt(value)).getBytes());
+                break;
+            case 41: // Terminal ID (FIXED 8)
+                baos.write(String.format("%-8s", value).getBytes());
+                break;
+            case 42: // Merchant ID (FIXED 15)
+                baos.write(String.format("%-15s", value).getBytes());
+                break;
+            case 49: // Currency Code (FIXED 3)
+                baos.write(String.format("%03d", Integer.parseInt(value)).getBytes());
+                break;
+            case 52: // PIN Block (BINARY 8)
+                baos.write(fromHex(value));
+                break;
+            case 54: // Balance (LLVAR)
+                baos.write(String.format("%02d", value.length()).getBytes());
+                baos.write(value.getBytes());
+                break;
+            case 55: // EMV Data (LLLVAR)
+                baos.write(String.format("%03d", value.length() / 2).getBytes());
+                baos.write(fromHex(value));
+                break;
+            default:
+                logger.fine("Skipping field " + fieldNum + " during serialization");
+        }
+    }
+
+    /**
+     * Convert hex string to bytes
+     */
+    private static byte[] fromHex(String hex) {
+        byte[] result = new byte[hex.length() / 2];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (byte)Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+        }
+        return result;
+    }
+
+    /**
      * Get transaction log
      */
     public static Map<String, String> getTransactionLog() {
@@ -301,3 +623,4 @@ public class ISOMessageHandler {
         transactionLog.clear();
     }
 }
+

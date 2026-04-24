@@ -50,17 +50,29 @@ public class Gateway {
 
             logger.info("Handling client: " + clientSocket.getInetAddress());
 
-            // Simple echo handler for now
-            byte[] buffer = new byte[1024];
+            // Read messages and process through ISOMessageHandler
+            byte[] buffer = new byte[4096];
             int bytesRead;
 
             while ((bytesRead = in.read(buffer)) != -1) {
                 logger.info("Received " + bytesRead + " bytes from client");
 
-                // Echo back to client
-                out.write(buffer, 0, bytesRead);
-                out.flush();
-                logger.info("Response sent to client");
+                try {
+                    // Process message through handler
+                    byte[] response = ISOMessageHandler.processRawMessage(buffer, bytesRead);
+                    
+                    if (response != null && response.length > 0) {
+                        out.write(response);
+                        out.flush();
+                        logger.info("Response sent to client (" + response.length + " bytes)");
+                    }
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Error processing message", e);
+                    // Send error response
+                    String errorResp = "ERROR: " + e.getMessage();
+                    out.write(errorResp.getBytes());
+                    out.flush();
+                }
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error handling client", e);
@@ -74,3 +86,4 @@ public class Gateway {
         }
     }
 }
+
