@@ -1,3 +1,4 @@
-org/cms/jpos/Gateway.class
+org/cms/jpos/Dukpt.class
 org/cms/jpos/ISOMessageHandler.class
 org/cms/jpos/ISOMessageHandler$SimpleISOMessage.class
+org/cms/jpos/Gateway.class
