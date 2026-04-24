@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  cms-jpos-ee:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cms-jpos-ee
+    hostname: cms-jpos-ee
+    ports:
+      - "8583:8583"  # ISO 8583 message gateway
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms256m
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
+    networks:
+      - cms-platform-net
+    healthcheck:
+      test: ["CMD", "java", "-cp", "/app/app.jar", "org.cms.jpos.HealthCheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    depends_on:
+      - cms-backend
+    labels:
+      - "component=payment-gateway"
+      - "module=jpos-ee"
+
+networks:
+  cms-platform-net:
+    external: true

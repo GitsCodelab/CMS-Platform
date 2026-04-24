@@ -124,6 +124,33 @@ services:
       retries: 5
       start_period: 120s
 
+  # cms-jpos-ee runs locally as JAR due to Docker image availability constraints
+  # To start: cd jpos-ee && java -jar target/jpos-ee-1.0.0.jar
+  # cms-jpos-ee:
+  #   build:
+  #     context: ./jpos-ee
+  #     dockerfile: Dockerfile
+  #   container_name: cms-jpos-ee
+  #   depends_on:
+  #     cms-backend:
+  #       condition: service_started
+  #   ports:
+  #     - "8583:8583"      # ISO 8583 Message Gateway
+  #   volumes:
+  #     - ./jpos-ee/config:/app/config
+  #     - ./jpos-ee/logs:/app/logs
+  #   environment:
+  #     JAVA_OPTS: "-Xmx512m -Xms256m"
+  #     LOG_LEVEL: "INFO"
+  #   networks:
+  #     - cms-platform-net
+  #   healthcheck:
+  #     test: ["CMD", "nc", "-z", "localhost", "8583"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 40s
+
 volumes:
   oracle-data:
     driver: local

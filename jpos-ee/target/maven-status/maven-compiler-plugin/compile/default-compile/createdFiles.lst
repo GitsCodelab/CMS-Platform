@@ -1,0 +1,3 @@
+org/cms/jpos/Gateway.class
+org/cms/jpos/ISOMessageHandler.class
+org/cms/jpos/ISOMessageHandler$SimpleISOMessage.class

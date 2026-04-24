@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jpos>
+    <!--
+        jPOS Configuration for CMS Platform
+        Vanilla jPOS-EE setup with no custom modifications
+    -->
+
+    <!-- ISO Message Handler Configuration -->
+    <channel id="default-channel" 
+             class="org.jpos.iso.channel.ASCIIChannel" 
+             packager="default">
+        <property name="host" value="0.0.0.0"/>
+        <property name="port" value="8583"/>
+        <property name="timeout" value="30000"/>
+    </channel>
+
+    <!-- Default Packager for ISO 8583 -->
+    <packager id="default" 
+              class="org.jpos.iso.packager.ISOBasePackager">
+        <property name="packager-config" 
+                  value="config/iso8583.xml"/>
+    </packager>
+
+    <!-- Transaction Manager -->
+    <transaction-manager id="tm" 
+                        class="org.jpos.transaction.TransactionManager">
+        <property name="queue" value="transactionQueue"/>
+        <property name="sessions" value="10"/>
+        <property name="debug" value="true"/>
+    </transaction-manager>
+
+    <!-- Logging -->
+    <logger name="Q2" class="org.jpos.util.Logger">
+        <property name="append" value="true"/>
+        <property name="logLevel" value="INFO"/>
+        <property name="prefix" value="[Q2]"/>
+    </logger>
+
+    <!-- Space (In-Memory Queue) -->
+    <space name="default" 
+           class="org.jpos.space.SpaceImpl"/>
+
+</jpos>
