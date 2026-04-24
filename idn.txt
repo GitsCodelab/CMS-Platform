@@ -1,206 +1,0 @@
-                      List of relations
- Schema |               Name               | Type  |  Owner   
---------+----------------------------------+-------+----------
- public | idn_app_revoked_event            | table | postgres
- public | idn_associated_id                | table | postgres
- public | idn_auth_session_app_info        | table | postgres
- public | idn_auth_session_meta_data       | table | postgres
- public | idn_auth_session_store           | table | postgres
- public | idn_auth_temp_session_store      | table | postgres
- public | idn_auth_user                    | table | postgres
- public | idn_auth_user_session_mapping    | table | postgres
- public | idn_auth_wait_status             | table | postgres
- public | idn_base_table                   | table | postgres
- public | idn_certificate                  | table | postgres
- public | idn_claim                        | table | postgres
- public | idn_claim_dialect                | table | postgres
- public | idn_claim_mapped_attribute       | table | postgres
- public | idn_claim_mapping                | table | postgres
- public | idn_claim_property               | table | postgres
- public | idn_config_attribute             | table | postgres
- public | idn_config_file                  | table | postgres
- public | idn_config_resource              | table | postgres
- public | idn_config_type                  | table | postgres
-[7m--More--[27m public | idn_cors_association             | table | postgres
-[7m--More--[27m public | idn_cors_origin                  | table | postgres
-[7m--More--[27m public | idn_fed_auth_session_mapping     | table | postgres
-[7m--More--[27m public | idn_function_library             | table | postgres
-[7m--More--[27m public | idn_identity_meta_data           | table | postgres
-[7m--More--[27m public | idn_identity_user_data           | table | postgres
-[7m--More--[27m public | idn_invalid_tokens               | table | postgres
-[7m--More--[27m public | idn_oauth1a_access_token         | table | postgres
-[7m--More--[27m public | idn_oauth1a_request_token        | table | postgres
-[7m--More--[27m public | idn_oauth2_access_token          | table | postgres
-[7m--More--[27m public | idn_oauth2_access_token_audit    | table | postgres
-[7m--More--[27m public | idn_oauth2_access_token_scope    | table | postgres
-[7m--More--[27m public | idn_oauth2_authorization_code    | table | postgres
-[7m--More--[27m public | idn_oauth2_authz_code_scope      | table | postgres
-[7m--More--[27m public | idn_oauth2_ciba_auth_code        | table | postgres
-[7m--More--[27m public | idn_oauth2_ciba_request_scopes   | table | postgres
-[7m--More--[27m public | idn_oauth2_device_flow           | table | postgres
-[7m--More--[27m public | idn_oauth2_device_flow_scopes    | table | postgres
-[7m--More--[27m public | idn_oauth2_resource_scope        | table | postgres
-[7m--More--[27m public | idn_oauth2_scope                 | table | postgres
-[7m--More--[27m public | idn_oauth2_scope_binding         | table | postgres
-[7m--More--[27m public | idn_oauth2_scope_validators      | table | postgres
-[7m--More--[27m public | idn_oauth2_token_binding         | table | postgres
-[7m--More--[27m public | idn_oauth2_user_consent          | table | postgres
-[7m--More--[27m public | idn_oauth2_user_consented_scopes | table | postgres
-[7m--More--[27m public | idn_oauth_consumer_apps          | table | postgres
-[7m--More--[27m public | idn_oidc_jti                     | table | postgres
-[7m--More--[27m public | idn_oidc_property                | table | postgres
-[7m--More--[27m public | idn_oidc_req_obj_claim_values    | table | postgres
-[7m--More--[27m public | idn_oidc_req_object_claims       | table | postgres
-[7m--More--[27m public | idn_oidc_req_object_reference    | table | postgres
-[7m--More--[27m public | idn_oidc_scope_claim_mapping     | table | postgres
-[7m--More--[27m public | idn_openid_associations          | table | postgres
-[7m--More--[27m public | idn_openid_remember_me           | table | postgres
-[7m--More--[27m public | idn_openid_user_rps              | table | postgres
-[7m--More--[27m public | idn_password_history_data        | table | postgres
-[7m--More--[27m public | idn_recovery_data                | table | postgres
-[7m--More--[27m public | idn_remote_fetch_config          | table | postgres
-[7m--More--[27m public | idn_remote_fetch_revisions       | table | postgres
-[7m--More--[27m public | idn_saml2_artifact_store         | table | postgres
-[7m--More--[27m public | idn_saml2_assertion_store        | table | postgres
-[7m--More--[27m public | idn_scim_group                   | table | postgres
-[7m--More--[27m public | idn_secret                       | table | postgres
-[7m--More--[27m public | idn_secret_type                  | table | postgres
-[7m--More--[27m public | idn_sts_store                    | table | postgres
-[7m--More--[27m public | idn_subject_entity_revoked_event | table | postgres
-[7m--More--[27m public | idn_thrift_session               | table | postgres
-[7m--More--[27m public | idn_uma_permission_ticket        | table | postgres
-[7m--More--[27m public | idn_uma_pt_resource              | table | postgres
-[7m--More--[27m public | idn_uma_pt_resource_scope        | table | postgres
-[7m--More--[27m public | idn_uma_resource                 | table | postgres
-[7m--More--[27m public | idn_uma_resource_meta_data       | table | postgres
-[7m--More--[27m public | idn_uma_resource_scope           | table | postgres
-[7m--More--[27m public | idn_user_account_association     | table | postgres
-[7m--More--[27m public | idn_user_functionality_mapping   | table | postgres
-[7m--More--[27m public | idn_user_functionality_property  | table | postgres
-[7m--More--[27m(76 rows)
-[7m--More--[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
-[7m--More--[K(END)[27m[K
