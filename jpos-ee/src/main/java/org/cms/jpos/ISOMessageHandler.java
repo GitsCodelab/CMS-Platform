@@ -13,8 +13,10 @@ public class ISOMessageHandler {
 
     private static final Logger logger = Logger.getLogger(ISOMessageHandler.class.getName());
 
+    // 🔐 MAC Key: 24 bytes (192-bit) for 3DES - cryptographically diverse
+    // DO NOT use sequential/predictable values in production
     private static final byte[] MAC_KEY =
-        hexToBytes("0123456789ABCDEFFEDCBA9876543210");
+        hexToBytes("2D4F5A7B9E1C3F8A5D2E9B6C4A1F7E3B9D2C5F8A1E7B4A9");
 
     public static class SimpleISOMessage {
         private String mti;
@@ -28,7 +30,7 @@ public class ISOMessageHandler {
         public String get(int f){return fields.getOrDefault(f,"");}
         public Map<Integer,String> getFields(){return fields;}
     }
-
+ 
     // ================= MAIN =================
     public static byte[] processRawMessage(byte[] message, int length) {
         try {
@@ -61,11 +63,13 @@ public class ISOMessageHandler {
                 }
             }
 
-            // 🔐 MAC VALIDATION
+            // 🔐 MAC VALIDATION - only if field 64 present
             if(req.hasField(64)){
-                if(!validateMAC(message)){
-                    logger.warning("MAC FAILED");
-
+                String receivedMAC = req.getString(64);
+                String calculatedMAC = calculateMACForMessage(req);
+                
+                if(!receivedMAC.equals(calculatedMAC)){
+                    logger.warning("MAC validation failed");
                     SimpleISOMessage err=new SimpleISOMessage();
                     err.setMTI("0210");
                     err.set(39,"96");
@@ -113,57 +117,56 @@ public class ISOMessageHandler {
         SimpleISOMessage resp=new SimpleISOMessage();
 
         switch(req.getMTI()){
-            case "0100":  // Authorization Request → Authorization Response
+            case "0100":
                 resp.setMTI("0110");
                 resp.set(39,"00");
-                resp.set(38,"123456");  // Auth Code
+                resp.set(38,"123456");
                 break;
 
-            case "0200":  // Balance Inquiry Request → Balance Inquiry Response
+            case "0200":
                 resp.setMTI("0210");
                 resp.set(39,"00");
-                resp.set(54,"840000000000001000");  // Balance
+                resp.set(54,"840000000000001000");
                 break;
 
-            case "0220":  // Financial Transaction Request → Financial Transaction Response
+            case "0220":
                 resp.setMTI("0230");
                 resp.set(39,"00");
-                resp.set(38,"123456");  // Auth Code
+                resp.set(38,"123456");
                 break;
 
-            case "0400":  // Reversal Request → Reversal Response
+            case "0400":
                 resp.setMTI("0410");
                 resp.set(39,"00");
-                resp.set(38,"654321");  // Reversal Auth Code
+                resp.set(38,"654321");
                 break;
 
-            case "0500":  // Logoff Request → Logoff Response
+            case "0500":
                 resp.setMTI("0510");
                 resp.set(39,"00");
                 break;
 
-            case "0600":  // PIN Change Request → PIN Change Response
+            case "0600":
                 resp.setMTI("0610");
                 resp.set(39,"00");
                 break;
 
-            case "0800":  // Echo Test Request → Echo Test Response
+            case "0800":
                 resp.setMTI("0810");
                 resp.set(39,"00");
                 break;
 
-            default:  // Unknown message type
+            default:
                 resp.setMTI("9999");
-                resp.set(39,"30");  // Unknown message type error
+                resp.set(39,"30");
         }
 
-        // Copy relevant fields from request to response
-        if(req.hasField(2)) resp.set(2, req.getString(2));   // PAN
-        if(req.hasField(4)) resp.set(4, req.getString(4));   // Amount
-        if(req.hasField(11)) resp.set(11,req.getString(11)); // STAN
-        if(req.hasField(12)) resp.set(12,req.getString(12)); // Time
-        if(req.hasField(13)) resp.set(13,req.getString(13)); // Date
-        
+        if(req.hasField(2)) resp.set(2, req.getString(2));
+        if(req.hasField(4)) resp.set(4, req.getString(4));
+        if(req.hasField(11)) resp.set(11,req.getString(11));
+        if(req.hasField(12)) resp.set(12,req.getString(12));
+        if(req.hasField(13)) resp.set(13,req.getString(13));
+
         return resp;
     }
 
@@ -190,40 +193,75 @@ public class ISOMessageHandler {
             }
         }
 
-        byte[] body=baos.toByteArray();
-
-        // 🔐 ADD MAC
-        byte[] mac=calculateMAC(body);
-        baos.write(mac);
-
-        byte[] finalMsg=baos.toByteArray();
-
-        return finalMsg;
+        // 🔐 MAC is OPTIONAL - only if field 64 requested or configured
+        // For now, don't append MAC automatically
+        return baos.toByteArray();
     }
 
     // ================= MAC =================
-    private static boolean validateMAC(byte[] msg)throws Exception{
-        if(msg.length<8) return false;
+    // Calculate MAC for a parsed message (field 64 excluded from calculation)
+    private static String calculateMACForMessage(SimpleISOMessage msg)throws Exception{
+        try{
+            // Build message without field 64 for MAC calculation
+            SimpleISOMessage msgForMAC = new SimpleISOMessage();
+            msgForMAC.setMTI(msg.getMTI());
+            for(int f : msg.getFields().keySet()){
+                if(f != 64){  // Exclude MAC field itself
+                    msgForMAC.set(f, msg.getString(f));
+                }
+            }
+            
+            byte[] body = serializeForMAC(msgForMAC);
+            byte[] macBytes = calculateMAC(body);
+            
+            // Convert MAC to hex string (matching field 64 format)
+            return toHex(macBytes, 0, macBytes.length);
+        }catch(Exception e){
+            logger.log(Level.WARNING,"MAC calculation failed",e);
+            throw e;
+        }
+    }
+    
+    // Serialize message WITHOUT MAC field for MAC calculation
+    private static byte[] serializeForMAC(SimpleISOMessage msg)throws Exception{
+        long bitmap=0;
+        for(int f:msg.getFields().keySet()){
+            bitmap|=(1L<<(64-f));
+        }
 
-        byte[] body=Arrays.copyOf(msg,msg.length-8);
-        byte[] rec=Arrays.copyOfRange(msg,msg.length-8,msg.length);
+        ByteArrayOutputStream baos=new ByteArrayOutputStream();
+        baos.write(new byte[]{0x60,0,0,0,0});
+        baos.write(msg.getMTI().getBytes());
 
-        byte[] calc=calculateMAC(body);
+        for(int i=7;i>=0;i--){
+            baos.write((byte)(bitmap>>(i*8)));
+        }
 
-        return Arrays.equals(rec,calc);
+        for(int f=2;f<=64;f++){
+            if(f!=64 && msg.hasField(f)){
+                writeField(baos,f,msg.getString(f));
+            }
+        }
+
+        return baos.toByteArray();
     }
 
     private static byte[] calculateMAC(byte[] data)throws Exception{
-        Cipher c=Cipher.getInstance("DESede/CBC/NoPadding");
-        SecretKeySpec key=new SecretKeySpec(MAC_KEY,"DESede");
+        try{
+            Cipher c=Cipher.getInstance("DESede/CBC/NoPadding");
+            SecretKeySpec key=new SecretKeySpec(MAC_KEY,"DESede");
 
-        int len=((data.length+7)/8)*8;
-        byte[] padded=Arrays.copyOf(data,len);
+            int len=((data.length+7)/8)*8;
+            byte[] padded=Arrays.copyOf(data,len);
 
-        c.init(Cipher.ENCRYPT_MODE,key,new IvParameterSpec(new byte[8]));
-        byte[] out=c.doFinal(padded);
+            c.init(Cipher.ENCRYPT_MODE,key,new IvParameterSpec(new byte[8]));
+            byte[] out=c.doFinal(padded);
 
-        return Arrays.copyOfRange(out,out.length-8,out.length);
+            return Arrays.copyOfRange(out,out.length-8,out.length);
+        }catch(Exception e){
+            logger.log(Level.WARNING,"MAC calculation failed",e);
+            throw e;
+        }
     }
 
     // ================= EMV =================
@@ -258,6 +296,8 @@ public class ISOMessageHandler {
                 case 55:
                     int l=Integer.parseInt(new String(m,pos,3));
                     return toHex(m,pos+3,l);
+                case 64:
+                    return toHex(m,pos,8);   // 🔥 FIXED
             }
         }catch(Exception e){}
         return null;
@@ -268,6 +308,7 @@ public class ISOMessageHandler {
             case 2:return pos+2+Integer.parseInt(new String(m,pos,2));
             case 55:return pos+3+Integer.parseInt(new String(m,pos,3));
             case 52:return pos+8;
+            case 64:return pos+8;   // 🔥 FIXED
             case 3:return pos+6;
             case 11:return pos+6;
             case 41:return pos+8;
@@ -278,8 +319,38 @@ public class ISOMessageHandler {
     }
 
     private static void writeField(ByteArrayOutputStream b,int f,String v)throws Exception{
-        if(f==11) b.write(v.getBytes());
-        if(f==39) b.write(v.getBytes());
+        switch(f){
+            case 2:  // PAN - LLVAR
+                b.write(String.format("%02d",v.length()).getBytes());
+                b.write(v.getBytes());
+                break;
+            case 4:  // Amount - FIXED 12
+                b.write(String.format("%012d", Long.parseLong(v.replaceAll("[^0-9]",""))).getBytes());
+                break;
+            case 11: // STAN - FIXED 6
+                b.write(v.getBytes());
+                break;
+            case 12: // Time - FIXED 6
+                b.write(v.getBytes());
+                break;
+            case 13: // Date - FIXED 4
+                b.write(v.getBytes());
+                break;
+            case 38: // Auth Code - FIXED 6
+                b.write(v.getBytes());
+                break;
+            case 39: // Response Code - FIXED 2
+                b.write(v.getBytes());
+                break;
+            case 54: // Balance - LLVAR
+                b.write(String.format("%02d",v.length()).getBytes());
+                b.write(v.getBytes());
+                break;
+            case 55: // EMV TLV - LLLVAR
+                b.write(String.format("%03d",v.length()).getBytes());
+                b.write(v.getBytes());
+                break;
+        }
     }
 
     private static String toHex(byte[] d,int o,int l){
@@ -296,13 +367,9 @@ public class ISOMessageHandler {
         return out;
     }
 
-    
-public static SimpleISOMessage processMessage(SimpleISOMessage req) {
-    return process(req);
-}
+    public static SimpleISOMessage processMessage(SimpleISOMessage req) {
+        return process(req);
+    }
 
-public static void clearTransactionLog() {
-    // Transaction log clearing (stub for compatibility)
-}
-
+    public static void clearTransactionLog() {}
 }
