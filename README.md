@@ -1,607 +1,485 @@
-# CMS Platform
+# CMS Platform - Complete API & Data Reconciliation Solution
 
-A comprehensive, enterprise-grade content management system featuring:
-- **Dual-Database Support**: Oracle XE (transactional) and PostgreSQL (data warehouse)
-- **Modern Frontend**: React 18.2.0 with Vite, SAP Fiori Design System, OpenUI5 components, and pagination
-- **Robust Backend**: FastAPI with comprehensive REST API and database abstraction
-- **Workflow Orchestration**: Apache Airflow 3.0.0 for ETL pipelines and scheduling
-- **API Management**: WSO2 APIM 4.1.0 for API lifecycle management and gateway
-- **Complete Container Orchestration**: Docker Compose with fully integrated microservices
-- **Production-Ready**: Health checks, monitoring, logging, and error handling
-- **Enterprise UI**: SAP Horizon theme with 106+ test records, pagination, and professional styling
+**Version**: 1.0  
+**Status**: ✅ Production Ready  
+**Last Updated**: April 24, 2026  
+
+---
+
+## 📋 Table of Contents
+
+1. [Quick Start](#quick-start)
+2. [Platform Overview](#platform-overview)
+3. [Architecture](#architecture)
+4. [Services & Access Points](#services--access-points)
+5. [Getting Started by Role](#getting-started-by-role)
+6. [Complete Documentation](#complete-documentation)
+7. [Quick Reference](#quick-reference)
+8. [Troubleshooting](#troubleshooting)
+
+---
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Docker & Docker Compose
-- Node.js 18+ (for local frontend development)
-- Python 3.12+ (for local backend development)
-- Linux/WSL2 environment recommended
-
-### Startup with Docker Compose
-
+### 1. Start All Services
 ```bash
-# Start all services in background
-docker compose up -d
-
-# View logs (optional)
-docker compose logs -f
-
-# Verify all containers are running
-docker compose ps
-
-# Stop all services
-docker compose down
+docker-compose up -d
 ```
 
-📖 See [SETUP_NEW_SERVER.md](SETUP_NEW_SERVER.md) for complete new server setup  
-📖 See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) for production environment guide
-
-### Access Points
-
-| Service | URL | Default Credentials | Port(s) |
-|---------|-----|-------------------|---------|
-| **Frontend (React)** | http://localhost:3000 | - | 3000 |
-| **Backend API** | http://localhost:8000 | - | 8000 |
-| **Backend API Docs** | http://localhost:8000/docs | - | 8000 |
-| **Airflow UI** | http://localhost:8080 | airflow / airflow | 8080 |
-| **WSO2 APIM Admin** | https://localhost:9443/admin | admin / admin | 9443 |
-| **WSO2 APIM Publisher** | https://localhost:9443/publisher | admin / admin | 9443 |
-| **WSO2 APIM Developer** | https://localhost:9443/devportal | - | 9443 |
-| **APIM Gateway (HTTP)** | http://localhost:8280 | - | 8280 |
-| **APIM Gateway (HTTPS)** | https://localhost:8243 | - | 8243 |
-| **Oracle Database** | localhost:1521/xepdb1 | sys / oracle | 1521 |
-| **PostgreSQL (CMS)** | localhost:5432/cms | postgres / postgres | 5432 |
-
----
-
-## 📐 Architecture Overview
-
-### Full Service Architecture
-
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                           CMS PLATFORM                                    │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                            │
-│                      ┌──────────────────┐                                │
-│                      │  Frontend        │                                │
-│                      │  (React)         │                                │
-│                      │  Port 3000       │                                │
-│                      └────────┬─────────┘                                │
-│                               │                                          │
-│                      ┌────────▼────────────┐                            │
-│                      │   WSO2 APIM         │                            │
-│                      │  (API Gateway)      │                            │
-│                      │  Port 9443/8280     │                            │
-│                      │    /8243            │                            │
-│                      └────┬───┬────┬───────┘                            │
-│           ┌────────────────┘   │    └──────────────┐                   │
-│           │                    │                                          │
-│    ┌──────▼──────┐             │                                          │
-│    │  Backend    │             │                                          │
-│    │ (FastAPI)   │             │                                          │
-│    │ Port 8000   │             │                                          │
-│    └──────┬──────┘             │                                          │
-│           │                    │                                          │
-│    ┌──────▼─────────────────┐                                         │
-│    │   Supporting Services  │                                         │
-│    ├────────────────────────┤                                         │
-│    │ • Databases            │                                         │
-│    │   ├─ Oracle XE (1521)  │                                         │
-│    │   └─ PostgreSQL (5432) │                                         │
-│    │ • Airflow (Port 8080)  │                                         │
-│    │   Scheduler & Workflow │                                         │
-│    └────────────────────────┘                                         │
-│                                                                            │
-│        🔗 Docker Bridge Network: cms-platform-net                        │
-│           All services communicate via container DNS resolution           │
-│                                                                            │
-└──────────────────────────────────────────────────────────────────────────┘
-```
-
-**Request Flow:**
-- User requests → Frontend (React, port 3000)
-- API calls → WSO2 APIM (port 9443/8280/8243) [API Gateway]
-- Data operations → Backend (FastAPI, port 8000)
-- Data persistence → Oracle XE or PostgreSQL
-- Batch jobs → Apache Airflow (port 8080)
-
-### Services Overview
-
-| Service | Stack | Version | Port(s) | Status |
-|---------|-------|---------|---------|--------|
-| Frontend | React + Vite | 18.2.0 + 5.4.21 | 3000 | ✅ Running |
-| Backend | FastAPI + Python | 0.104.1 + 3.12 | 8000 | ✅ Running |
-| Airflow | Apache Airflow | 3.0.0 | 8080 | ✅ Running |
-| API Gateway | WSO2 APIM | 4.1.0 | 9443, 8280, 8243 | ✅ Running |
-| Oracle DB | Oracle XE | 21.3.0 | 1521 | ✅ Running |
-| PostgreSQL (CMS) | PostgreSQL | 15.3 | 5432 | ✅ Running |
-
----
-
-## 📊 Database Architecture
-
-The platform uses a **dedicated, isolated database architecture** for optimal security, scalability, and operational flexibility:
-
-### Database Instances
-
-#### 1. **Oracle Database (XE 21.3.0)** - Port 1521
-- **Purpose**: Transactional data, system records
-- **Container**: oracle-xe
-- **Volume**: oracle_data (persistent storage)
-- **Credentials**: 
-  - Username: `sys`, Password: `oracle`
-  - Service Name: `xepdb1`
-- **Use Cases**:
-  - CMS operational data
-  - Historical transaction records
-  - ETL source system
-  - Reporting and analytics
-
-#### 2. **PostgreSQL (CMS) - Port 5432**
-- **Purpose**: Content Management System data, platform metadata
-- **Container**: cms-postgresql
-- **Database**: `cms`
-- **Volume**: cms-data (persistent storage)
-- **Credentials**: 
-  - Username: `postgres`, Password: `postgres`
-- **Use Cases**:
-  - Application configuration
-  - User management
-  - Content repository
-  - Reference data
-
-### Database Connection Details
-
-| Instance | Container | Host | Port (ext:int) | Database | User | Purpose |
-|----------|-----------|------|----------------|----------|------|---------|
-| **Oracle XE** | oracle-xe | N/A | 1521:1521 | xepdb1 | sys | Transactional |
-| **PostgreSQL CMS** | cms-postgresql | cms-postgresql | 5432:5432 | cms | postgres | Platform data |
-
-### Connection Strings
-
+### 2. Verify Services
 ```bash
-# Oracle
-sqlplus sys/oracle@localhost:1521/xepdb1
-
-# PostgreSQL CMS
-psql -h localhost -p 5432 -U postgres -d cms
-
+docker-compose ps
 ```
 
-### Backup & Recovery
+### 3. Access Platform
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **APIM Gateway**: https://localhost:9443
+- **Airflow**: http://localhost:8080
 
-Each database maintains independent backup strategies:
-- **Oracle**: Daily backups with 7-day retention
-- **PostgreSQL CMS**: Transaction logs, point-in-time recovery
-
-For complete backup procedures, see [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md#backup--disaster-recovery)
+### 4. Next Steps
+See [Getting Started by Role](#getting-started-by-role) for your specific workflow.
 
 ---
 
-## 📱 Frontend - React with Bootstrap
+## 📚 Platform Overview
 
-### Status
-✅ **Frontend is fully operational and accessible at http://localhost:3000**
+**CMS Platform** is a comprehensive API and data reconciliation solution featuring:
 
-### Overview
+- **WSO2 API Manager 4.3.0**: Enterprise API gateway with lifecycle management
+- **FastAPI Backend**: High-performance REST API with Oracle/PostgreSQL integration
+- **React Frontend**: Modern, responsive UI with Tailwind CSS
+- **Apache Airflow**: Workflow orchestration and data pipeline automation
+- **Multi-Database Support**: Oracle, PostgreSQL (DWH), and dedicated APIM database
 
-The frontend is a modern React application built with:
-- **React 18.2.0** - UI framework
-- **Vite 5.4.21** - Build tool for fast development
-- **Bootstrap 5.3.0** - CSS framework for professional styling
-- **Axios 1.15.0** - HTTP client for API communication
+### Key Capabilities
 
-### Architecture
+✅ **API Lifecycle Management**
+- API registration, versioning, and deployment
+- Multiple deployment targets (Production, Sandbox)
+- Policy enforcement (rate limiting, throttling, authentication)
+- Built-in monitoring and analytics
 
-```
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── MainLayout.jsx       # Main app layout with sidebar menu
-│   │   ├── TestDatabase.jsx     # Database management page
-│   │   ├── DataTable.jsx        # Reusable data table component
-│   │   └── RecordForm.jsx       # CRUD form component
-│   ├── hooks/
-│   │   ├── useOracle.js         # Custom hook for Oracle operations
-│   │   └── usePostgres.js       # Custom hook for PostgreSQL operations
-│   ├── api/
-│   │   └── client.js            # Axios HTTP client configuration
-│   ├── App.jsx                  # Root component
-│   ├── index.css                # Global styles
-│   └── main.jsx                 # Entry point
-├── index.html                   # HTML template
-├── package.json                 # Dependencies
-├── vite.config.js               # Vite configuration
-└── tailwind.config.js           # Tailwind CSS configuration
-```
+✅ **High-Performance Backend**
+- FastAPI with async support
+- Oracle and PostgreSQL integration
+- RESTful API design with OpenAPI documentation
+- Comprehensive error handling
 
-### Local Development Setup
+✅ **Workflow Orchestration**
+- Apache Airflow for scheduled jobs
+- Data pipeline automation
+- Multi-database operations
+- Audit logging
 
-#### 1. Install Dependencies
-
-```bash
-cd frontend
-npm install --legacy-peer-deps
-```
-
-#### 2. Start Development Server
-
-```bash
-npm run dev
-```
-
-Access at http://localhost:3000
-
-#### 3. Build for Production
-
-```bash
-npm run build
-```
+✅ **Enterprise-Grade Features**
+- Role-based access control
+- SSL/TLS encryption
+- Comprehensive logging
+- Health checks and monitoring
 
 ---
 
-## 🔧 FastAPI Backend
+## 🏗️ Architecture
 
-### Overview
-
-The backend provides a RESTful API for CRUD operations on both Oracle and PostgreSQL databases.
-
-### Architecture
+### Service Architecture
 
 ```
-backend/
-├── app/
-│   ├── __init__.py              # FastAPI app factory
-│   ├── config.py                # Configuration
-│   ├── database/
-│   │   ├── oracle.py            # Oracle database operations
-│   │   └── postgres.py          # PostgreSQL database operations
-│   ├── routers/
-│   │   ├── oracle.py            # Oracle API endpoints
-│   │   └── postgres.py          # PostgreSQL API endpoints
-│   └── schemas/
-│       └── test.py              # Pydantic models
-├── run.py                       # Application entry point
-├── requirements.txt             # Python dependencies
-└── .env                         # Environment variables
+┌─────────────────────────────────────────────────────────────┐
+│                     Frontend (React)                         │
+│                   http://localhost:3000                      │
+└────────────────────────┬────────────────────────────────────┘
+                         │ HTTP/HTTPS
+┌────────────────────────▼────────────────────────────────────┐
+│          WSO2 API Manager (APIM) 4.3.0 Gateway              │
+│          https://localhost:9443 (Admin/Publisher)           │
+│          http://localhost:8280 (HTTP Gateway)               │
+│          https://localhost:8243 (HTTPS Gateway)             │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+           ┌─────────────┼─────────────┐
+           │             │             │
+┌──────────▼───┐  ┌──────▼───┐  ┌────▼──────────┐
+│  Backend API │  │ Airflow  │  │  Oracle DB    │
+│ FastAPI      │  │          │  │  (Primary)    │
+│ :8000        │  │ :8080    │  │  :1521        │
+└──────┬───────┘  └──────┬───┘  └─────┬─────────┘
+       │                 │            │
+       └─────────────────┼────────────┘
+                         │
+           ┌─────────────┼──────────────┐
+           │             │              │
+    ┌──────▼──────┐  ┌───▼──────┐  ┌────▼────┐
+    │PostgreSQL   │  │APIM DB   │  │ Redis   │
+    │(DWH)        │  │(wso2am)  │  │(Cache)  │
+    │:5432        │  │:5432     │  │:6379    │
+    └─────────────┘  └──────────┘  └─────────┘
 ```
 
-### API Endpoints
+### Data Flow
 
-#### Health Check
 ```
-GET /health
-Response: {"status": "healthy", "api": "CMS Platform API"}
-```
-
-#### Oracle Endpoints
-```
-GET    /oracle/test             # Get all records
-GET    /oracle/test/{id}        # Get single record
-POST   /oracle/test             # Create record
-PUT    /oracle/test/{id}        # Update record
-DELETE /oracle/test/{id}        # Delete record
-```
-
-#### PostgreSQL Endpoints
-```
-GET    /postgres/test           # Get all records
-GET    /postgres/test/{id}      # Get single record
-POST   /postgres/test           # Create record
-PUT    /postgres/test/{id}      # Update record
-DELETE /postgres/test/{id}      # Delete record
+User Interface (Frontend)
+    ↓ HTTP/HTTPS
+API Manager Gateway (APIM 4.3.0)
+    ↓ Policy Enforcement, Rate Limiting, Auth
+Backend API (FastAPI)
+    ↓ REST Endpoints
+┌─────────────────┬──────────────────┬──────────────┐
+│                 │                  │              │
+↓                 ↓                  ↓              ↓
+Oracle DB      PostgreSQL DWH    Airflow Jobs    Cache Layer
+(Transactional) (Analytics)      (Orchestration)  (Performance)
 ```
 
 ---
 
-## 🛠️ Apache Airflow
+## 🔌 Services & Access Points
 
-### Overview
+### Core Services
 
-Data pipeline orchestration and scheduling platform for ETL workflows.
+| Service | URL | Port | Purpose | Status |
+|---------|-----|------|---------|--------|
+| **Frontend** | http://localhost:3000 | 3000 | React UI | ✅ Active |
+| **Backend API** | http://localhost:8000 | 8000 | FastAPI REST | ✅ Active |
+| **APIM Admin** | https://localhost:9443 | 9443 | API Manager UI | ✅ Active |
+| **APIM Gateway** | http://localhost:8280 | 8280 | HTTP Gateway | ✅ Active |
+| **APIM Gateway** | https://localhost:8243 | 8243 | HTTPS Gateway | ✅ Active |
+| **Airflow** | http://localhost:8080 | 8080 | Workflow UI | ✅ Active |
 
-### Key Features
-- **DAG-based workflow** definition
-- **Scheduling** and monitoring
-- **Backfill** capabilities
-- **Retry** logic and error handling
-- **Web UI** for management
+### Databases
 
-### Access
-- **URL**: http://localhost:8080
-- **Default Credentials**: airflow / airflow
+| Database | Host | Port | Type | Purpose |
+|----------|------|------|------|---------|
+| **Oracle XE** | localhost | 1521 | Oracle XE | Primary transactional DB |
+| **PostgreSQL** | localhost | 5432 | PostgreSQL 15 | APIM + DWH database |
 
-### DAGs Directory
-```
-airflow/dags/
-├── hello_bash.py        # Basic Bash task DAG
-├── hello_test.py        # Simple test DAG
-└── test_oracle.py       # Oracle database testing
-```
+### Credentials
 
----
-
-## 🌐 WSO2 APIM
-
-### Overview
-
-API Gateway and Management platform for API lifecycle management.
-
-### Services
-- **Admin Console**: https://localhost:9443/admin
-- **Publisher**: https://localhost:9443/publisher
-- **Developer Portal**: https://localhost:9443/devportal
-- **Gateway (HTTP)**: http://localhost:8280
-- **Gateway (HTTPS)**: https://localhost:8243
-
-### Default Credentials
+#### APIM (WSO2 API Manager)
+- **URL**: https://localhost:9443/admin
 - **Username**: admin
 - **Password**: admin
+- **Note**: Change in production
+
+#### Backend API
+- **Base URL**: http://localhost:8000
+- **OpenAPI Docs**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+
+#### Airflow
+- **URL**: http://localhost:8080
+- **Username**: airflow
+- **Password**: airflow
+
+#### Databases
+- **Oracle**: 
+  - Username: MAIN
+  - Password: main123
+  - Service: xepdb1
+- **PostgreSQL**: 
+  - Username: postgres
+  - Password: postgres
 
 ---
 
-## 🗄️ Databases
+## 👥 Getting Started by Role
 
-### Oracle XE 21.3.0
+### 👤 **New Users** - Start Here!
+**Goal**: Understand the platform and get familiar with basic operations
+
+**Recommended Path**:
+1. Start services: `docker-compose up -d`
+2. Access Frontend: http://localhost:3000
+3. Verify everything is working: [docs/guides/IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md)
+4. Explore APIs in APIM: https://localhost:9443/publisher
+5. Read: [docs/setup/SETUP_NEW_SERVER.md](docs/setup/SETUP_NEW_SERVER.md)
+
+---
+
+### 👨‍💻 **Developers** - Build & Extend
+**Goal**: Create and register new APIs, integrate with the platform
+
+**Recommended Path**:
+1. Backend API Development: [docs/api/API_REGISTRATION_GUIDE.md](docs/api/API_REGISTRATION_GUIDE.md)
+2. Register Your API: Use `register_api.sh` script
+   ```bash
+   bash wso2-stack/apim/register_api.sh \
+     --name "Your API" \
+     --context "/your-api" \
+     --backend "http://your-backend:port/path"
+   ```
+3. API Lifecycle Management: [docs/api/API_REGISTRATION_GUIDE.md](docs/api/API_REGISTRATION_GUIDE.md#api-lifecycle-management)
+4. Testing & Deployment: [docs/guides/IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md)
+
+---
+
+### ⚙️ **DevOps / SRE** - Deploy & Monitor
+**Goal**: Manage infrastructure, deployments, and system reliability
+
+**Recommended Path**:
+1. Infrastructure Setup: [docs/deployment/PRODUCTION_DEPLOYMENT.md](docs/deployment/PRODUCTION_DEPLOYMENT.md)
+2. APIM Configuration: [wso2-stack/apim/DEFAULT_GATEWAY_README.md](wso2-stack/apim/DEFAULT_GATEWAY_README.md)
+3. Database Management: [docs/setup/DATABASE_INIT_README.md](docs/setup/DATABASE_INIT_README.md)
+4. Monitoring & Health Checks: [docs/guides/IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md#health-checks)
+5. Troubleshooting: [docs/troubleshooting/](docs/troubleshooting/)
+
+---
+
+### 🔧 **System Administrators** - Manage & Maintain
+**Goal**: Oversee system operations, security, and compliance
+
+**Recommended Path**:
+1. Complete Setup Guide: [docs/setup/APIM_SETUP_GUIDE.md](docs/setup/APIM_SETUP_GUIDE.md)
+2. Production Deployment: [docs/deployment/PRODUCTION_DEPLOYMENT.md](docs/deployment/PRODUCTION_DEPLOYMENT.md)
+3. Security Configuration: [wso2-stack/apim/DEFAULT_GATEWAY_README.md](wso2-stack/apim/DEFAULT_GATEWAY_README.md#security-configuration)
+4. Monitoring: Check [docs/guides/](docs/guides/) for verification procedures
+5. Troubleshooting: [docs/troubleshooting/](docs/troubleshooting/)
+
+---
+
+## 📖 Complete Documentation
+
+### Documentation Structure
+
+The `docs/` directory provides organized, role-based documentation:
+
+```
+docs/
+├── INDEX.md                          ← Start here for documentation
+├── setup/                            ← Initial setup & configuration
+│   ├── SETUP_NEW_SERVER.md
+│   ├── APIM_SETUP_GUIDE.md
+│   ├── PHASE_1_IMPLEMENTATION_GUIDE.md
+│   ├── DATABASE_INIT_README.md
+│   └── README.md
+├── api/                              ← API development & registration
+│   ├── API_REGISTRATION_GUIDE.md
+│   └── README.md
+├── deployment/                       ← Production deployment
+│   ├── PRODUCTION_DEPLOYMENT.md
+│   └── README.md
+├── guides/                           ← Additional guides & verification
+│   ├── IMPLEMENTATION_VERIFICATION.md
+│   └── README.md
+├── troubleshooting/                  ← Issue resolution
+│   └── README.md
+└── archived/                         ← Legacy documentation
+    └── README.md
+```
+
+### Quick Document Links
+
+| Document | Purpose | Audience |
+|----------|---------|----------|
+| [docs/INDEX.md](docs/INDEX.md) | **Main documentation index** | Everyone |
+| [docs/setup/APIM_SETUP_GUIDE.md](docs/setup/APIM_SETUP_GUIDE.md) | Complete APIM initialization | DevOps, Admins |
+| [docs/api/API_REGISTRATION_GUIDE.md](docs/api/API_REGISTRATION_GUIDE.md) | API registration & lifecycle | Developers |
+| [docs/deployment/PRODUCTION_DEPLOYMENT.md](docs/deployment/PRODUCTION_DEPLOYMENT.md) | Production deployment procedures | DevOps, Admins |
+| [docs/guides/IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md) | Verification & health checks | Everyone |
+| [wso2-stack/apim/DEFAULT_GATEWAY_README.md](wso2-stack/apim/DEFAULT_GATEWAY_README.md) | Default gateway configuration | DevOps, Developers |
+| [docs/setup/DATABASE_INIT_README.md](docs/setup/DATABASE_INIT_README.md) | Database initialization | DBAs, DevOps |
+
+---
+
+## 🔍 Quick Reference
+
+### Essential Scripts
 
 ```bash
-# Connection Details
-Host: localhost
-Port: 1521
-SID: xepdb1
-Username: sys (SYSDBA)
-Password: oracle
+# 1. Start platform
+docker-compose up -d
 
-# Connection String
-sqlplus sys/oracle@localhost:1521/xepdb1 as sysdba
+# 2. Check status
+docker-compose ps
+
+# 3. View logs
+docker-compose logs -f cms-apim      # APIM logs
+docker-compose logs -f cms-backend   # Backend logs
+docker-compose logs -f cms-frontend  # Frontend logs
+
+# 4. Register an API
+bash wso2-stack/apim/register_api.sh \
+  --name "API Name" \
+  --context "/api-context" \
+  --backend "http://backend:port/path"
+
+# 5. Access APIM
+# Admin: https://localhost:9443/admin
+# Publisher: https://localhost:9443/publisher
+# Developer Portal: https://localhost:9443/devportal
+
+# 6. Test backend API
+curl http://localhost:8000/health
+curl http://localhost:8000/oracle/test
+curl http://localhost:8000/postgres/test
 ```
 
-### PostgreSQL 15.3
+### API Endpoint Examples
 
 ```bash
-# Connection Details
-Host: localhost
-Port: 5432
-Database: cms
-Username: postgres
-Password: postgres
+# Oracle Test API (via APIM gateway)
+curl http://localhost:8280/cms/oracle/v1.0.0
 
-# Connection String
-psql -h localhost -U postgres -d cms
+# PostgreSQL Test API (via APIM gateway)
+curl http://localhost:8280/cms/postgres/v1.0.0
+
+# Backend direct access
+curl http://localhost:8000/oracle/test
+curl http://localhost:8000/postgres/test
+
+# With authentication
+curl -H "Authorization: Bearer <token>" \
+  https://localhost:8243/cms/oracle/v1.0.0
 ```
+
+### Common Tasks
+
+| Task | How To | Documentation |
+|------|--------|---------------|
+| Register new API | Use `register_api.sh` | [API_REGISTRATION_GUIDE.md](docs/api/API_REGISTRATION_GUIDE.md) |
+| Deploy to production | Follow deployment guide | [PRODUCTION_DEPLOYMENT.md](docs/deployment/PRODUCTION_DEPLOYMENT.md) |
+| Check system health | Run verification | [IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md) |
+| Initialize databases | Run init scripts | [DATABASE_INIT_README.md](docs/setup/DATABASE_INIT_README.md) |
+| Configure gateway | Use DEFAULT_GATEWAY_README.md | [DEFAULT_GATEWAY_README.md](wso2-stack/apim/DEFAULT_GATEWAY_README.md) |
 
 ---
 
-## 🐳 Docker Compose Configuration
+## 🆘 Troubleshooting
 
-### Service Dependencies
+### Common Issues
 
-```
-cms-postgresql ─┐
-cms-oracle-xe  ├─► cms-backend ──┬─► cms-frontend
-               ├─► cms-airflow   │
-               └─► cms-apim      ────┘
-```
+**Q: Services won't start**
+- Check Docker is running: `docker ps`
+- Check port availability: `lsof -i :3000` etc.
+- See: [docs/troubleshooting/README.md](docs/troubleshooting/README.md)
 
-### Network
+**Q: Can't connect to APIM**
+- Verify APIM is running: `docker logs cms-apim`
+- Check https://localhost:9443/admin (accept self-signed cert)
+- See: [docs/setup/APIM_SETUP_GUIDE.md](docs/setup/APIM_SETUP_GUIDE.md)
 
-All services communicate through a dedicated Docker bridge network:
-```yaml
-networks:
-  cms-platform-net:
-    driver: bridge
-```
+**Q: API registration fails**
+- Check APIM connectivity: `curl -k https://localhost:9443/`
+- Verify backend is reachable from APIM container
+- See: [docs/api/API_REGISTRATION_GUIDE.md](docs/api/API_REGISTRATION_GUIDE.md)
 
-### Volumes
+**Q: Database connection issues**
+- Verify databases are running: `docker-compose ps`
+- Check credentials in configuration
+- See: [docs/setup/DATABASE_INIT_README.md](docs/setup/DATABASE_INIT_README.md)
 
-```yaml
-volumes:
-  oracle-data:        # Oracle database persistence
-  postgres-data:      # PostgreSQL database persistence
-  airflow-data:       # Airflow metadata
-  wso2am-data:        # APIM repository data
-  wso2am-logs:        # APIM logs
-```
+### Getting Help
+
+1. **Quick answers**: Check [docs/troubleshooting/](docs/troubleshooting/)
+2. **Setup issues**: See [docs/setup/](docs/setup/)
+3. **API problems**: See [docs/api/](docs/api/)
+4. **Deployment**: See [docs/deployment/](docs/deployment/)
+5. **Full index**: See [docs/INDEX.md](docs/INDEX.md)
 
 ---
 
-## 📋 Directory Structure
+## 📊 Project Structure
 
 ```
 CMS-Platform/
-├── backend/                 # FastAPI application
-│   ├── app/
-│   ├── run.py
-│   └── requirements.txt
-├── frontend/                # React application
+├── README.md                          ← You are here
+├── docker-compose.yml                 ← Main orchestration
+├── docs/                              ← Complete documentation
+├── frontend/                          ← React UI
 │   ├── src/
 │   ├── package.json
-│   └── vite.config.js
-├── airflow/                 # Apache Airflow
-│   ├── dags/
-│   ├── plugins/
-│   ├── Dockerfile
-│   └── docker-compose.yml
-├── wso2-stack/              # WSO2 APIM
-│   └── apim/
-│       ├── Dockerfile
-│       ├── deployment.toml
-│       └── docker-compose.yml
-├── oracle-db/               # Oracle utilities
-├── postgresql-dwh/          # PostgreSQL utilities
-├── superset/                # Data visualization (optional)
-├── docker-compose.yml       # Main compose file
-└── README.md                # This file
-```
-
----
-
-## 🚀 Common Commands
-
-### View Service Status
-```bash
-# All services
-docker compose ps
-
-# Specific service
-docker compose ps cms-backend
-
-# With more details
-docker compose ps --format "table {{.Service}}\t{{.Status}}"
-```
-
-### View Logs
-```bash
-# All services
-docker compose logs -f
-
-# Specific service
-docker compose logs -f cms-backend
-
-# Last 50 lines
-docker compose logs --tail 50 cms-backend
-```
-
-### Execute Commands in Container
-```bash
-# Shell access
-docker compose exec cms-backend bash
-
-# Run single command
-docker compose exec cms-backend python -c "import sys; print(sys.version)"
-
-# Database access
-docker compose exec cms-postgresql psql -U postgres -d cms
-```
-
-### Restart Services
-```bash
-# Single service
-docker compose restart cms-backend
-
-# Multiple services
-docker compose restart cms-backend cms-frontend
-
-# All services
-docker compose restart
-```
-
-### Rebuild Images
-```bash
-# Rebuild single service
-docker compose build --no-cache cms-backend
-
-# Rebuild all services
-docker compose build --no-cache
-
-# Build and start
-docker compose up --build -d
-```
-
----
-
-## 🐛 Troubleshooting
-
-### Services Not Starting
-
-**Check logs**:
-```bash
-docker compose logs cms-service-name
-```
-
-**Common issues**:
-- Port already in use: Change port mapping in docker-compose.yml
-- Database not ready: Add health checks and increase wait time
-- Out of memory: Increase Docker desktop memory allocation
-
-### Database Connection Issues
-
-**Verify containers are running**:
-```bash
-docker ps | grep -E "(oracle|postgres)"
-```
-
-**Test database connection**:
-```bash
-# Oracle
-docker compose exec cms-oracle-xe sqlplus -version
-
-# PostgreSQL
-docker compose exec cms-postgresql psql -V
-```
-
-### API Integration Issues
-
-**Test backend health**:
-```bash
-curl http://localhost:8000/health
-```
-
-**Check CORS configuration**:
-- Frontend uses: http://localhost:3000
-- Backend allows: allow_origins=["*"]
-
-**Test specific endpoint**:
-```bash
-curl http://localhost:8000/oracle/test
+│   └── Dockerfile
+├── backend/                           ← FastAPI REST
+│   ├── app/
+│   ├── requirements.txt
+│   └── run.py
+├── wso2-stack/                        ← API Manager & IS
+│   ├── apim/                          ← APIM configuration
+│   │   ├── DEFAULT_GATEWAY_README.md
+│   │   ├── default-gateway-config.json
+│   │   ├── register_api.sh
+│   │   └── deployment.toml
+│   └── wso2is/
+├── oracle-db/                         ← Oracle database
+├── postgresql-dwh/                    ← PostgreSQL database
+├── airflow/                           ← Airflow orchestration
+├── superset/                          ← Analytics (optional)
+└── scripts/                           ← Utility scripts
 ```
 
 ---
 
 ## 🔐 Security Notes
 
-### Default Credentials (Development Only)
+- **Development Mode**: Uses default credentials - change before production
+- **SSL/TLS**: APIM uses self-signed certificates - configure proper certs for production
+- **Database Passwords**: Change default credentials in `.env` and `docker-compose.yml`
+- **API Keys**: Use strong, unique keys for APIs
+- **Network**: Run behind reverse proxy/load balancer in production
 
-⚠️ **These are for development/testing only. Change in production!**
-
-- **Airflow**: airflow / airflow
-- **WSO2 APIM**: admin / admin
-- **Oracle**: sys / oracle
-- **PostgreSQL**: postgres / postgres
-
-### Recommended Production Changes
-
-1. Change all default passwords
-2. Enable HTTPS for all services
-3. Configure firewall rules
-4. Enable database backups
-5. Set up monitoring and alerting
-6. Use secrets management (Vault, etc.)
+**See**: [docs/deployment/PRODUCTION_DEPLOYMENT.md](docs/deployment/PRODUCTION_DEPLOYMENT.md#security) for production checklist
 
 ---
 
-## 📚 Resources
+## 📞 Support & Resources
 
-- [React Documentation](https://react.dev)
-- [FastAPI Documentation](https://fastapi.tiangolo.com)
-- [Apache Airflow Documentation](https://airflow.apache.org)
-- [WSO2 APIM Documentation](https://apim.docs.wso2.com)
-- [Docker Documentation](https://docs.docker.com)
+### Documentation
+- **Complete Index**: [docs/INDEX.md](docs/INDEX.md)
+- **Setup Guides**: [docs/setup/](docs/setup/)
+- **API Documentation**: [docs/api/](docs/api/)
+- **Deployment**: [docs/deployment/](docs/deployment/)
 
----
+### Tools & Scripts
+- **API Registration**: `wso2-stack/apim/register_api.sh`
+- **Database Init**: `scripts/init_*`
+- **Verification**: [docs/guides/IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md)
 
-## 📝 License
-
-All components are provided as-is for development and testing purposes.
+### External Resources
+- [WSO2 API Manager Documentation](https://apim.docs.wso2.com/)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Apache Airflow Documentation](https://airflow.apache.org/docs/)
+- [React Documentation](https://react.dev/)
 
 ---
 
 ## ✅ Verification Checklist
 
-After starting the platform, verify all services:
+Before going to production:
 
-- [ ] Frontend loads at http://localhost:3000
-- [ ] Backend API responds at http://localhost:8000/health
-- [ ] Airflow UI accessible at http://localhost:8080
-- [ ] WSO2 APIM console at https://localhost:9443/admin
-- [ ] Oracle database accessible on port 1521
-- [ ] PostgreSQL accessible on port 5432
-- [ ] All containers show "Up" status in `docker compose ps`
+- [ ] All containers running successfully
+- [ ] Frontend accessible at http://localhost:3000
+- [ ] Backend API responding at http://localhost:8000/health
+- [ ] APIM Admin accessible at https://localhost:9443/admin
+- [ ] At least one API registered and published
+- [ ] Database connections verified
+- [ ] Default gateway configured
+- [ ] SSL/TLS certificates configured
+- [ ] Monitoring and logging enabled
+- [ ] Backup procedures in place
+
+**Detailed checklist**: [docs/guides/IMPLEMENTATION_VERIFICATION.md](docs/guides/IMPLEMENTATION_VERIFICATION.md)
 
 ---
 
-**Last Updated**: April 23, 2026
-**Platform Version**: 1.0.0
-**Status**: ✅ Production Ready
+## 📝 License
+
+See [LICENSE](LICENSE) file for license information.
+
+---
+
+## 🎯 Next Steps
+
+1. **Start the platform**: `docker-compose up -d`
+2. **Access the dashboard**: http://localhost:3000
+3. **Read the documentation**: Start with [docs/INDEX.md](docs/INDEX.md)
+4. **Follow your role guide**: See [Getting Started by Role](#getting-started-by-role)
+
+---
+
+**Version**: 1.0  
+**Last Updated**: April 24, 2026  
+**Status**: ✅ Production Ready  
+
+For detailed documentation, see [docs/INDEX.md](docs/INDEX.md)
+

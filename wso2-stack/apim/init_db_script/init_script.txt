@@ -1,0 +1,19 @@
+psql -h cms-postgresql -U postgres -d wso2am -f /home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql
+psql -h cms-postgresql -U postgres -d wso2am -f /home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql
+psql -h cms-postgresql -U postgres -d wso2am -f /home/wso2carbon/wso2am-4.3.0/dbscripts/metrics/postgresql.sql
+docker exec -it cms-postgresql psql -U postgres -d wso2am
+
+
+
+
+------------
+wget https://jdbc.postgresql.org/download/postgresql-42.5.0.jar
+docker cp postgresql-42.5.0.jar cms-apim:/home/wso2carbon/wso2am-4.3.0/repository/components/lib/
+
+
+
+docker stop cms-apim
+docker exec -it cms-postgresql psql -U postgres -c "DROP DATABASE wso2am;"
+docker exec -it cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;"
+docker cp cms-apim:/home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql ./apimgt_43.sql
+docker cp cms-apim:/home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql ./shared_43.sql

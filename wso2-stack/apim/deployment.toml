@@ -15,21 +15,21 @@ type = "database_unique_id"
 # ================= DATABASE =================
 
 [database.identity_db]
-type = "postgresql"
+type = "postgres"
 url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
 username = "postgres"
 password = "postgres"
 driver = "org.postgresql.Driver"
 
 [database.shared_db]
-type = "postgresql"
+type = "postgres"
 url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
 username = "postgres"
 password = "postgres"
 driver = "org.postgresql.Driver"
 
 [database.apim_db]
-type = "postgresql"
+type = "postgres"
 url = "jdbc:postgresql://cms-postgresql:5432/wso2am"
 username = "postgres"
 password = "postgres"
@@ -70,15 +70,15 @@ enable = true
 
 # ================= KEY MANAGER =================
 
-[[apim.key_manager]]
-server_url = "https://localhost:9443"
-username = "admin"
-password = "admin"
-type = "WSO2-IS"
-
-configuration.TokenEndpoint = "https://localhost:9443/oauth2/token"
-configuration.RevokeEndpoint = "https://localhost:9443/oauth2/revoke"
-configuration.UserInfoEndpoint = "https://localhost:9443/oauth2/userinfo"
+# Use default (Resident) key manager only
+# [[apim.key_manager]]
+# server_url = "https://localhost:9443"
+# username = "admin"
+# password = "admin"
+# type = "WSO2-IS"
+# configuration.TokenEndpoint = "https://localhost:9443/oauth2/token"
+# configuration.RevokeEndpoint = "https://localhost:9443/oauth2/revoke"
+# configuration.UserInfoEndpoint = "https://localhost:9443/oauth2/userinfo"
 
 # ================= ANALYTICS =================
 

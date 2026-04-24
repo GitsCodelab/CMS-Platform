@@ -23,7 +23,7 @@ def log(message, level="INFO"):
     print(f"[{timestamp}] {level}: {message}")
 
 
-def init_wso2_apim_db(host="cms-postgresql", port=5432, user="postgres", password="postgres", database="wso2am"):
+def init_wso2_apim_db(host="localhost", port=5432, user="postgres", password="postgres", database="wso2am"):
     """Initialize WSO2 APIM database with required tables"""
     try:
         log("Connecting to PostgreSQL database for WSO2 APIM...")
@@ -286,7 +286,7 @@ def main():
     print("-" * 70)
     
     # Parse command line arguments
-    host = "cms-postgresql"
+    host = "localhost"
     database = "wso2am"
     
     if len(sys.argv) > 1:

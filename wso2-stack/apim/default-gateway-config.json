@@ -1,0 +1,156 @@
+    {
+  "name": "Default Gateway",
+  "displayName": "Default Gateway",
+  "description": "Default production gateway for API traffic",
+  "gatewayType": "Regular",
+  "supportedApiTypes": [
+    "HTTP",
+    "SOAP",
+    "GraphQL",
+    "WebSocket"
+  ],
+  "enabled": true,
+  "endpoint": {
+    "host": "localhost",
+    "port": 8280,
+    "https": {
+      "enabled": true,
+      "port": 8243
+    },
+    "webSocket": {
+      "enabled": true,
+      "port": 9099
+    },
+    "secureWebSocket": {
+      "enabled": true,
+      "port": 8099
+    }
+  },
+  "deployments": [
+    {
+      "name": "Production",
+      "displayName": "Production Deployment",
+      "description": "Default production gateway deployment",
+      "enabled": true,
+      "vhost": "localhost",
+      "environment": "production"
+    }
+  ],
+  "properties": {
+    "Organization": "carbon.super",
+    "ApiVersion": "v4",
+    "Environment": "production",
+    "Tenant": "carbon.super",
+    "Region": "default",
+    "DataCenter": "default"
+  },
+  "loadBalance": {
+    "algorithm": "round_robin",
+    "sessionAffinity": false,
+    "healthCheck": {
+      "enabled": true,
+      "interval": 30,
+      "timeout": 10
+    }
+  },
+  "tls": {
+    "minVersion": "TLSv1.2",
+    "maxVersion": "TLSv1.3",
+    "cipherSuites": [
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+    ],
+    "enableClientAuthentication": false
+  },
+  "security": {
+    "enableSSL": true,
+    "enableClientCertificates": false,
+    "trustStorePath": "${carbon.home}/repository/resources/security/client-truststore.jks",
+    "trustStorePassword": "wso2carbon",
+    "keyStorePath": "${carbon.home}/repository/resources/security/wso2carbon.jks",
+    "keyStorePassword": "wso2carbon"
+  },
+  "rateLimit": {
+    "enabled": true,
+    "globalLimit": 10000,
+    "perMinuteLimit": 600,
+    "perSecondLimit": 100
+  },
+  "cors": {
+    "enabled": true,
+    "allowOrigins": [
+      "*"
+    ],
+    "allowMethods": [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "PATCH",
+      "OPTIONS"
+    ],
+    "allowHeaders": [
+      "authorization",
+      "Access-Control-Allow-Origin",
+      "Content-Type",
+      "SOAPAction",
+      "X-API-Key"
+    ],
+    "allowCredentials": false,
+    "maxAge": 3600
+  },
+  "throttling": {
+    "enabled": true,
+    "policies": [
+      "Unlimited",
+      "Bronze",
+      "Silver",
+      "Gold",
+      "Platinum"
+    ]
+  },
+  "monitoring": {
+    "enabled": true,
+    "metricsEnabled": true,
+    "loggingLevel": "INFO",
+    "requestLogging": true,
+    "responseLogging": true,
+    "errorLogging": true
+  },
+  "authentication": {
+    "enabled": true,
+    "types": [
+      "oauth2",
+      "api_key",
+      "basic_auth",
+      "mtls"
+    ],
+    "defaultType": "oauth2"
+  },
+  "cache": {
+    "enabled": true,
+    "ttl": 300,
+    "maxSize": 1000
+  },
+  "logging": {
+    "accessLog": {
+      "enabled": true,
+      "format": "%h %l %u %t \"%r\" %s %b"
+    },
+    "errorLog": {
+      "enabled": true,
+      "level": "ERROR"
+    }
+  },
+  "advanced": {
+    "connectionTimeout": 30000,
+    "socketTimeout": 300000,
+    "maxConnections": 10000,
+    "maxConnectionsPerHost": 100,
+    "enableHttpCompressionSupport": true,
+    "enablePipelining": true,
+    "bufferSize": 8192
+  }
+}
