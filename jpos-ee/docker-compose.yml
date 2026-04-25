@@ -7,6 +7,8 @@ services:
     hostname: cms-jpos-ee
     ports:
       - "8583:8583"  # ISO 8583 message gateway
+    env_file:
+      - .env
     environment:
       - JAVA_OPTS=-Xmx512m -Xms256m
       - LOG_LEVEL=INFO
@@ -17,8 +19,8 @@ services:
       - JPOS_REPLAY_WINDOW_SECONDS=300
       - JPOS_REQUIRE_MAC=true
       - JPOS_REQUIRE_TLS=false
-      - JPOS_BDK_HEX=${JPOS_BDK_HEX:?Set JPOS_BDK_HEX in your environment}
-      - JPOS_MAC_KEY_HEX=${JPOS_MAC_KEY_HEX:?Set JPOS_MAC_KEY_HEX in your environment}
+      - JPOS_BDK_HEX=0123456789ABCDEFFEDCBA9876543210
+      - JPOS_MAC_KEY_HEX=2D4F5A7B9E1C3F8A5D2E9B6C4A1F7E3B9D2C5F8A1E7B4A9
     volumes:
       - ./config:/app/config
       - ./logs:/app/logs
