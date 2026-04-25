@@ -74,6 +74,20 @@ PARSED RC (field 39): 00
 E2E OK: response code is 00
 ```
 
+### Multi ATM Parallel Simulator
+
+For concurrent ATM worker simulation with full ISO8583 + DUKPT + MAC validation, see:
+
+- [test-script/multi_atm_simulator/README.md](test-script/multi_atm_simulator/README.md)
+
+That guide includes:
+
+1. Terminal concurrency model.
+2. KSN/counter progression behavior.
+3. MAC + field 64 construction rules.
+4. Response field 39 parsing logic.
+5. Troubleshooting for RC `96`, `55`, and startup errors.
+
 ---
 
 ## 🚀 Quick Start
