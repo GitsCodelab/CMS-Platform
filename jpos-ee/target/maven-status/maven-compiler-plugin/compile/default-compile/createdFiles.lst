@@ -1,4 +1,5 @@
-org/cms/jpos/Dukpt.class
+org/cms/jpos/dao/IsoLogDAO.class
 org/cms/jpos/ISOMessageHandler.class
-org/cms/jpos/ISOMessageHandler$SimpleISOMessage.class
+org/cms/jpos/dao/TransactionDAO.class
+org/cms/jpos/config/DBConnectionManager.class
 org/cms/jpos/Gateway.class
