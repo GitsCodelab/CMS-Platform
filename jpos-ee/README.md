@@ -1,14 +1,14 @@
 # jPOS-EE: ISO 8583 Message Gateway for CMS Platform
 
-**Version**: 1.0.0  
-**Status**: ✅ Vanilla Setup - No Custom Modifications  
-**Date**: April 24, 2026
+**Version**: 1.1.0  
+**Status**: ✅ Updated and Verified End-to-End  
+**Date**: April 25, 2026
 
 ---
 
 ## 📋 Overview
 
-This is a **vanilla jPOS Enterprise Edition (jPOS-EE)** setup for the CMS Platform, providing a standalone ISO 8583 message gateway for financial transaction processing. It handles:
+This is a jPOS Enterprise Edition (jPOS-EE) setup for the CMS Platform, providing a standalone ISO 8583 message gateway for financial transaction processing. It handles:
 
 - ✅ Authorization requests (0x0100)
 - ✅ Balance inquiries (0x0200)
@@ -25,6 +25,54 @@ jPOS is an open-source framework for building payment systems. It provides:
 - **Pluggable Architecture**: Modular design for extensibility
 - **Transaction Management**: Reliable message handling
 - **Packager/Unpackager**: Message serialization/deserialization
+
+---
+
+## 🧠 Updated Transaction Logic (April 25, 2026)
+
+The gateway and test flow were updated and validated end-to-end with dynamic runtime behavior:
+
+- MAC requirement is environment-driven (`JPOS_REQUIRE_MAC`) and enforced by MTI rules.
+- Required-field validation now adapts to runtime configuration (field 64 required only when MAC is enabled).
+- DUKPT PIN flow is aligned between client test script and gateway validation.
+- Response-code parsing in the client is bitmap-aware and reads field 39 correctly.
+- Replay protection remains active (duplicate MTI+STAN+terminal+KSN combinations are rejected).
+
+### End-to-End Processing Flow
+
+`ATM → ISO8583 → Crypto (DUKPT + MAC) → Gateway → Validation → Response`
+
+### Architecture Review (Updated)
+
+1. Transport Layer:
+ISO message arrives with length header + TPDU and is unpacked using `iso87.xml`.
+2. Security Layer:
+MAC validation (when enabled) and DUKPT PIN block validation are applied before business response generation.
+3. Validation Layer:
+MTI-specific required/allowed fields are checked, plus field format and replay window rules.
+4. Business Response Layer:
+Gateway generates `0210/0110/0410/0810` responses, sets field 39, and signs with MAC when needed.
+5. Client Verification Layer:
+Python test client packs ISO fields, computes crypto values, sends over TCP 8583, and validates field 39.
+
+### Reliable E2E Run Sequence
+
+```bash
+cd /home/samehabib/CMS-Platform/jpos-ee
+docker compose up -d --build
+docker compose ps
+
+cd /home/samehabib/CMS-Platform/jpos-ee/test-script
+set -a && source .env && set +a
+python3 Production-raw-ISO-v3-fixed-field52.py --with-mac
+```
+
+Expected terminal output ends with:
+
+```text
+PARSED RC (field 39): 00
+E2E OK: response code is 00
+```
 
 ---
 

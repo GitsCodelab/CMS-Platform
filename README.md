@@ -126,6 +126,27 @@ python3 test_jpos_iso.py
 - **[JPOS_COMPLETE_SUMMARY.md](JPOS_COMPLETE_SUMMARY.md)** - Technical architecture and details
 - **[test_jpos_iso.py](test_jpos_iso.py)** - Python ISO 8583 test client with Visa/MC examples
 
+### Updated Logic and Architecture Review (April 25, 2026)
+
+The jPOS integration has been validated with updated crypto and response parsing logic.
+
+Core validated flow:
+
+`ATM → ISO8583 → Crypto (DUKPT + MAC) → Gateway → Validation → Response`
+
+Architecture review highlights:
+
+1. Request Envelope and Parsing:
+Length-prefixed payload + TPDU are unpacked to ISO fields using the jPOS packager.
+2. Security Processing:
+DUKPT PIN validation and ANSI X9.19 MAC validation are applied per configuration.
+3. Validation Gates:
+MTI-specific required fields, field format checks, and replay protection are enforced.
+4. Response Generation:
+Gateway builds ISO response MTI, sets field 39 outcome, and appends MAC when required.
+5. End-to-End Verification:
+Python ISO client sends binary ISO 8583 and verifies parsed field 39 (`00` expected for success).
+
 ---
 
 ## 🏗️ Architecture

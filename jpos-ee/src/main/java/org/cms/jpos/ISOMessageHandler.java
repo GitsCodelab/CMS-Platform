@@ -653,12 +653,37 @@ public class ISOMessageHandler {
         return value == null ? "-" : value;
     }
 
-    private static Map<String, Set<Integer>> buildRequiredFields() {
+        private static Map<String, Set<Integer>> buildRequiredFields() {
         Map<String, Set<Integer>> map = new HashMap<>();
-        map.put("0200", setOf(2, 3, 4, 7, 11, 12, 13, 22, 25, 41, 42, 49, 52, 62, 64));
-        map.put("0100", setOf(2, 3, 4, 7, 11, 12, 13, 22, 25, 41, 42, 49, 64));
-        map.put("0400", setOf(2, 3, 4, 7, 11, 12, 13, 41, 42, 49, 64));
-        map.put("0800", setOf(7, 11, 70, 64));
+
+        // 0200
+        Set<Integer> f0200 = new HashSet<>(Arrays.asList(
+            2, 3, 4, 7, 11, 12, 13, 22, 25, 41, 42, 49, 52, 62
+        ));
+        if (CONFIG.requireMac) f0200.add(64);
+        map.put("0200", Collections.unmodifiableSet(f0200));
+
+        // 0100
+        Set<Integer> f0100 = new HashSet<>(Arrays.asList(
+            2, 3, 4, 7, 11, 12, 13, 22, 25, 41, 42, 49
+        ));
+        if (CONFIG.requireMac) f0100.add(64);
+        map.put("0100", Collections.unmodifiableSet(f0100));
+
+        // 0400
+        Set<Integer> f0400 = new HashSet<>(Arrays.asList(
+            2, 3, 4, 7, 11, 12, 13, 41, 42, 49
+        ));
+        if (CONFIG.requireMac) f0400.add(64);
+        map.put("0400", Collections.unmodifiableSet(f0400));
+
+        // 0800
+        Set<Integer> f0800 = new HashSet<>(Arrays.asList(
+            7, 11, 70
+        ));
+        if (CONFIG.requireMac) f0800.add(64);
+        map.put("0800", Collections.unmodifiableSet(f0800));
+
         return Collections.unmodifiableMap(map);
     }
 
