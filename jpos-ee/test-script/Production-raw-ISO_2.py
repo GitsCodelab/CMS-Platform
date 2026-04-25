@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
+import os
 import socket
 import struct
 from datetime import datetime
+from typing import Optional
+
 from Crypto.Cipher import DES, DES3
 
-HOST = "localhost"
-PORT = 8583
-
+HOST = os.getenv("JPOS_HOST", "localhost")
+PORT = int(os.getenv("JPOS_PORT", "8583"))
 TPDU = b"\x60\x00\x00\x00\x00"
 
-BDK = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
-KSN = bytes.fromhex("FFFF9876543210E00001")
+BDK = bytes.fromhex(os.environ["JPOS_BDK_HEX"])
+MAC_KEY = bytes.fromhex(os.environ["JPOS_MAC_KEY_HEX"])
+KSN = bytes.fromhex(os.getenv("JPOS_KSN_HEX", "FFFF9876543210E00001"))
 VARIANT_RIGHT_HALF = bytes.fromhex("C0C0C0C000000000")
-MAC_KEY = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
 
 
 def bcd_pack(s: str) -> bytes:
@@ -29,71 +31,42 @@ def bcd_pack_right_padded(s: str, pad_nibble: str = "0") -> bytes:
 
 
 def pack_ifb_numeric(value: str, digits: int) -> bytes:
-    if not value.isdigit():
-        raise ValueError(f"Numeric field contains non-digits: {value!r}")
-    if len(value) > digits:
-        raise ValueError(f"Numeric field too long: {value!r} > {digits}")
     return bcd_pack_right_padded(value.zfill(digits))
 
 
 def pack_ifb_llnum(value: str) -> bytes:
-    if not value.isdigit():
-        raise ValueError(f"LLNUM field contains non-digits: {value!r}")
-    if len(value) > 99:
-        raise ValueError(f"LLNUM field too long: {len(value)}")
     return bcd_pack(f"{len(value):02}") + bcd_pack_right_padded(value)
 
 
 def pack_ifb_lllchar(value: str) -> bytes:
-    value_bytes = value.encode("ascii")
-    length = len(value_bytes)
-    if length > 999:
-        raise ValueError(f"LLLCHAR field too long: {length}")
-    # jPOS IFB_LLLCHAR uses a 3-digit BCD length prefix packed into 2 bytes.
-    # Example: len=37 -> 0x00 0x37
-    return bcd_pack(f"{length:03}") + value_bytes
+    return bcd_pack(f"{len(value):03}") + value.encode("ascii")
 
 
 def pack_ifa_lllchar(value: str) -> bytes:
-    value_bytes = value.encode("ascii")
-    length = len(value_bytes)
-    if length > 999:
-        raise ValueError(f"IFA_LLLCHAR field too long: {length}")
-    return f"{length:03}".encode("ascii") + value_bytes
+    return f"{len(value):03}".encode("ascii") + value.encode("ascii")
 
 
 def pack_if_char(value: str, length: int) -> bytes:
-    value_bytes = value.encode("ascii")
-    if len(value_bytes) > length:
-        raise ValueError(
-            f"CHAR field length mismatch: expected <= {length}, got {len(value_bytes)}"
-        )
-    return value_bytes.ljust(length, b" ")
+    return value.encode("ascii").ljust(length, b" ")
 
 
 def pack_ifb_binary_hex(value: str, length: int) -> bytes:
     raw = bytes.fromhex(value)
     if len(raw) != length:
-        raise ValueError(
-            f"Binary field length mismatch: expected {length}, got {len(raw)}"
-        )
+        raise ValueError(f"Expected {length} bytes, got {len(raw)}")
     return raw
 
 
-def expand_key(k):
-    return k + k[:8]
-
-
-def tdes_encrypt(key, data):
-    return DES3.new(expand_key(key), DES3.MODE_ECB).encrypt(data)
-
-
-def tdes_decrypt(key, data):
-    return DES3.new(expand_key(key), DES3.MODE_ECB).decrypt(data)
-
-
-def des_encrypt(key, data):
+def des_encrypt(key: bytes, data: bytes) -> bytes:
     return DES.new(key, DES.MODE_ECB).encrypt(data)
+
+
+def des_decrypt(key: bytes, data: bytes) -> bytes:
+    return DES.new(key, DES.MODE_ECB).decrypt(data)
+
+
+def tdes_encrypt(key: bytes, data: bytes) -> bytes:
+    return DES3.new(key + key[:8], DES3.MODE_ECB).encrypt(data)
 
 
 def xor_bytes(left: bytes, right: bytes) -> bytes:
@@ -103,7 +76,7 @@ def xor_bytes(left: bytes, right: bytes) -> bytes:
 def tdes_encrypt_ede(key: bytes, data: bytes) -> bytes:
     left = key[:8]
     right = key[8:]
-    return des_encrypt(left, DES.new(right, DES.MODE_ECB).decrypt(des_encrypt(left, data)))
+    return des_encrypt(left, des_decrypt(right, des_encrypt(left, data)))
 
 
 def shift_right_21(counter_bytes: bytearray) -> None:
@@ -166,98 +139,84 @@ def derive_pin_key(bdk: bytes, ksn: bytes) -> bytes:
     return bytes(current_key)
 
 
-def build_pin_block(pin):
-    block = f"0{len(pin)}{pin}" + "F" * (16 - len(pin) - 2)
-    return bytes.fromhex(block)
+def build_pin_block(pin: str) -> bytes:
+    return bytes.fromhex(f"0{len(pin)}{pin}" + "F" * (16 - len(pin) - 2))
 
 
-def build_pan_block(pan):
-    pan12 = pan[-13:-1]
-    return bytes.fromhex("0000" + pan12)
+def build_pan_block(pan: str) -> bytes:
+    return bytes.fromhex("0000" + pan[-13:-1])
 
 
-def encrypt_pin(pin, pan, pin_key):
-    pin_block = build_pin_block(pin)
-    pan_block = build_pan_block(pan)
-    clear = bytes(a ^ b for a, b in zip(pin_block, pan_block))
+def encrypt_pin(pin: str, pan: str, pin_key: bytes) -> bytes:
+    clear = xor_bytes(build_pin_block(pin), build_pan_block(pan))
     return tdes_encrypt(pin_key, clear)
 
 
-def retail_mac(key: bytes, data: bytes) -> bytes:
+def retail_mac_ansi_x919(key: bytes, data: bytes) -> bytes:
     left = key[:8]
     right = key[8:]
     padded = data + (b"\x00" * ((8 - len(data) % 8) % 8))
     state = b"\x00" * 8
-
     for offset in range(0, len(padded), 8):
         block = padded[offset:offset + 8]
         state = des_encrypt(left, xor_bytes(state, block))
-
-    state = DES.new(right, DES.MODE_ECB).decrypt(state)
+    state = des_decrypt(right, state)
     return des_encrypt(left, state)
 
 
-def pack_fields(fields: dict[int, str], mac_value: bytes | None = None) -> bytes:
+def pack_fields(mti: str, fields: dict[int, str], mac_value: Optional[bytes] = None) -> bytes:
     bitmap = 0
+    secondary_bitmap = 0
     field_ids = set(fields)
     if mac_value is not None:
         field_ids.add(64)
 
     for f in field_ids:
-        bitmap |= (1 << (64 - f))
+        if f <= 64:
+            bitmap |= (1 << (64 - f))
+        else:
+            bitmap |= (1 << 63)
+            secondary_bitmap |= (1 << (128 - f))
 
-    data = bcd_pack("0200") + bitmap.to_bytes(8, "big")
-
+    data = bcd_pack(mti) + bitmap.to_bytes(8, "big")
+    if secondary_bitmap:
+        data += secondary_bitmap.to_bytes(8, "big")
     for f in sorted(field_ids):
         if f == 64:
             data += mac_value
             continue
 
         v = fields[f]
-
         if f == 2:
             data += pack_ifb_llnum(v)
-
-        elif f in [3, 4, 7, 11, 12, 13, 22, 25, 49]:
-            fixed_lengths = {
-                3: 6,
-                4: 12,
-                7: 10,
-                11: 6,
-                12: 6,
-                13: 4,
-                22: 3,
-                25: 2,
-                49: 3,
-            }
-            data += pack_ifb_numeric(v, fixed_lengths[f])
-
+        elif f in [3, 4, 7, 11, 12, 13, 22, 25, 49, 70]:
+            lengths = {3: 6, 4: 12, 7: 10, 11: 6, 12: 6, 13: 4, 22: 3, 25: 2, 49: 3, 70: 3}
+            data += pack_ifb_numeric(v, lengths[f])
         elif f == 35:
             data += pack_ifb_lllchar(v)
-
         elif f == 62:
             data += pack_ifa_lllchar(v)
-
         elif f in [41, 42]:
-            fixed_lengths = {41: 8, 42: 15}
-            data += pack_if_char(v, fixed_lengths[f])
-
+            lengths = {41: 8, 42: 15}
+            data += pack_if_char(v, lengths[f])
         elif f == 52:
             data += pack_ifb_binary_hex(v, 8)
-
         else:
-            raise ValueError(f"Unsupported field: {f}")
-
+            raise ValueError(f"Unsupported field {f}")
     return data
 
 
-def build_iso():
-    pan = "4111111111111111"
-    pin = "1234"
-
+def build_message(
+    mti: str = "0200",
+    pan: str = "4111111111111111",
+    pin: str = "1234",
+    ksn: bytes = KSN,
+    include_mac: bool = True,
+    tamper_mac: bool = False,
+    overrides: Optional[dict[int, str]] = None,
+) -> bytes:
     now = datetime.now()
-
-    fields = {
+    fields: dict[int, str] = {
         2: pan,
         3: "000000",
         4: "000000010000",
@@ -271,34 +230,49 @@ def build_iso():
         41: "TERMID01",
         42: "MERCHANT000001",
         49: "840",
-        62: KSN.hex().upper(),
+        62: ksn.hex().upper(),
     }
 
-    pin_key = derive_pin_key(BDK, KSN)
-    enc_pin = encrypt_pin(pin, pan, pin_key)
+    if mti == "0800":
+        fields = {
+            7: now.strftime("%m%d%H%M%S"),
+            11: "654321",
+            70: "301",
+        }
+    else:
+        pin_key = derive_pin_key(BDK, ksn)
+        fields[52] = encrypt_pin(pin, pan, pin_key).hex().upper()
 
-    fields[52] = enc_pin.hex().upper()
-    mac = retail_mac(MAC_KEY, pack_fields(fields, mac_value=b"\x00" * 8))
-    data = pack_fields(fields, mac_value=mac)
+    if overrides:
+        for field, value in overrides.items():
+            if value is None and field in fields:
+                del fields[field]
+            elif value is not None:
+                fields[field] = value
 
-    full = TPDU + data
+    mac = None
+    if include_mac:
+        mac = retail_mac_ansi_x919(MAC_KEY, pack_fields(mti, fields, mac_value=b"\x00" * 8))
+        if tamper_mac:
+            mac = bytes([mac[0] ^ 0xFF]) + mac[1:]
+
+    body = pack_fields(mti, fields, mac_value=mac)
+    full = TPDU + body
     return struct.pack(">H", len(full)) + full
 
 
-def send(msg):
+def send(msg: bytes) -> bytes:
     print("\nSENT HEX:")
     print(msg.hex().upper())
-
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(5)
         s.connect((HOST, PORT))
         s.sendall(msg)
         resp = s.recv(4096)
-
     print("\nRECEIVED HEX:")
     print(resp.hex().upper())
+    return resp
 
 
 if __name__ == "__main__":
-    msg = build_iso()
-    send(msg)
+    send(build_message())

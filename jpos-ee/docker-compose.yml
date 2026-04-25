@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   cms-jpos-ee:
     build:
@@ -12,24 +10,31 @@ services:
     environment:
       - JAVA_OPTS=-Xmx512m -Xms256m
       - LOG_LEVEL=INFO
+      - JPOS_PORT=8583
+      - JPOS_SOCKET_TIMEOUT_MS=5000
+      - JPOS_MAX_MESSAGE_LENGTH=4096
+      - JPOS_MAX_CLIENTS=32
+      - JPOS_REPLAY_WINDOW_SECONDS=300
+      - JPOS_REQUIRE_MAC=true
+      - JPOS_REQUIRE_TLS=false
+      - JPOS_BDK_HEX=${JPOS_BDK_HEX:?Set JPOS_BDK_HEX in your environment}
+      - JPOS_MAC_KEY_HEX=${JPOS_MAC_KEY_HEX:?Set JPOS_MAC_KEY_HEX in your environment}
     volumes:
       - ./config:/app/config
       - ./logs:/app/logs
     networks:
       - cms-platform-net
     healthcheck:
-      test: ["CMD", "java", "-cp", "/app/app.jar", "org.cms.jpos.HealthCheck"]
+      test: ["CMD-SHELL", "bash -lc 'echo > /dev/tcp/127.0.0.1/8583'"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 10s
     restart: unless-stopped
-    depends_on:
-      - cms-backend
     labels:
       - "component=payment-gateway"
       - "module=jpos-ee"
 
 networks:
   cms-platform-net:
-    external: true
+    driver: bridge
