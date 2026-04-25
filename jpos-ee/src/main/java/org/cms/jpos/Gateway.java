@@ -16,7 +16,18 @@ public class Gateway {
     private static final AppConfig CONFIG = AppConfig.load();
     private static volatile boolean running = true;
 
-    public static void main(String[] args) {
+    // public static void main(String[] args) {
+    //     logger.info(String.format(
+    //         "Starting CMS Gateway port=%d timeoutMs=%d maxMessageLength=%d maxClients=%d requireMac=%s",
+    //         CONFIG.port,
+    //         CONFIG.socketTimeoutMs,
+    //         CONFIG.maxMessageLength,
+    //         CONFIG.maxClients,
+    //         CONFIG.requireMac
+    //     ));
+
+
+     public static void main(String[] args) {
         logger.info(String.format(
             "Starting CMS Gateway port=%d timeoutMs=%d maxMessageLength=%d maxClients=%d requireMac=%s",
             CONFIG.port,
@@ -25,6 +36,7 @@ public class Gateway {
             CONFIG.maxClients,
             CONFIG.requireMac
         ));
+
 
         ExecutorService executor = Executors.newFixedThreadPool(CONFIG.maxClients);
         try (ServerSocket serverSocket = new ServerSocket(CONFIG.port)) {

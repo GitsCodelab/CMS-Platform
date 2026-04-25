@@ -66,15 +66,20 @@ public final class AppConfig {
         );
     }
 
+    // ✅ FIXED: CLEAN INPUT BEFORE PARSING
     private static List<byte[]> loadKeyList(String primaryName, String previousName) {
-        String primary = requireEnv(primaryName);
         List<byte[]> keys = new ArrayList<>();
-        keys.add(hexToBytes(primary));
+
+        String primary = requireEnv(primaryName);
+        String cleanedPrimary = cleanHex(primary);
+        keys.add(hexToBytes(cleanedPrimary));
 
         String previous = System.getenv(previousName);
         if (previous != null && !previous.trim().isEmpty()) {
-            keys.add(hexToBytes(previous.trim()));
+            String cleanedPrev = cleanHex(previous);
+            keys.add(hexToBytes(cleanedPrev));
         }
+
         return keys;
     }
 
@@ -102,15 +107,27 @@ public final class AppConfig {
         return value.trim();
     }
 
+    // ✅ NEW: CLEAN HEX INPUT SAFELY
+    private static String cleanHex(String hex) {
+        return hex.trim().replaceAll("[^0-9A-Fa-f]", "");
+    }
+
+    // ✅ SAFE HEX PARSER
     private static byte[] hexToBytes(String hex) {
-        if ((hex.length() % 2) != 0 || !hex.matches("[0-9A-Fa-f]+")) {
-            throw new IllegalArgumentException("Invalid hex value provided for key material");
+        if (hex == null || hex.isEmpty()) {
+            throw new IllegalArgumentException("Key is empty");
         }
 
-        byte[] out = new byte[hex.length() / 2];
-        for (int i = 0; i < out.length; i++) {
-            out[i] = (byte) Integer.parseInt(hex.substring(i * 2, i * 2 + 2), 16);
+        if (hex.length() % 2 != 0) {
+            throw new IllegalArgumentException("Invalid hex length: " + hex.length());
         }
-        return out;
+
+        byte[] result = new byte[hex.length() / 2];
+
+        for (int i = 0; i < hex.length(); i += 2) {
+            result[i / 2] = (byte) Integer.parseInt(hex.substring(i, i + 2), 16);
+        }
+
+        return result;
     }
-}
+}   
