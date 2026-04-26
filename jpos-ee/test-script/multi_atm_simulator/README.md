@@ -1,85 +1,95 @@
-# Multi ATM Simulator (Production Logic)
+# Multi ATM Simulator (End-to-End)
 
-This simulator runs multiple ATM terminals in parallel against the jPOS gateway using full ISO 8583 + DUKPT + MAC logic.
+This folder is now organized around one primary simulator:
 
-## End-to-End Flow
+- `atm_iso8583_end_to_end_simulator.py`
 
-Multiple ATMs (Python workers)  
--> ISO8583 + DUKPT + MAC  
--> Gateway (Java jPOS)  
--> Validation + Routing  
--> Response
+Legacy variants were removed so all testing uses one maintained script and one consistent behavior model.
 
-## What This Test Covers
+## What This Simulator Covers
 
-1. Parallel terminal traffic using worker threads (`TERM0001`, `TERM0002`, `TERM0003`).
-2. Per-transaction KSN progression per terminal (`terminal_state.json`).
-3. DUKPT PIN key derivation and encrypted field 52 PIN block.
-4. ANSI X9.19 MAC generation for field 64.
-5. ISO 8583 packing and unpacking against jPOS parser.
-6. Correct response-code extraction from field 39 (not from last raw byte).
-
-## Crypto + Message Logic (Current)
-
-1. DUKPT:
-- `derive_pin_key()` derives a per-transaction key from `JPOS_BDK_HEX` + terminal KSN.
-- `build_pin()` creates ISO-0 clear PIN block and encrypts it with 3DES.
-
-2. MAC (field 64):
-- `mac_x919()` uses ANSI X9.19 2-key finalization (`K1/K2/K1`).
-- MAC is calculated over the packed message with field 64 set to 8 zero bytes placeholder.
-
-3. ISO Packing:
-- Numeric fields are right-nibble padded BCD when odd length.
-- Field 52 is sent as raw 8-byte binary.
-- Field 62 carries KSN as ASCII LLLVAR.
-
-4. Response Parsing:
-- `get_response_code()` parses bitmap and walks fields to extract field 39 exactly.
+1. Full ISO 8583 transaction lifecycle: `0100 -> 0200 -> optional 0400`.
+2. DUKPT PIN encryption with per-transaction KSN.
+3. ANSI X9.19 MAC generation (K1/K2/K1) with zero-filled field-64 preimage.
+4. Thread-safe STAN allocation and transaction state updates.
+5. Deterministic fault injection for end-to-end scenario tests.
+6. Event-level tracking and JSONL audit trail for reconciliation.
 
 ## Prerequisites
 
-1. jPOS gateway is running and healthy on `localhost:8583`.
-2. `.env` is loaded in this folder.
-3. Python virtual environment has crypto dependency installed (`pycryptodome`).
+1. jPOS gateway running on configured host/port.
+2. `.env` loaded in this folder.
+3. Python dependency installed: `pycryptodome`.
 
-## Run
+## Setup
 
 ```bash
 cd /home/samehabib/CMS-Platform/jpos-ee/test-script/multi_atm_simulator
+python3 -m pip install pycryptodome
 set -a && source .env && set +a
-python3 prod-iso-atm-test.py --with-mac
 ```
 
-## Expected Output
+## Commands
 
-All workers should print successful response codes:
+### 1) Syntax check
 
-```text
-[TERM0001] RC=00
-[TERM0002] RC=00
-[TERM0003] RC=00
-...
+```bash
+python3 -m py_compile atm_iso8583_end_to_end_simulator.py
 ```
 
-## Troubleshooting
+### 2) Live End-to-End run
 
-1. `RC=96` (System/MAC validation failure):
-- Verify `JPOS_MAC_KEY_HEX` matches gateway runtime key.
-- Ensure MAC is calculated with field 64 zero placeholder before final insertion.
+```bash
+python3 atm_iso8583_end_to_end_simulator.py
+```
 
-2. `RC=55` (DUKPT/PIN failure):
-- Check BDK and KSN progression logic.
-- Ensure field 52 remains binary 8 bytes.
+### 3) Deterministic scenario tests
 
-3. `ConnectionRefusedError`:
-- Start gateway and wait until healthy.
+Timeout on 0200, reversal succeeds:
 
-4. Wrong RC values like random hex (`7E`, `69`, ...):
-- This indicates parsing the wrong byte; use field-39 parser (`get_response_code`).
+```bash
+ATM_TERMINAL_COUNT=1 ATM_TX_PER_TERMINAL=1 \
+TEST_RC_PLAN='{"0100":["00"],"0200":["TIMEOUT"],"0400":["00"]}' \
+python3 atm_iso8583_end_to_end_simulator.py
+```
 
-## Files
+Decline on 0200, no reversal:
 
-- `prod-iso-atm-test.py`: Multi-terminal simulator with DUKPT + MAC + ISO parsing.
-- `.env`: Test runtime host/port and key material.
-- `terminal_state.json`: Runtime terminal counter state (KSN progression).
+```bash
+ATM_TERMINAL_COUNT=1 ATM_TX_PER_TERMINAL=1 \
+TEST_RC_PLAN='{"0100":["00"],"0200":["05"]}' \
+python3 atm_iso8583_end_to_end_simulator.py
+```
+
+Timeout on 0100, reversal timeout:
+
+```bash
+ATM_TERMINAL_COUNT=1 ATM_TX_PER_TERMINAL=1 \
+TEST_RC_PLAN='{"0100":["TIMEOUT"],"0400":["TIMEOUT"]}' \
+python3 atm_iso8583_end_to_end_simulator.py
+```
+
+### 4) Field 37 reconciliation capability
+
+```bash
+ATM_TERMINAL_COUNT=1 ATM_TX_PER_TERMINAL=1 ATM_SEND_RRN_FIELD37=1 \
+TEST_RC_PLAN='{"0100":["00"],"0200":["00"]}' \
+python3 atm_iso8583_end_to_end_simulator.py
+```
+
+### 5) Audit trail output
+
+```bash
+rm -f atm_audit_trail.jsonl
+ATM_TERMINAL_COUNT=1 ATM_TX_PER_TERMINAL=1 ATM_WRITE_AUDIT_LOG=1 \
+TEST_RC_PLAN='{"0100":["00"],"0200":["TIMEOUT"],"0400":["00"]}' \
+python3 atm_iso8583_end_to_end_simulator.py
+wc -l atm_audit_trail.jsonl
+```
+
+## Expected Results
+
+1. Normal flow: `COMPLETED`.
+2. Timeout + successful reversal: `REVERSED`.
+3. Timeout + reversal timeout: `REVERSAL_TIMEOUT`.
+4. Decline `05/51`: `DECLINED` with no reversal event.

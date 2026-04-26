@@ -30,7 +30,7 @@ set -a && source .env && set +a
 | 2 | `multi_atm_simulator/prod-iso-atm-test.py` | Multi-terminal basic auth (3 terminals × 3 rounds) |
 | 3 | `multi_atm_simulator/prod-iso-atm-lifecycle.py` | Full lifecycle: 0100 → 0200 → optional 0400 |
 | 4 | `multi_atm_simulator/prod-iso-atm-advanced.py` | Advanced: timeout/decline simulation + auto reversal |
-| 5 | `multi_atm_simulator/prod-iso-atm-test-EndToEnd.py` | STAN tracking across 0100/0200/0400 lifecycle |
+| 5 | `multi_atm_simulator/atm_iso8583_end_to_end_simulator.py` | STAN tracking across 0100/0200/0400 lifecycle |
 
 ---
 
@@ -82,11 +82,11 @@ python3 prod-iso-atm-advanced.py --with-mac
 
 ---
 
-## Script 5 — STAN Tracking Simulator (`prod-iso-atm-test-EndToEnd.py`)
+## Script 5 — STAN Tracking Simulator (`atm_iso8583_end_to_end_simulator.py`)
 
 **Command:**
 ```bash
-python3 prod-iso-atm-test-EndToEnd.py --with-mac
+python3 atm_iso8583_end_to_end_simulator.py --with-mac
 ```
 
 **Purpose:** Tests that the System Trace Audit Number (STAN) is tracked correctly across the full transaction lifecycle (0100 → 0200 → optional 0400 reversal) for 3 terminals running concurrently (5 rounds each). Each STAN is recorded in a thread-safe in-memory `transaction_store` with status: `STARTED → AUTHORIZED → COMPLETED` (or `DECLINED / TIMEOUT / FAILED`).
@@ -230,7 +230,7 @@ All STAN statuses are `COMPLETED` or `TIMEOUT` (correct reversal triggered). No 
 
 ---
 
-## Script 5 — Production Hardening (`prod-iso-atm-test-EndToEnd.py` v2)
+## Script 5 — Production Hardening (`atm_iso8583_end_to_end_simulator.py` v2)
 
 After the initial functional fixes, a risk assessment (`ATM_SIMULATOR_RISKS_README.md`) identified 10 production-grade issues. All were addressed in a second pass.
 
