@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-prod-iso-atm-stan-tracking.py
+prod-iso-atm-test-EndToEnd.py
 ATM ISO 8583 STAN Lifecycle Tracker
 
 Risks addressed (ATM_SIMULATOR_RISKS_README.md):
@@ -8,7 +8,7 @@ Risks addressed (ATM_SIMULATOR_RISKS_README.md):
   R2  - Duplicate STAN detection per terminal (prevents double-charging)
   R3  - Reversal validation: check STAN existence + status before 0400
   R4  - Concurrency protection: threading.Lock on all transaction_store ops
-  R5  - RRN (field 37) added for cross-system reconciliation
+    R5  - RRN generated and tracked in store for cross-system reconciliation
   R6  - KSN counter persisted to ksn_state.json (prevents DUKPT key reuse)
   R7  - Reversal only on TIMEOUT, not on soft declines (05/51)
   R8  - Structured JSON logging (replaces bare print statements)
@@ -19,25 +19,110 @@ import os, socket, struct, threading, random, time, json, logging, sys
 from datetime import datetime, timezone
 from Crypto.Cipher import DES, DES3
 
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
 # ── Config ────────────────────────────────────────────────────────────────────
 HOST = os.getenv("JPOS_HOST", "localhost")
 PORT = int(os.getenv("JPOS_PORT", "8583"))
 TPDU = b"\x60\x00\x00\x00\x00"
 
-TIMEOUT_RATE   = 0.1
-TIMEOUT_SEC    = 3
-MAX_RETRIES    = 2          # R9 – retries before reversal
+TIMEOUT_RATE   = float(os.getenv("JPOS_TIMEOUT_RATE", "0.1"))
+TIMEOUT_SEC    = int(os.getenv("JPOS_TIMEOUT_SEC", "3"))
+MAX_RETRIES    = int(os.getenv("JPOS_MAX_RETRIES", "2"))   # R9 – retries before reversal
 KSN_STATE_FILE = "ksn_state.json"
+TX_PER_TERMINAL = int(os.getenv("ATM_TX_PER_TERMINAL", "5"))
+TERMINAL_COUNT  = int(os.getenv("ATM_TERMINAL_COUNT", "3"))
+SEND_RRN_FIELD37 = os.getenv("ATM_SEND_RRN_FIELD37", "0") == "1"
+AUDIT_LOG_FILE = os.getenv("ATM_AUDIT_LOG_FILE", "atm_audit_trail.jsonl")
+WRITE_AUDIT_LOG = os.getenv("ATM_WRITE_AUDIT_LOG", "1") == "1"
 
 BDK = bytes.fromhex(os.environ["JPOS_BDK_HEX"])
 MAC_KEY = bytes.fromhex(os.environ["JPOS_MAC_KEY_HEX"])
 VARIANT_RIGHT_HALF = bytes.fromhex("C0C0C0C000000000")
 
-TERMINALS = [
+TERMINALS_ALL = [
     {"tid": "TERM0001", "ksn_base": "FFFF9876543210E00000"},
     {"tid": "TERM0002", "ksn_base": "FFFF9876543211E00000"},
     {"tid": "TERM0003", "ksn_base": "FFFF9876543212E00000"},
 ]
+TERMINALS = TERMINALS_ALL[:max(1, min(TERMINAL_COUNT, len(TERMINALS_ALL)))]
+
+# End-to-end deterministic test plan. Example:
+# TEST_RC_PLAN='{"0100":["00","TIMEOUT"],"0200":["05"],"0400":["00"]}'
+_test_plan_lock = threading.Lock()
+try:
+    _test_rc_plan = json.loads(os.getenv("TEST_RC_PLAN", "{}"))
+except json.JSONDecodeError:
+    _test_rc_plan = {}
+
+# Built-in deterministic EndToEnd test catalog.
+TEST_CASES = [
+    {
+        "id": "TC01",
+        "name": "0200 timeout then successful reversal",
+        "description": "Authorization succeeds, financial message times out, and 0400 completes successfully.",
+        "plan": {"0100": ["00"], "0200": ["TIMEOUT"], "0400": ["00"]},
+        "expected_status": "REVERSED",
+        "expected_reversal": "executed"
+    },
+    {
+        "id": "TC02",
+        "name": "0200 decline without reversal",
+        "description": "Authorization succeeds, financial message is declined (05/51), and no 0400 is sent.",
+        "plan": {"0100": ["00"], "0200": ["05"]},
+        "expected_status": "DECLINED",
+        "expected_reversal": "not_sent"
+    },
+    {
+        "id": "TC03",
+        "name": "0100 timeout then successful reversal",
+        "description": "Authorization request times out and triggers 0400 which succeeds.",
+        "plan": {"0100": ["TIMEOUT"], "0400": ["00"]},
+        "expected_status": "REVERSED",
+        "expected_reversal": "executed"
+    },
+    {
+        "id": "TC04",
+        "name": "0100 hard failure without reversal",
+        "description": "Authorization fails with non-timeout RC (e.g. 96), and no reversal is sent.",
+        "plan": {"0100": ["96"]},
+        "expected_status": "FAILED",
+        "expected_reversal": "not_sent"
+    },
+    {
+        "id": "TC05",
+        "name": "Reversal timeout",
+        "description": "Authorization times out, 0400 is sent, and reversal itself times out.",
+        "plan": {"0100": ["TIMEOUT"], "0400": ["TIMEOUT"]},
+        "expected_status": "REVERSAL_TIMEOUT",
+        "expected_reversal": "timeout"
+    },
+    {
+        "id": "TC06",
+        "name": "Field 37 capability",
+        "description": "RRN can be injected into ISO messages when ATM_SEND_RRN_FIELD37=1 for reconciliation-enabled profiles.",
+        "plan": {"0100": ["00"], "0200": ["00"]},
+        "expected_status": "COMPLETED",
+        "expected_reversal": "not_sent"
+    }
+]
+
+
+def print_test_catalog():
+    info("EndToEnd test catalog", cases=TEST_CASES)
+
+def _planned_rc(mti: str):
+    with _test_plan_lock:
+        plan = _test_rc_plan.get(mti)
+        if plan is None:
+            return None
+        if isinstance(plan, str):
+            return plan
+        if isinstance(plan, list) and plan:
+            return plan.pop(0)
+        return None
 
 # ── R8 – Structured JSON logging ──────────────────────────────────────────────
 class _JsonFormatter(logging.Formatter):
@@ -69,6 +154,15 @@ def err(msg,  **kw):  _logx(logging.ERROR,   msg, **kw)
 # ── R4 – Concurrency protection ───────────────────────────────────────────────
 _store_lock = threading.Lock()
 transaction_store: dict = {}
+_audit_lock = threading.Lock()
+
+
+def _append_audit(entry: dict):
+    if not WRITE_AUDIT_LOG:
+        return
+    with _audit_lock:
+        with open(AUDIT_LOG_FILE, "a") as f:
+            f.write(json.dumps(entry) + "\n")
 
 # R10 – idempotency / R2 – duplicate STAN
 _seen_stans: set = set()
@@ -248,6 +342,11 @@ def _send_with_retry(msg):
     return None
 
 def send_tx(mti, fields):
+    injected = _planned_rc(mti)
+    if injected is not None:
+        warn("Test RC injected", mti=mti, injected_rc=injected)
+        return injected
+
     # R1 – pack with zero field-64, compute MAC, re-pack with real MAC
     temp = pack_msg(mti, fields, macv=b"\x00"*8)
     mac  = mac_x919(MAC_KEY, temp)
@@ -272,7 +371,13 @@ def allocate_stan(tid: str) -> str:
             stan = str(random.randint(0, 999999)).zfill(6)
             if stan not in _seen_stans:
                 _seen_stans.add(stan)
-                transaction_store[stan] = {"terminal": tid, "status": "STARTED", "rrn": None}
+                transaction_store[stan] = {
+                    "terminal": tid,
+                    "status": "STARTED",
+                    "rrn": None,
+                    "created_at": _utc_now(),
+                    "events": []
+                }
                 return stan
     raise RuntimeError(f"[{tid}] Failed to allocate unique STAN after 100 attempts")
 
@@ -280,6 +385,22 @@ def allocate_stan(tid: str) -> str:
 def update_store(stan: str, **kwargs):
     with _store_lock:
         transaction_store[stan].update(kwargs)
+
+
+def add_event(stan: str, event_type: str, **details):
+    event = {"ts": _utc_now(), "event": event_type, **details}
+    with _store_lock:
+        if stan in transaction_store:
+            transaction_store[stan].setdefault("events", []).append(event)
+            entry = {
+                "stan": stan,
+                "terminal": transaction_store[stan].get("terminal"),
+                "rrn": transaction_store[stan].get("rrn"),
+                **event
+            }
+        else:
+            entry = {"stan": stan, **event}
+    _append_audit(entry)
 
 # ── R3 – Reversal validation ──────────────────────────────────────────────────
 def can_reverse(stan: str) -> bool:
@@ -291,7 +412,21 @@ def can_reverse(stan: str) -> bool:
         if entry["status"] not in ("AUTHORIZED", "TIMEOUT", "STARTED"):
             warn("Reversal skipped: not in reversible state", stan=stan, status=entry["status"])
             return False
-        return "TIMEOUT"
+        return True
+
+def do_reversal(tid: str, stan: str, rrn: str, rev_fields: dict, reason: str):
+    add_event(stan, "0400.requested", mti="0400", reason=reason)
+    info("0400 reversal requested", terminal=tid, stan=stan, rrn=rrn, reason=reason)
+    rc = send_tx("0400", rev_fields)
+    add_event(stan, "0400.response", mti="0400", rc=rc)
+    info("0400 reversal response", terminal=tid, stan=stan, rrn=rrn, rc=rc)
+    if rc == "00":
+        update_store(stan, status="REVERSED", reversal_rc=rc)
+    elif rc == "TIMEOUT":
+        # Explicitly track uncertain reversal outcome for operator follow-up.
+        update_store(stan, status="REVERSAL_TIMEOUT", reversal_rc=rc)
+    else:
+        update_store(stan, status="REVERSAL_FAILED", reversal_rc=rc)
 
 # ── Terminal worker ───────────────────────────────────────────────────────────
 def run_term(term):
@@ -300,7 +435,7 @@ def run_term(term):
     ksn_state = load_ksn_state()                    # R6 – load persisted counter
     counter   = ksn_state.get(tid, 1)
 
-    for _ in range(5):
+    for _ in range(TX_PER_TERMINAL):
         ksn = build_ksn(base, counter)
         counter += 1
 
@@ -310,8 +445,9 @@ def run_term(term):
         stan = allocate_stan(tid)                   # R2/R10 – unique STAN
         rrn  = next_rrn()                           # R5  – RRN
         update_store(stan, rrn=rrn)
+        add_event(stan, "transaction.started", mti="0000", status="STARTED")
 
-        # R5 – RRN tracked in store; not sent in message (gateway packager limitation)
+        # R5 – RRN is always tracked in store. Field 37 is optional by profile.
         fields = {
             2: pan,
             3:"000000",
@@ -326,24 +462,29 @@ def run_term(term):
             42:"MERCHANT000001",
             49:"840"
         }
+        if SEND_RRN_FIELD37:
+            fields[37] = rrn
 
         rc = send_tx("0100", fields)
+        add_event(stan, "0100.response", mti="0100", rc=rc, rrn_field37_sent=SEND_RRN_FIELD37)
         info("0100", terminal=tid, stan=stan, rrn=rrn, rc=rc)   # R8
 
         if rc == "00":
             update_store(stan, status="AUTHORIZED")
         elif rc in ("05", "51"):
             # R7 – soft decline: NO reversal
-            update_store(stan, status="DECLINED")
+            update_store(stan, status="DECLINED", auth_rc=rc)
+            add_event(stan, "transaction.declined", mti="0100", rc=rc)
             continue  
         elif rc == "TIMEOUT":
             update_store(stan, status="TIMEOUT")
+            add_event(stan, "transaction.timeout", mti="0100", rc=rc)
             if can_reverse(stan):                   # R3 – validate before reversing
-                info("0400 reversal (0100 timeout)", terminal=tid, stan=stan, rrn=rrn)
-                send_tx("0400", fields)
+                do_reversal(tid, stan, rrn, fields, reason="0100 timeout")
             continue
         else:
-            update_store(stan, status="FAILED")
+            update_store(stan, status="FAILED", auth_rc=rc)
+            add_event(stan, "transaction.failed", mti="0100", rc=rc)
             continue
 
         fields.update({
@@ -352,20 +493,27 @@ def run_term(term):
         })
 
         rc = send_tx("0200", fields)
+        add_event(stan, "0200.response", mti="0200", rc=rc, rrn_field37_sent=SEND_RRN_FIELD37)
         info("0200", terminal=tid, stan=stan, rrn=rrn, rc=rc)   # R8
 
         if rc == "00":
             update_store(stan, status="COMPLETED")
+            add_event(stan, "transaction.completed", mti="0200", rc=rc)
         elif rc == "TIMEOUT":
             # R7 – only reverse on timeout, not on decline
             update_store(stan, status="TIMEOUT")
+            add_event(stan, "transaction.timeout", mti="0200", rc=rc)
             if can_reverse(stan):                   # R3
-                info("0400 reversal (0200 timeout)", terminal=tid, stan=stan, rrn=rrn)
                 rev_fields = {k: v for k, v in fields.items() if k not in [52, 62]}
-                send_tx("0400", rev_fields)
+                do_reversal(tid, stan, rrn, rev_fields, reason="0200 timeout")
+        elif rc in ("05", "51"):
+            # R7 – soft decline: NO reversal
+            update_store(stan, status="DECLINED", financial_rc=rc)
+            add_event(stan, "transaction.declined", mti="0200", rc=rc)
         else:
             # R7 – non-timeout failure: NO reversal
-            update_store(stan, status="FAILED")
+            update_store(stan, status="FAILED", financial_rc=rc)
+            add_event(stan, "transaction.failed", mti="0200", rc=rc)
 
     # R6 – persist KSN counter after terminal finishes
     ksn_state[tid] = counter
@@ -373,6 +521,8 @@ def run_term(term):
 
 # ── Main ─────────────────────────────────────────────────────────────────────
 def main():
+    print_test_catalog()
+
     threads=[]
     for t in TERMINALS:
         th=threading.Thread(target=run_term,args=(t,))
@@ -381,8 +531,15 @@ def main():
     for th in threads:
         th.join()
 
+    counts = {}
+    for tx in transaction_store.values():
+        s = tx.get("status", "UNKNOWN")
+        counts[s] = counts.get(s, 0) + 1
+
     print("\n=== TRANSACTION STORE ===")
     print(json.dumps(transaction_store, indent=2))
+    print("\n=== STATUS SUMMARY ===")
+    print(json.dumps(counts, indent=2))
 
 if __name__=="__main__":
     main()
