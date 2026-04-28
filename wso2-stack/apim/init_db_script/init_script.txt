@@ -17,3 +17,8 @@ docker exec -it cms-postgresql psql -U postgres -c "DROP DATABASE wso2am;"
 docker exec -it cms-postgresql psql -U postgres -c "CREATE DATABASE wso2am;"
 docker cp cms-apim:/home/wso2carbon/wso2am-4.3.0/dbscripts/apimgt/postgresql.sql ./apimgt_43.sql
 docker cp cms-apim:/home/wso2carbon/wso2am-4.3.0/dbscripts/postgresql.sql ./shared_43.sql
+
+
+psql -h localhost -U postgres -d wso2am -f /home/user/cms-platform/CMS-Platform/apimgt_43.sql
+psql -h localhost -U postgres -d wso2am -f /home/user/cms-platform/CMS-Platform/shared_43.sql
+
