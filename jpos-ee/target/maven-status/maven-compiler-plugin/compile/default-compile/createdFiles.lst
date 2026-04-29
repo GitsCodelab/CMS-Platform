@@ -1,8 +1,0 @@
-org/cms/jpos/ISOMessageHandler.class
-org/cms/jpos/AppConfig.class
-org/cms/jpos/ISOMessageHandler$RequestValidationException.class
-org/cms/jpos/ISOMessageHandler$RequestContext.class
-org/cms/jpos/dao/IsoLogDAO.class
-org/cms/jpos/dao/TransactionDAO.class
-org/cms/jpos/config/DBConnectionManager.class
-org/cms/jpos/Gateway.class

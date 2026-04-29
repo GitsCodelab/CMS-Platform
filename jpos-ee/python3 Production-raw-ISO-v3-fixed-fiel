@@ -1,2 +1,0 @@
- python3 Production-raw-ISO-v3-fixed-field52.py --with-mac
- ATM → ISO8583 → Crypto (DUKPT + MAC) → Gateway → Validation → Response 
